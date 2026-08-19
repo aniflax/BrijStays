@@ -32,13 +32,23 @@ Visit `http://localhost:1337/admin`. Local development uses SQLite (`.tmp/data.d
 
 ## Environment variables
 
-| Variable group | Purpose |
+| Variable | Purpose |
 | --- | --- |
 | `HOST`, `PORT` | Server host and port |
-| `DATABASE_CLIENT=postgres`, `DATABASE_URL`, `DATABASE_SSL`, `DATABASE_SCHEMA` | Neon PostgreSQL configuration |
-| `APP_KEYS`, `ADMIN_JWT_SECRET`, `API_TOKEN_SALT`, `JWT_SECRET`, `TRANSFER_TOKEN_SALT`, `ENCRYPTION_KEY` | Required Strapi secrets |
-| `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_ENDPOINT`, `S3_REGION` | Cloudflare R2 S3-compatible connection |
-| Bucket-name and public media/CDN variables for both buckets | Two-bucket media configuration; exact names are to be set during infrastructure setup |
+| `DATABASE_CLIENT=postgres` | Uses PostgreSQL in production |
+| `DATABASE_URL` | Neon PostgreSQL connection string |
+| `DATABASE_SSL`, `DATABASE_SCHEMA` | Neon connection options |
+| `APP_KEYS` | Strapi app keys (comma-separated) |
+| `ADMIN_JWT_SECRET` | Admin-panel JWT secret |
+| `API_TOKEN_SALT` | API-token salt |
+| `JWT_SECRET` | Users-permissions JWT secret |
+| `TRANSFER_TOKEN_SALT` | Transfer-token salt |
+| `ENCRYPTION_KEY` | Transfer encryption key |
+| `R2_ACCESS_KEY_ID` | Cloudflare R2 access key |
+| `R2_SECRET_ACCESS_KEY` | Cloudflare R2 secret key |
+| `R2_ENDPOINT` | R2 S3-compatible endpoint |
+| `S3_REGION` | R2 region (usually `auto`) |
+| Primary and secondary bucket variables | Configure separate bucket names and public media/CDN URLs when the two buckets are created |
 | `CORS_ORIGINS` | Comma-separated allowed frontend origins |
 
 Configure all production values in Render, never in Git. Production database credentials, R2 credentials, bucket names, and final domains are not yet assigned.
