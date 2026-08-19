@@ -7,7 +7,7 @@ Server-rendered hospitality/accommodation marketing site built with **TanStack S
 - Repository: `git@github.com:aniflax/BrijStays.git`, branch `main`.
 - Deploy this `Frontend/` directory to Cloudflare Workers once the Cloudflare project is created.
 - Configure automatic deployments from `main` after the Cloudflare integration is set up.
-- Do not use Unityaliving URLs, worker names, or deployment configuration for Brij Stays.
+- Do not reuse legacy URLs, worker names, or deployment configuration from the source project.
 
 ## Stack and build
 
@@ -17,7 +17,7 @@ Server-rendered hospitality/accommodation marketing site built with **TanStack S
 
 ## Backend connectivity
 
-`src/lib/site.ts` resolves the Strapi backend URL and fetches site-wide information. Its existing code may contain inherited Unityaliving defaults; replace those with Brij Stays configuration when the backend URL is available.
+`src/lib/site.ts` resolves the Strapi backend URL and fetches site-wide information. Its existing code may contain legacy defaults; replace those with Brij Stays configuration when the backend URL is available.
 
 Resolution order:
 

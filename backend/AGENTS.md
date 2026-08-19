@@ -7,7 +7,7 @@ Headless CMS for Brij Stays, built with **Strapi 5**. It is planned for deployme
 - Repository: `git@github.com:aniflax/BrijStays.git`, branch `main`.
 - Deploy this `backend/` directory to a new Render web service.
 - Configure automatic deploys from `main` after the Render service is created.
-- Do not carry forward Unityaliving service URLs, CDN URLs, bucket names, or secrets.
+- Do not carry forward legacy service URLs, CDN URLs, bucket names, or secrets.
 
 ## Stack and local run
 

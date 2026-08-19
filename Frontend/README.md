@@ -23,7 +23,7 @@ Browser ──> Brij Stays Cloudflare Worker (SSR frontend)
                     └── Cloudflare R2 media buckets
 ```
 
-The public frontend domain and Strapi base URL have not yet been assigned. Do not use Unityaliving URLs or existing inherited production defaults.
+The public frontend domain and Strapi base URL have not yet been assigned. Do not use legacy URLs or inherited production defaults.
 
 ## Getting started
 

@@ -73,4 +73,4 @@ Deployment is not configured yet. When ready:
 
 ## API and content types
 
-The existing code may include inherited Unityaliving content types and routes. Review and replace them as Brij Stays requirements are defined. Only enable public permissions for endpoints the frontend actually consumes.
+The existing code may include legacy content types and routes. Review and replace them as Brij Stays requirements are defined. Only enable public permissions for endpoints the frontend actually consumes.
