@@ -1,10 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { Banknote, ChevronDown, Home, MapPin, Play, Search } from "lucide-react";
 
+import houseImage from "@/assets/house.png";
 import { useSite } from "@/lib/site-context";
 import { cn } from "@/lib/utils";
-
-const HOUSE_IMAGE = "https://cdn.brijstays.com/Hero%20Image/House.png";
 
 const facebookPath = "M14 8h3V4h-3c-3.3 0-5 1.9-5 5v3H6v4h3v8h4v-8h3.2l.8-4H13V9c0-.7.3-1 1-1z";
 
@@ -121,7 +120,7 @@ export function Hero() {
               )}
             >
               <img
-                src={HOUSE_IMAGE}
+                src={houseImage}
                 alt="Brij Stays Dream Home"
                 width={1600}
                 height={900}

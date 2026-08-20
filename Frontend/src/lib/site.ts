@@ -117,7 +117,8 @@ export const EMPTY_SITE: Site = {
   directorImage: "",
 };
 
-const PRODUCTION_STRAPI_URL = "https://admin.brijstays.com";
+// Replace this placeholder with the real public Strapi base URL before launch.
+const PRODUCTION_STRAPI_URL = "https://cms.example.com";
 
 /**
  * Sanitizes a raw backend URL value from env vars so common mistakes (trailing
