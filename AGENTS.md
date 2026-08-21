@@ -24,6 +24,7 @@ The frontend, CMS, and CDN/custom domains have not yet been assigned. Do not ass
 - **Backend:** deploy `backend/` to Render after the Render service is created.
 - A push to `main` should be configured to deploy both services automatically once those integrations exist.
 - Environment variables and secrets must be configured in the relevant Cloudflare and Render dashboards; never commit them.
+- **Commit policy:** any changes to the code must be pushed to `main` immediately after being made. Commits must not include co-author/attribution trailers (e.g. `Co-authored-by: ...`); all commits are authored by **aniflax** alone.
 
 ## Services
 
