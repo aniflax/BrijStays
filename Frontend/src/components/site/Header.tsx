@@ -12,7 +12,7 @@ type NavItem = { label: string; to?: string; children?: NavChild[] };
 
 const companyChildren: NavChild[] = [
   { label: "About Us", to: "/about" },
-  { label: "Director's Desk", to: "/director" },
+  { label: "Founders & Leadership", to: "/director" },
   { label: "Careers", to: "/careers" },
   { label: "Privacy Policy", to: "/privacy-policy" },
   { label: "Terms & Conditions", to: "/terms-and-conditions" },

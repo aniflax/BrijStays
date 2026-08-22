@@ -1,22 +1,38 @@
+import directorPhoto from "@/assets/director.jpg";
 import { collection, type StrapiEntity, type TeamMember } from "./types";
 
 export const teamMemberEntities: StrapiEntity<TeamMember>[] = [
   {
     id: 1,
     attributes: {
-      name: "Rohan Astoliya",
-      role: "Managing Director",
-      initials: "RA",
-      signature: "Rohan Astoliya",
+      name: "Keshav Aggarwal",
+      role: "Founder",
+      initials: "KA",
+      signature: "Keshav Aggarwal",
+      photo: directorPhoto,
+      quote:
+        "A home is not sold in an afternoon — it is chosen over months, and lived in for decades.",
       bio: [
-        "When we began Brij Stays, Indore was still a city that people described in terms of what it might become. We chose to build here precisely because of that — a city on the edge of its own growth deserves homes built with patience rather than haste.",
-        "Every project we take up begins with a simple question: will a family still be glad they chose this home fifteen years from now? That question decides our sites, our specifications, our contractors, and the pace at which we grow. It is a slower way to build a company, and it is the only way we know how.",
-        "I read every enquiry that reaches us. If you are considering a home with us, I would rather you visit, ask difficult questions, and take your time. A home is not sold in an afternoon; it is chosen over months, and lived in for decades.",
+        "Keshav founded Brij Stays with a simple conviction: build fewer homes, build them honestly, and build for the family who will live in them fifteen years from now.",
       ],
     },
   },
   {
     id: 2,
+    attributes: {
+      name: "Vineet Singhal",
+      role: "Co-founder",
+      initials: "VS",
+      signature: "Vineet Singhal",
+      photo: directorPhoto,
+      quote: "Good details are quiet — you notice them in how a home feels, not in what it claims.",
+      bio: [
+        "Vineet co-founded Brij Stays to bring the same disciplined attention to specification and care to every resident relationship we enter.",
+      ],
+    },
+  },
+  {
+    id: 3,
     attributes: {
       name: "Ira Saxena",
       role: "Head of Design",
@@ -27,7 +43,7 @@ export const teamMemberEntities: StrapiEntity<TeamMember>[] = [
     },
   },
   {
-    id: 3,
+    id: 4,
     attributes: {
       name: "Devang Rao",
       role: "Head of Construction",
@@ -38,7 +54,7 @@ export const teamMemberEntities: StrapiEntity<TeamMember>[] = [
     },
   },
   {
-    id: 4,
+    id: 5,
     attributes: {
       name: "Naina Kulkarni",
       role: "Customer Relations",
@@ -53,3 +69,6 @@ export const teamMemberEntities: StrapiEntity<TeamMember>[] = [
 export const teamMembers = collection(teamMemberEntities);
 export const teamMemberList = teamMemberEntities.map((e) => e.attributes);
 export const director = teamMemberList[0]!;
+export const leadership = teamMemberList.filter(
+  (m) => m.role === "Founder" || m.role === "Co-founder",
+);

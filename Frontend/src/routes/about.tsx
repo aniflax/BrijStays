@@ -79,8 +79,8 @@ function AboutPage() {
             </h3>
             <p className="mt-5 text-[0.95rem] leading-relaxed text-muted-foreground">
               That means resisting the temptation to add floors, shrink balconies or substitute
-              specification once a project is sold. Every decision after booking is made in the buyer's
-              favour, because the decision was made honestly before it.
+              specification once a project is sold. Every decision after booking is made in the
+              buyer's favour, because the decision was made honestly before it.
             </p>
           </Reveal>
           <Reveal delay={0.15}>
@@ -89,9 +89,9 @@ function AboutPage() {
               To be the developer Indore families recommend without being asked.
             </h3>
             <p className="mt-5 text-[0.95rem] leading-relaxed text-muted-foreground">
-              We measure ourselves on referrals rather than launches. More than half of our buyers come
-              from someone who already lives in a Brij Stays home, which is the only marketing metric
-              we take seriously.
+              We measure ourselves on referrals rather than launches. More than half of our buyers
+              come from someone who already lives in a Brij Stays home, which is the only marketing
+              metric we take seriously.
             </p>
           </Reveal>
         </div>
@@ -100,8 +100,8 @@ function AboutPage() {
       <section className="container-luxe py-24 md:py-32">
         <Reveal className="mx-auto max-w-3xl text-center">
           <p className="font-display text-[clamp(1.5rem,3.2vw,2.5rem)] leading-[1.3] italic">
-            “A home is not sold in an afternoon. It is chosen over months, and lived in for decades — we
-            build for the second part.”
+            “A home is not sold in an afternoon. It is chosen over months, and lived in for decades
+            — we build for the second part.”
           </p>
           <p className="mt-8 text-[0.7rem] tracking-[0.2em] text-muted-foreground uppercase">
             {director.name} · {director.role}
@@ -110,12 +110,18 @@ function AboutPage() {
       </section>
 
       <section className="container-luxe pb-24 md:pb-32">
-        <SectionHeading eyebrow="Leadership" title="A message from our Managing Director" className="mb-14" />
+        <SectionHeading
+          eyebrow="Leadership"
+          title="A message from our Founders"
+          className="mb-14"
+        />
         <Reveal className="grid gap-10 border border-border p-8 md:grid-cols-12 md:p-10">
           <div className="md:col-span-3">
-            <div className="flex h-24 w-24 items-center justify-center rounded-full bg-charcoal font-display text-2xl text-cream">
-              {director.initials}
-            </div>
+            <img
+              src={director.photo}
+              alt={`Portrait of ${director.name}`}
+              className="aspect-[4/5] w-full rounded-2xl object-cover"
+            />
           </div>
           <div className="md:col-span-9">
             <h3 className="font-display text-2xl">{director.name}</h3>

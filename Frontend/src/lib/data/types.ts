@@ -87,6 +87,7 @@ export type TeamMember = {
   bio: string[];
   photo?: string;
   signature?: string;
+  quote?: string;
 };
 
 export type Amenity = {
