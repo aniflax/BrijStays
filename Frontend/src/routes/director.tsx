@@ -7,16 +7,17 @@ import { leadership } from "@/lib/data/teamMembers";
 export const Route = createFileRoute("/director")({
   head: () => ({
     meta: [
-      { title: "Founders & Leadership — Brij Stays, Indore" },
+      { title: "Founders & Leadership — Brij Stays" },
       {
         name: "description",
         content:
-          "Keshav Aggarwal (Founder) and Vineet Singhal (Co-founder) on why Brij Stays builds thoughtfully in Indore.",
+          "Meet Keshav Aggarwal (Founder & Host) and Vineet Singhal (Co-founder) — the people behind Brij Stays' thoughtful hospitality in Vrindavan.",
       },
       { property: "og:title", content: "Founders & Leadership — Brij Stays" },
       {
         property: "og:description",
-        content: "The people behind Brij Stays and the standard of thoughtful living we build for.",
+        content:
+          "Keshav Aggarwal and Vineet Singhal on why Brij Stays builds warm, personal, high-quality stays in the spiritual region of Brij.",
       },
     ],
   }),
@@ -104,6 +105,14 @@ function DirectorPage() {
                   <p className="mt-8 text-[0.95rem] leading-[1.85] text-muted-foreground">
                     {member.bio[0]}
                   </p>
+                  {member.bio.slice(1).map((paragraph) => (
+                    <p
+                      key={paragraph}
+                      className="mt-6 text-[0.95rem] leading-[1.85] text-muted-foreground"
+                    >
+                      {paragraph}
+                    </p>
+                  ))}
                 </div>
               </div>
             ))}
