@@ -5,19 +5,19 @@ export const testimonialEntities: StrapiEntity<Testimonial>[] = [
     id: 1,
     attributes: {
       quote:
-        "We visited eleven projects before this one. Elysian was the only place where the plan felt written for how we actually live.",
-      name: "Aparna & Rohit Deshmukh",
-      project: "Elysian — Vijay Nagar",
-      location: "Indore",
+        "Staying at Brij Stays' Hari Krishna Residency made our family pilgrimage effortless! Being literally steps away from ISKCON saved us so much time and travel hassle. The room was sparkling clean, modern, and comfortable. Having direct WhatsApp contact with the host for quick local guidance was the cherry on top!",
+      name: "R. Sharma",
+      project: "Hari Krishna Residency",
+      location: "Verified Airbnb Guest",
     },
   },
   {
     id: 2,
     attributes: {
       quote:
-        "Handover happened on the date printed in our agreement. In this market, that alone told me everything about the team.",
-      name: "Sanjay Kothari",
-      project: "The Palms — Rau",
+        "We visited eleven projects before this one. Elysian was the only place where the plan felt written for how we actually live.",
+      name: "Aparna & Rohit Deshmukh",
+      project: "Elysian — Vijay Nagar",
       location: "Indore",
     },
   },
