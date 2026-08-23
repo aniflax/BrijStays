@@ -43,7 +43,7 @@ export function StayCard({ stay, className }: { stay: Stay; className?: string }
             params={{ slug: stay.slug }}
             className="transition-colors hover:text-brand"
           >
-            {stay.name}
+            {stay.shortName}
           </Link>
         </h3>
         <p className="mt-2 hidden text-sm leading-relaxed text-muted-foreground md:block">

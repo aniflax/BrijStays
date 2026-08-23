@@ -19,7 +19,7 @@ const companyChildren: NavChild[] = [
 const staysChildren: NavChild[] = [
   { label: "All Stays", to: "/stays" },
   ...stayList.map((s) => ({
-    label: s.name,
+    label: s.shortName,
     to: "/stays/$slug",
     params: { slug: s.slug },
   })),

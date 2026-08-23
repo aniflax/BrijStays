@@ -39,6 +39,8 @@ export type HeroSlide = {
 export type Stay = {
   slug: string;
   name: string;
+  /** Short title for cards (e.g. "Nest in the Forest"); name keeps the full listing title. */
+  shortName: string;
   location: string;
   shortDescription: string;
   description: string[];

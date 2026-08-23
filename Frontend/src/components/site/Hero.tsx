@@ -2,11 +2,22 @@ import { Link } from "@tanstack/react-router";
 import { Banknote, ChevronDown, Home, MapPin, Play, Search } from "lucide-react";
 
 import houseImage from "@/assets/house.png";
-import { INSTAGRAM_URL } from "@/lib/site";
+import { useSite } from "@/lib/site-context";
 import { cn } from "@/lib/utils";
 
-const instagramPath =
-  "M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2-.1-1.3-.1-1.7-.1-4.9s0-3.6.1-4.9c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4 1.3-.1 1.7-.1 4.9-.1zm0-2.2C8.7 0 8.3 0 7 .1 5.8.1 4.9.3 4.1.6c-.8.3-1.5.8-2.2 1.5C1.2 2.8.7 3.5.4 4.3.1 5.1-.1 6-.1 7.2.0 8.5 0 8.9 0 12s0 3.5.1 4.8c.1 1.2.3 2.1.6 2.9.3.8.8 1.5 1.5 2.2.7.7 1.4 1.2 2.2 1.5.8.3 1.7.5 2.9.6 1.3.1 1.7.1 5 .1s3.7 0 5-.1c1.2-.1 2.1-.3 2.9-.6.8-.3 1.5-.8 2.2-1.5.7-.7 1.2-1.4 1.5-2.2.3-.8.5-1.7.6-2.9.1-1.3.1-1.7.1-4.8s0-3.5-.1-4.8c-.1-1.2-.3-2.1-.6-2.9-.3-.8-.8-1.5-1.5-2.2C19.2 1.2 18.5.7 17.7.4c-.8-.3-1.7-.5-2.9-.6C13.5.0 13.1 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4 6.2 6.2 0 0 0 0-12.4zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm7.8-10.4a1.4 1.4 0 1 1-2.9 0 1.4 1.4 0 0 1 2.9 0z";
+const facebookPath = "M14 8h3V4h-3c-3.3 0-5 1.9-5 5v3H6v4h3v8h4v-8h3.2l.8-4H13V9c0-.7.3-1 1-1z";
+
+const twitterPath =
+  "M22 5.8c-.7.3-1.5.5-2.3.6.8-.5 1.4-1.3 1.7-2.2-.8.5-1.7.8-2.6 1A4.1 4.1 0 0 0 11.7 8c0 .3 0 .6.1.9-3.4-.2-6.4-1.8-8.4-4.2-.4.6-.6 1.3-.6 2.1 0 1.4.7 2.7 1.7 3.4-.6 0-1.2-.2-1.8-.5v.1c0 2 1.4 3.7 3.3 4.1-.3.1-.7.1-1 .1-.2 0-.5 0-.7-.1.5 1.6 2 2.8 3.8 2.8A8.3 8.3 0 0 1 3 18.5 11.7 11.7 0 0 0 9.3 20c7.5 0 11.6-6.2 11.6-11.6v-.5c.8-.6 1.5-1.3 2.1-2.1z";
+
+const linkedinPath =
+  "M6.5 8.5H3V21h3.5V8.5zM4.8 3C3.7 3 3 3.8 3 4.8s.7 1.8 1.8 1.8 1.8-.8 1.8-1.8S5.9 3 4.8 3zM21 13.8c0-3.8-2-5.6-4.8-5.6-2.2 0-3.2 1.2-3.8 2v-1.7H9V21h3.5v-6.2c0-1.6.3-3.2 2.3-3.2 2 0 2 1.9 2 3.3V21H21v-7.2z";
+
+const heroSocials = [
+  { label: "Facebook", path: facebookPath },
+  { label: "Twitter", path: twitterPath },
+  { label: "LinkedIn", path: linkedinPath },
+];
 
 const searchFields = [
   {
@@ -27,6 +38,8 @@ const searchFields = [
 ];
 
 export function Hero() {
+  const site = useSite();
+
   return (
     <section className="overflow-hidden bg-white">
       <div className="mx-auto w-full max-w-[1720px] px-6 md:px-10 xl:px-24">
@@ -41,8 +54,8 @@ export function Hero() {
               )}
             >
               <h1 className="font-baloo text-[44px] leading-[1.02] tracking-[-1px] text-[#111] min-[600px]:text-[54px] min-[1001px]:text-[68px] min-[1001px]:tracking-[-1.4px]">
-                <span className="block font-normal">Premium Stays in</span>
-                <span className="block font-bold">Vrindavan</span>
+                <span className="block font-normal">Gateway to</span>
+                <span className="block font-bold">Dream Homes</span>
               </h1>
 
               <p className="mt-[25px] max-w-[445px] font-poppins text-[14px] leading-[1.55] font-normal text-[#686868] min-[600px]:text-base max-[600px]:mt-5">
@@ -72,21 +85,29 @@ export function Hero() {
               </div>
 
               <div className="mt-11 flex items-center gap-3 max-[600px]:mt-[26px] max-[600px]:gap-[10px]">
-                <a
-                  href={INSTAGRAM_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Instagram"
-                  className="flex h-7 w-7 items-center justify-center text-[#111] transition duration-200 hover:-translate-y-px hover:opacity-55 max-[600px]:h-[22px] max-[600px]:w-[22px]"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className="block h-6 w-6 max-[600px]:h-[19px] max-[600px]:w-[19px]"
-                  >
-                    <path d={instagramPath} />
-                  </svg>
-                </a>
+                {heroSocials.map((social) => {
+                  const href =
+                    site.socials.find((s) => s.label.toLowerCase() === social.label.toLowerCase())
+                      ?.href ?? "#";
+                  return (
+                    <a
+                      key={social.label}
+                      href={href}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={social.label}
+                      className="flex h-7 w-7 items-center justify-center text-[#111] transition duration-200 hover:-translate-y-px hover:opacity-55 max-[600px]:h-[22px] max-[600px]:w-[22px]"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="block h-6 w-6 max-[600px]:h-[19px] max-[600px]:w-[19px]"
+                      >
+                        <path d={social.path} />
+                      </svg>
+                    </a>
+                  );
+                })}
               </div>
             </div>
 

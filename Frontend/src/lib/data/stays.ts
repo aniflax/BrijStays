@@ -10,6 +10,7 @@ export const stayEntities: StrapiEntity<Stay>[] = [
     attributes: {
       slug: "nest-in-the-forest",
       name: "Nest in the Forest — 1 min to ISKCON & Prem Mandir",
+      shortName: "Nest in the Forest",
       location: "Vrindavan, Uttar Pradesh",
       category: "Boutique Stay",
       building: "Hari Krishna Residency",
@@ -50,6 +51,7 @@ export const stayEntities: StrapiEntity<Stay>[] = [
     attributes: {
       slug: "red-velvet-studio",
       name: "Red Velvet Studio — next to ISKCON & Prem Mandir",
+      shortName: "Red Velvet Studio",
       location: "Vrindavan, Uttar Pradesh",
       category: "Studio",
       building: "Hari Krishna Residency",
@@ -90,6 +92,7 @@ export const stayEntities: StrapiEntity<Stay>[] = [
     attributes: {
       slug: "shyam-rang-palace",
       name: "Shyam Rang Palace — next to ISKCON & Prem Mandir",
+      shortName: "Shyam Rang Palace",
       location: "Vrindavan, Uttar Pradesh",
       category: "Heritage Apartment",
       building: "Hari Krishna Residency",
@@ -130,6 +133,7 @@ export const stayEntities: StrapiEntity<Stay>[] = [
     attributes: {
       slug: "anand-van",
       name: "Anand-Van: Cute Clay 1BHK w/ Sunrise & Sunset Balcony",
+      shortName: "Anand-Van",
       location: "Vrindavan, Uttar Pradesh",
       category: "1 BHK Apartment",
       featured: true,
@@ -169,6 +173,7 @@ export const stayEntities: StrapiEntity<Stay>[] = [
     attributes: {
       slug: "all-things-pichwai",
       name: "All things Pichwai — Arthouse with stunning balcony",
+      shortName: "All things Pichwai",
       location: "Vrindavan, Uttar Pradesh",
       category: "Arthouse Studio",
       featured: true,
@@ -208,6 +213,7 @@ export const stayEntities: StrapiEntity<Stay>[] = [
     attributes: {
       slug: "artistic-haven-shantivan",
       name: "Artistic Haven: ShantiVan Retreat by Prime Temples",
+      shortName: "Artistic Haven: ShantiVan",
       location: "Vrindavan, Uttar Pradesh",
       category: "Designer Suite",
       featured: true,
@@ -247,6 +253,7 @@ export const stayEntities: StrapiEntity<Stay>[] = [
     attributes: {
       slug: "royal-indian-odyssey",
       name: "The Royal Indian Odyssey — Majestic Luxury Suite",
+      shortName: "The Royal Indian Odyssey",
       location: "Vrindavan, Uttar Pradesh",
       category: "Luxury Suite",
       featured: true,
@@ -286,6 +293,7 @@ export const stayEntities: StrapiEntity<Stay>[] = [
     attributes: {
       slug: "yoga-cafe",
       name: "The Yoga Cafe — wellness stay",
+      shortName: "The Yoga Cafe",
       location: "Vrindavan, Uttar Pradesh",
       category: "Wellness Stay",
       featured: true,

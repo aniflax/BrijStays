@@ -184,23 +184,11 @@ export const stayImages: Record<
 };
 
 export const galleryStrip = [
-  {
-    src: stayImages["shyam-rang-palace"]?.hero ?? interior2,
-    alt: "Hand-painted heritage stay interior in Vrindavan",
-  },
-  {
-    src: stayImages["royal-indian-odyssey"]?.hero ?? interior1,
-    alt: "Luxury suite with Rajasthan-inspired décor",
-  },
-  {
-    src: stayImages["red-velvet-studio"]?.hero ?? hero2,
-    alt: "Designer studio next to ISKCON Vrindavan",
-  },
+  { src: interior2, alt: "Bedroom with linen bedding and morning light" },
+  { src: interior1, alt: "Oak and stone kitchen with brass fittings" },
+  { src: hero2, alt: "Living room in warm neutral tones" },
   { src: interior4, alt: "Stone basin in a minimal bathroom" },
-  { src: stayImages["all-things-pichwai"]?.hero ?? interior3, alt: "Pichwai art studio interior" },
-  { src: hero3, alt: "Vrindavan at dusk" },
-  {
-    src: stayImages["anand-van"]?.hero ?? projectSilverwood,
-    alt: "Chic apartment with a sunrise balcony",
-  },
+  { src: interior3, alt: "Travertine and oak material detail" },
+  { src: hero3, alt: "Aerial view of a landscaped residential community" },
+  { src: projectSilverwood, alt: "Duplex villa exterior at dusk" },
 ];
