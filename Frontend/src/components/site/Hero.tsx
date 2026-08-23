@@ -71,8 +71,8 @@ export function Hero() {
                   Discover Now
                 </Link>
 
-                <button
-                  type="button"
+                <a
+                  href="#enquire"
                   className="inline-flex cursor-pointer items-center gap-[13px] border-0 bg-transparent p-0 text-[#111]"
                 >
                   <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border-2 border-[#111] max-[600px]:h-10 max-[600px]:w-10">
@@ -81,7 +81,7 @@ export function Hero() {
                   <span className="font-poppins text-[15px] font-semibold max-[600px]:text-[13px]">
                     Watch Demo
                   </span>
-                </button>
+                </a>
               </div>
 
               <div className="mt-11 flex items-center gap-3 max-[600px]:mt-[26px] max-[600px]:gap-[10px]">
