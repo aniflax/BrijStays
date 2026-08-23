@@ -46,7 +46,7 @@ function ContactPage() {
       <PageHero
         eyebrow="Contact"
         title={"Let's Talk About\nYour Next Home"}
-        subtitle="Mon–Sat · 10am–7pm. We reply to every enquiry within one working day."
+        subtitle="Monday – Sunday: 24/7 Operations. We reply to every enquiry promptly."
         image={img.hero1}
         imageAlt="Minimalist residence facade at dusk"
         priority

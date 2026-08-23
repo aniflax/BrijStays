@@ -26,7 +26,7 @@ export const STATIC_SITE = {
   mission: "Redefining the standard of thoughtful living in Indore, Madhya Pradesh.",
   address:
     "Flat No. 110, 1st Floor, Krishna Castle Group Housing-5, Omaxe Eternity, Vrindavan, Mathura, Uttar Pradesh – 281121",
-  hours: "Mon–Sat · 10am–7pm",
+  hours: "Monday – Sunday: 24/7 Operations",
   rera: "RERA registered · Indore, Madhya Pradesh",
 } as const;
 
