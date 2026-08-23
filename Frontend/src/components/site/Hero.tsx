@@ -23,7 +23,7 @@ const searchFields = [
   {
     label: "Location",
     icon: MapPin,
-    value: "Los Angeles, California",
+    value: "Vrindavan, Uttar Pradesh",
   },
   {
     label: "Property Type",
