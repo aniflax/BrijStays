@@ -55,11 +55,11 @@ function DirectorPage() {
         </div>
       </section>
 
-      {/* Founders — two centered columns with leaf icon between */}
+      {/* Founders — two centered columns */}
       <section className="bg-background py-24 md:py-32">
         <div className="container-x mx-auto max-w-6xl">
           <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-24">
-            {leadership.map((member, index) => (
+            {leadership.map((member) => (
               <div key={member.name} className="relative text-center lg:text-left">
                 <div className="overflow-hidden rounded-t-[2rem] bg-secondary">
                   {member.photo ? (
@@ -74,14 +74,6 @@ function DirectorPage() {
                     />
                   ) : null}
                 </div>
-
-                {index === 0 ? (
-                  <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 lg:block">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-brand text-cream">
-                      <Leaf className="h-6 w-6" />
-                    </div>
-                  </div>
-                ) : null}
 
                 <div className="mt-10">
                   <h2 className="font-display text-3xl text-foreground md:text-4xl">
