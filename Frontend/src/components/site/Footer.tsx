@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Youtube } from "lucide-react";
 
 import { useSite } from "@/lib/site-context";
-import { mapEmbedFor, mapLinkFor } from "@/lib/site";
+import { MAP_QUERY, mapEmbedFor, mapLinkFor } from "@/lib/site";
 
 const socialIcons = { Instagram, Facebook, Linkedin, Youtube } as const;
 
@@ -89,7 +89,7 @@ export function Footer() {
         <div>
           <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Visit</div>
           <a
-            href={mapLinkFor("Indore, Madhya Pradesh, India")}
+            href={mapLinkFor(MAP_QUERY)}
             target="_blank"
             rel="noreferrer"
             className="mt-5 block overflow-hidden rounded-2xl border border-border hover-lift"
@@ -97,7 +97,7 @@ export function Footer() {
           >
             <iframe
               title="Brij Stays location"
-              src={mapEmbedFor("Indore, Madhya Pradesh, India")}
+              src={mapEmbedFor(MAP_QUERY)}
               className="pointer-events-none h-40 w-full"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
@@ -111,7 +111,7 @@ export function Footer() {
         <div className="container-x flex flex-col items-center justify-between gap-2 py-6 text-xs text-muted-foreground md:flex-row">
           <div>© {new Date().getFullYear()} Brij Stays. All Rights Reserved.</div>
           <div>{site.rera}</div>
-          <div>Crafted in Indore, India.</div>
+          <div>Crafted in Vrindavan, India.</div>
         </div>
       </div>
     </footer>

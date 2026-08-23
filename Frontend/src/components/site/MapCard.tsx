@@ -1,9 +1,9 @@
 import { ArrowUpRight } from "lucide-react";
-import { mapEmbedFor, mapLinkFor } from "@/lib/site";
+import { MAP_QUERY, mapEmbedFor, mapLinkFor } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 export function MapCard({
-  query = "Indore, Madhya Pradesh, India",
+  query = MAP_QUERY,
   className,
   height = 220,
   tone = "dark",

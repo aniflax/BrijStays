@@ -24,10 +24,15 @@ export const STATIC_SITE = {
   name: "Brij Stays",
   tagline: "Where Living Finds Its Meaning",
   mission: "Redefining the standard of thoughtful living in Indore, Madhya Pradesh.",
-  address: "Brij Stays, Indore, Madhya Pradesh, India",
+  address:
+    "Flat No. 110, 1st Floor, Krishna Castle Group Housing-5, Omaxe Eternity, Vrindavan, Mathura, Uttar Pradesh – 281121",
   hours: "Mon–Sat · 10am–7pm",
   rera: "RERA registered · Indore, Madhya Pradesh",
 } as const;
+
+/** Where the Google Map previews point. */
+export const MAP_QUERY =
+  "Flat No. 110, 1st Floor, Krishna Castle Group Housing-5, Omaxe Eternity, Vrindavan, Mathura, Uttar Pradesh – 281121";
 
 /** Raw shape of the Strapi "Personal Informations" single type. */
 export type StrapiMedia =

@@ -23,15 +23,15 @@ export const Route = createFileRoute("/contact")({
     const contactLine = phone && email ? `Call ${phone}, email ${email},` : "Contact our team";
     return {
       meta: [
-        { title: "Contact Brij Stays — Indore, Madhya Pradesh" },
+        { title: "Contact Brij Stays — Vrindavan, Uttar Pradesh" },
         {
           name: "description",
-          content: `${contactLine} or send an enquiry to arrange a site visit in Indore.`,
+          content: `${contactLine} or send an enquiry to arrange a stay or visit in Vrindavan.`,
         },
         { property: "og:title", content: "Contact Brij Stays" },
         {
           property: "og:description",
-          content: "Talk to our team about residences and weekend homes in Madhya Pradesh.",
+          content: "Talk to our team about stays and experiences in Vrindavan, Uttar Pradesh.",
         },
       ],
     };
