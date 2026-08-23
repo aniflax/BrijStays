@@ -46,10 +46,6 @@ export function StayCard({ stay, className }: { stay: Stay; className?: string }
             {stay.shortName}
           </Link>
         </h3>
-        <p className="mt-2 hidden text-sm leading-relaxed text-muted-foreground md:block">
-          {stay.shortDescription}
-        </p>
-
         <ul className="mt-4 flex flex-wrap gap-2">
           {[`${stay.guestCapacity} guests`, `${stay.bedrooms} bed`, `${stay.bathrooms} bath`].map(
             (value) => (
@@ -75,7 +71,7 @@ export function StayCard({ stay, className }: { stay: Stay; className?: string }
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`Inquire about ${stay.name} on WhatsApp`}
-            className="inline-flex h-10 flex-1 min-w-[130px] cursor-pointer items-center justify-center gap-2 rounded-full bg-[#25D366] px-4 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#1ebe5b]"
+            className="inline-flex h-10 flex-1 min-w-[130px] cursor-pointer items-center justify-center gap-2 rounded-full border border-foreground/20 px-4 text-sm font-medium text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-brand hover:text-brand"
           >
             <WhatsAppGlyph className="h-4 w-4" />
             WhatsApp

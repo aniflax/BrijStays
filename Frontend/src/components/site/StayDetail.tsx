@@ -1,6 +1,15 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowUpRight, Check, Star, X } from "lucide-react";
+import {
+  ArrowUpRight,
+  Check,
+  MapPin,
+  ShieldCheck,
+  Sparkles,
+  Star,
+  Wifi,
+  X,
+} from "lucide-react";
 
 import { PageHero } from "./PageHero";
 import { SectionHeading } from "./SectionHeading";
@@ -9,6 +18,29 @@ import { WhatsAppInquiry } from "./WhatsAppInquiry";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/button";
 import type { Stay } from "@/lib/data/types";
+
+const usps = [
+  {
+    icon: MapPin,
+    title: "Prime Locations",
+    caption: "Close to ISKCON, Prem Mandir and Banke Bihari.",
+  },
+  {
+    icon: Wifi,
+    title: "High-Speed Wi-Fi",
+    caption: "Fast, reliable internet in every stay.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "24/7 Guest Support",
+    caption: "Front desk and host assistance around the clock.",
+  },
+  {
+    icon: Sparkles,
+    title: "Transparent Pricing",
+    caption: "Clear rates, confirmed directly on WhatsApp.",
+  },
+];
 
 export function StayDetail({ stay }: { stay: Stay }) {
   const [lightbox, setLightbox] = useState<number | null>(null);
@@ -143,6 +175,27 @@ export function StayDetail({ stay }: { stay: Stay }) {
           </motion.div>
         ) : null}
       </AnimatePresence>
+
+      <section className="container-luxe pb-24 md:pb-32">
+        <SectionHeading
+          eyebrow="Why Stay With Us"
+          title="The Brij Stays standard"
+          className="mb-14"
+        />
+        <RevealGroup className="grid gap-6 md:grid-cols-2 lg:grid-cols-4" stagger={0.1}>
+          {usps.map((usp) => (
+            <RevealItem key={usp.title} className="h-full">
+              <div className="card-soft flex h-full flex-col gap-3 p-6">
+                <span className="grid h-11 w-11 place-items-center rounded-full bg-brand/10 text-brand">
+                  <usp.icon className="h-5 w-5" strokeWidth={1.6} />
+                </span>
+                <h3 className="mt-1 font-serif text-lg text-foreground">{usp.title}</h3>
+                <p className="text-sm leading-relaxed text-muted-foreground">{usp.caption}</p>
+              </div>
+            </RevealItem>
+          ))}
+        </RevealGroup>
+      </section>
 
       <section className="bg-secondary/60 py-24 md:py-32">
         <div className="container-luxe">
