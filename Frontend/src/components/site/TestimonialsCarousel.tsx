@@ -12,7 +12,7 @@ export function TestimonialsCarousel({ items }: { items: Testimonial[] }) {
     if (items.length <= 1) return;
     const timer = setInterval(() => {
       setIndex((i) => (i + 1) % items.length);
-    }, 3000);
+    }, 2000);
     return () => clearInterval(timer);
   }, [items.length]);
 
@@ -29,7 +29,7 @@ export function TestimonialsCarousel({ items }: { items: Testimonial[] }) {
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -12 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
         >
           <p className="mt-6 break-words font-serif text-2xl leading-snug text-foreground md:text-3xl">
             “{item.quote}”
