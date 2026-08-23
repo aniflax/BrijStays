@@ -143,36 +143,27 @@ function Home() {
         <GalleryMarquee images={galleryStrip} />
       </section>
 
-      {/* Upcoming destinations */}
-      <section className="container-luxe py-24 md:py-32">
-        <SectionHeading
-          eyebrow="Holiday & Weekend Homes"
-          title="Escape to Nature"
-          intro="Retreats within a comfortable drive of Indore — managed by us, so a second home does not become a second job."
-          action={
-            <Button asChild variant="luxeOutline" size="luxeSm">
-              <Link to="/upcoming-projects">All destinations</Link>
-            </Button>
-          }
-          className="mb-10"
-        />
-        <div className="mb-12 flex flex-wrap gap-3">
-          {["All", ...upcomingCategories].map((c) => (
-            <button
-              key={c}
-              type="button"
-              onClick={() => setCategory(c)}
-              className={`cursor-pointer rounded-full border px-5 py-2 text-xs tracking-[0.14em] uppercase transition-colors duration-300 ${
-                category === c
-                  ? "border-brand bg-brand text-white"
-                  : "border-border text-muted-foreground hover:border-brand hover:text-brand"
-              }`}
-            >
-              {c}
-            </button>
+      {/* Featured residences carousel */}
+      <section className="py-24 md:py-32">
+        <div className="container-luxe">
+          <SectionHeading
+            eyebrow="Find Your Dream Home"
+            title="Featured residences"
+            action={
+              <Button asChild variant="luxeOutline" size="luxeSm">
+                <Link to="/projects">All residences</Link>
+              </Button>
+            }
+            className="mb-14"
+          />
+        </div>
+        <div className="container-luxe">
+        <div className="grid gap-x-6 gap-y-10 md:grid-cols-3 lg:grid-cols-4">
+          {projectList.map((project) => (
+            <ProjectCard key={project.slug} project={project} />
           ))}
         </div>
-        <ProjectGrid projects={destinations} columns={3} variant="compact" />
+        </div>
       </section>
 
       {/* Location & connectivity */}
@@ -219,27 +210,36 @@ function Home() {
         </div>
       </section>
 
-      {/* Featured residences carousel */}
-      <section className="py-24 md:py-32">
-        <div className="container-luxe">
-          <SectionHeading
-            eyebrow="Find Your Dream Home"
-            title="Featured residences"
-            action={
-              <Button asChild variant="luxeOutline" size="luxeSm">
-                <Link to="/projects">All residences</Link>
-              </Button>
-            }
-            className="mb-14"
-          />
-        </div>
-        <div className="container-luxe">
-        <div className="grid gap-x-6 gap-y-10 md:grid-cols-3 lg:grid-cols-4">
-          {projectList.map((project) => (
-            <ProjectCard key={project.slug} project={project} />
+      {/* Upcoming destinations */}
+      <section className="container-luxe py-24 md:py-32">
+        <SectionHeading
+          eyebrow="Holiday & Weekend Homes"
+          title="Escape to Nature"
+          intro="Retreats within a comfortable drive of Indore — managed by us, so a second home does not become a second job."
+          action={
+            <Button asChild variant="luxeOutline" size="luxeSm">
+              <Link to="/upcoming-projects">All destinations</Link>
+            </Button>
+          }
+          className="mb-10"
+        />
+        <div className="mb-12 flex flex-wrap gap-3">
+          {["All", ...upcomingCategories].map((c) => (
+            <button
+              key={c}
+              type="button"
+              onClick={() => setCategory(c)}
+              className={`cursor-pointer rounded-full border px-5 py-2 text-xs tracking-[0.14em] uppercase transition-colors duration-300 ${
+                category === c
+                  ? "border-brand bg-brand text-white"
+                  : "border-border text-muted-foreground hover:border-brand hover:text-brand"
+              }`}
+            >
+              {c}
+            </button>
           ))}
         </div>
-        </div>
+        <ProjectGrid projects={destinations} columns={3} variant="compact" />
       </section>
 
       {/* Feature block + collage */}
