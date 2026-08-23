@@ -1,17 +1,10 @@
-export function GalleryMarquee({
-  images,
-}: {
-  images: { src: string; alt: string }[];
-}) {
+export function GalleryMarquee({ images }: { images: { src: string; alt: string }[] }) {
   const doubled = [...images, ...images];
   return (
     <div className="group relative overflow-hidden py-2" aria-label="Interiors gallery">
       <div className="animate-marquee flex w-max gap-4 group-hover:[animation-play-state:paused]">
         {doubled.map((image, i) => (
-          <figure
-            key={`${image.alt}-${i}`}
-            className="w-[280px] shrink-0 md:w-[380px]"
-          >
+          <figure key={`${image.alt}-${i}`} className="w-[280px] shrink-0 md:w-[380px]">
             <img
               src={image.src}
               alt={image.alt}

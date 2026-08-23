@@ -7,10 +7,8 @@ import { MAP_QUERY, mapEmbedFor, mapLinkFor } from "@/lib/site";
 const socialIcons = { Instagram, Facebook, Linkedin, Youtube } as const;
 
 const exploreLinks = [
-  { label: "Projects", to: "/projects" },
-  { label: "Upcoming Projects", to: "/upcoming-projects" },
+  { label: "Stays", to: "/stays" },
   { label: "Media", to: "/media" },
-  { label: "Careers", to: "/careers" },
   { label: "Contact", to: "/contact" },
 ];
 
@@ -72,13 +70,19 @@ export function Footer() {
             </li>
             <li className="flex gap-2">
               <Phone size={16} className="mt-0.5 shrink-0" />
-              <a href={site.phoneHref} className="link-underline text-foreground/80 hover:text-brand">
+              <a
+                href={site.phoneHref}
+                className="link-underline text-foreground/80 hover:text-brand"
+              >
                 {site.phoneDisplay}
               </a>
             </li>
             <li className="flex gap-2">
               <Mail size={16} className="mt-0.5 shrink-0" />
-              <a href={`mailto:${site.email}`} className="link-underline text-foreground/80 hover:text-brand">
+              <a
+                href={`mailto:${site.email}`}
+                className="link-underline text-foreground/80 hover:text-brand"
+              >
                 {site.email}
               </a>
             </li>
@@ -110,7 +114,7 @@ export function Footer() {
       <div className="border-t border-border">
         <div className="container-x flex flex-col items-center justify-between gap-2 py-6 text-xs text-muted-foreground md:flex-row">
           <div>© {new Date().getFullYear()} Brij Stays. All Rights Reserved.</div>
-          <div>{site.rera}</div>
+          <div>{site.gst}</div>
           <div>Crafted in Vrindavan, India.</div>
         </div>
       </div>

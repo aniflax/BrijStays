@@ -6,7 +6,6 @@ import type { Testimonial } from "@/lib/data/types";
 export function TestimonialsCarousel({ items }: { items: Testimonial[] }) {
   const [index, setIndex] = useState(0);
   const item = items[index] ?? items[0];
-  if (!item) return null;
 
   useEffect(() => {
     if (items.length <= 1) return;
@@ -15,6 +14,8 @@ export function TestimonialsCarousel({ items }: { items: Testimonial[] }) {
     }, 2000);
     return () => clearInterval(timer);
   }, [items.length]);
+
+  if (!item) return null;
 
   return (
     <div className="relative min-w-0 overflow-hidden rounded-[2rem] border border-border bg-white p-8 md:p-14">

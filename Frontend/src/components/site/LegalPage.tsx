@@ -20,7 +20,7 @@ export function LegalPage({
         title={title}
         subtitle={`Last updated ${updated}`}
         image={img.bannerDark}
-        imageAlt="Colonnade of a residence at night"
+        imageAlt="A warm boutique stay at night"
         priority
       />
       <div className="container-luxe grid gap-14 py-24 md:py-32 lg:grid-cols-12">

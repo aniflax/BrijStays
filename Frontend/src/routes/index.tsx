@@ -1,38 +1,37 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { MapPin, ShieldCheck, Trees } from "lucide-react";
+import { BedDouble, MapPin, MessageCircle, ShieldCheck, Sparkles, Wifi } from "lucide-react";
 
 import { Hero } from "@/components/site/Hero";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { StatRow } from "@/components/site/StatCounter";
 import { GalleryMarquee } from "@/components/site/GalleryMarquee";
-import { ProjectGrid } from "@/components/site/ProjectGrid";
-import { ProjectCard } from "@/components/site/ProjectCard";
+import { StayCard } from "@/components/site/StayCard";
 import { BlogCard } from "@/components/site/BlogCard";
 import { TestimonialsCarousel } from "@/components/site/TestimonialsCarousel";
 import { EnquiryForm } from "@/components/site/EnquiryForm";
+import { WhatsAppInquiry } from "@/components/site/WhatsAppInquiry";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/button";
-import { projectList } from "@/lib/data/projects";
-import { upcomingCategories, upcomingProjectList } from "@/lib/data/upcomingProjects";
-import { blogPostList } from "@/lib/data/blogPosts";
+import { stayList } from "@/lib/data/stays";
 import { testimonialList } from "@/lib/data/testimonials";
-import { galleryStrip, img } from "@/lib/data/images";
+import { blogPostList } from "@/lib/data/blogPosts";
+import { galleryStrip, img, stayImages } from "@/lib/data/images";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Brij Stays — Where Living Finds Its Meaning | Indore" },
+      { title: "Brij Stays — Premium Stays in Vrindavan" },
       {
         name: "description",
         content:
-          "Thoughtfully designed residences in Indore, Madhya Pradesh. Independent floors, garden homes, duplex villas and sky residences built with quality that lasts.",
+          "Curated boutique stays in Vrindavan near ISKCON, Prem Mandir and Banke Bihari. Premium, comfortable and warmly hosted — inquire on WhatsApp.",
       },
-      { property: "og:title", content: "Brij Stays — Where Living Finds Its Meaning" },
+      { property: "og:title", content: "Brij Stays — Premium Stays in Vrindavan" },
       {
         property: "og:description",
         content:
-          "Considered residences in Indore, Madhya Pradesh — crafted with quality that lasts, creating homes for generations.",
+          "Premium, comfortable and curated boutique stays in Vrindavan, Uttar Pradesh — near ISKCON, Prem Mandir and Banke Bihari.",
       },
     ],
   }),
@@ -40,73 +39,102 @@ export const Route = createFileRoute("/")({
 });
 
 const stats = [
-  { value: 900, suffix: "+", label: "Homes", caption: "Built to last across Madhya Pradesh." },
-  { value: 22, suffix: "yrs", label: "Design", caption: "Led by excellence, not by trend." },
-  { value: 100, suffix: "%", label: "Quality", caption: "Checked in every detail, every stage." },
+  { value: 8, suffix: "", label: "Curated Stays", caption: "Boutique stays across Vrindavan." },
+  { value: 311, suffix: "+", label: "Guest Reviews", caption: "Verified ratings on Airbnb." },
+  {
+    value: 24,
+    suffix: "/7",
+    label: "Guest Support",
+    caption: "Front desk and host care, always on.",
+  },
 ];
 
 const features = [
   {
-    title: "Crafted",
-    body: "Materials are chosen for their fifth year, not their first. Honed stone, engineered oak, matte ironmongery — finishes that wear in rather than out.",
+    title: "Warm",
+    body: "Every stay is hosted personally — from check-in to local guidance on temple timings, darshan and getting around Vrindavan.",
   },
   {
-    title: "Connected",
-    body: "Every site is picked for the commute it spares you. Schools, hospitals and the ring road stay within a short drive of every project we take up.",
+    title: "Comfortable",
+    body: "Hygienic, fully furnished rooms with high-speed Wi-Fi, modern interiors and thoughtful daily essentials.",
   },
   {
-    title: "Complete",
-    body: "Water treatment, back-up, drainage and parking are specified before the elevation is drawn. The unglamorous parts decide how a home ages.",
+    title: "Transparent",
+    body: "Clear pricing and flexible check-in. Availability and rates are confirmed directly on WhatsApp — no hidden charges.",
   },
 ];
 
-const locationTags = [
+const services = [
+  {
+    icon: BedDouble,
+    title: "Executive Stay Suites & Rooms",
+    caption: "Premium rooms and suites for a comfortable, restful stay.",
+  },
   {
     icon: MapPin,
-    title: "Seamless Connectivity",
-    caption: "Ring road, airport and metro corridor within reach.",
+    title: "Vacation Rentals & Homestays",
+    caption: "Curated homes that feel personal, minutes from the temples.",
   },
   {
     icon: ShieldCheck,
-    title: "Safe & Secure",
-    caption: "Gated communities with round-the-clock security.",
+    title: "Long-term Serviced Apartments",
+    caption: "Daily, weekly and monthly stays with housekeeping and support.",
   },
   {
-    icon: Trees,
-    title: "Peaceful Living",
-    caption: "Landscaped courtyards at the centre of every plan.",
+    icon: MessageCircle,
+    title: "Corporate Lodging Solutions",
+    caption: "Reliable accommodation and bulk booking packages for teams.",
+  },
+];
+
+const uspTags = [
+  {
+    icon: MapPin,
+    title: "Prime Locations",
+    caption: "Close to ISKCON, Prem Mandir and Banke Bihari.",
+  },
+  {
+    icon: Wifi,
+    title: "High-Speed Wi-Fi",
+    caption: "Fast, reliable internet in every stay.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "24/7 Guest Support",
+    caption: "Front desk and host assistance around the clock.",
+  },
+  {
+    icon: Sparkles,
+    title: "Transparent Pricing",
+    caption: "Clear rates, confirmed directly on WhatsApp.",
   },
 ];
 
 function Home() {
-  const [category, setCategory] = useState<string>("All");
-  const destinations =
-    category === "All"
-      ? upcomingProjectList
-      : upcomingProjectList.filter((p) => p.category === category);
+  const featuredStay = stayList[0]!;
+  const templeImage = stayImages[featuredStay.slug]?.hero ?? img.hero2;
 
   return (
     <>
       <Hero />
 
-      {/* More Than Four Walls */}
+      {/* More Than a Stay */}
       <section className="container-luxe py-24 md:py-32">
         <div className="grid gap-14 lg:grid-cols-12 lg:items-center">
           <Reveal className="lg:col-span-5">
-            <p className="mb-4 text-xs uppercase tracking-[0.28em] text-brand">
-              More Than Four Walls
-            </p>
+            <p className="mb-4 text-xs uppercase tracking-[0.28em] text-brand">More Than a Stay</p>
             <h2 className="hidden font-display text-4xl leading-[1.05] tracking-tight text-foreground md:text-5xl md:block">
-              A home is the one place that keeps a record of your life
+              A stay in Vrindavan should feel like coming home
             </h2>
             <p className="mt-6 hidden text-base leading-relaxed text-muted-foreground md:block">
-              We build in Indore because it is a city still deciding what it will become. The homes
-              we put here are meant to outlast that decision — plans that hold a growing family,
-              courtyards that gather neighbours, materials that soften rather than fade.
+              We host in the spiritual region of Brij because we believe warm, personal
+              accommodation is part of the experience itself. Every Brij Stays property is curated,
+              cleaned and cared for — so you can focus on your darshan, your retreat or simply time
+              with family.
             </p>
             <p className="mt-4 hidden text-base leading-relaxed text-muted-foreground md:block">
-              Nothing here is designed to impress a passer-by. It is designed for the fifteenth
-              year, when the trees have grown and the house still feels right.
+              From studios next to ISKCON to heritage apartments and skyline suites, each stay is
+              verified on Airbnb and hosted with the same standard of care.
             </p>
             <Button asChild variant="luxeOutline" size="luxe" className="mt-9">
               <Link to="/about">About Brij Stays</Link>
@@ -116,7 +144,7 @@ function Home() {
             <div className="relative">
               <img
                 src={img.hero2}
-                alt="Living room in warm neutral tones with tall windows"
+                alt="Warm boutique stay interior with tall windows"
                 width={1600}
                 height={1000}
                 loading="lazy"
@@ -126,9 +154,9 @@ function Home() {
               <div className="animate-floaty absolute -top-6 -left-6 hidden h-24 w-24 rounded-full border border-brand/30 md:block" />
               <div className="animate-floaty absolute -right-4 -bottom-8 hidden h-32 w-32 rounded-3xl border border-brand/20 bg-white/40 backdrop-blur-sm md:block" />
               <div className="absolute -bottom-6 left-6 hidden max-w-[230px] rounded-2xl border border-border bg-white/90 p-4 shadow-lg backdrop-blur md:block">
-                <div className="text-xs tracking-widest text-brand uppercase">Trusted by</div>
-                <div className="mt-1 font-serif text-2xl text-foreground">900+ Homes</div>
-                <div className="text-xs text-muted-foreground">across Madhya Pradesh</div>
+                <div className="text-xs tracking-widest text-brand uppercase">Rated on Airbnb</div>
+                <div className="mt-1 font-serif text-2xl text-foreground">4.9 / 5</div>
+                <div className="text-xs text-muted-foreground">across 311 guest reviews</div>
               </div>
             </div>
           </Reveal>
@@ -143,36 +171,36 @@ function Home() {
         <GalleryMarquee images={galleryStrip} />
       </section>
 
-      {/* Featured residences carousel */}
+      {/* Featured stays */}
       <section className="py-24 md:py-32">
         <div className="container-luxe">
           <SectionHeading
-            eyebrow="Find Your Dream Home"
-            title="Featured residences"
+            eyebrow="Find Your Stay"
+            title="Featured stays in Vrindavan"
             action={
               <Button asChild variant="luxeOutline" size="luxeSm">
-                <Link to="/projects">All residences</Link>
+                <Link to="/stays">All stays</Link>
               </Button>
             }
             className="mb-14"
           />
         </div>
         <div className="container-luxe">
-        <div className="grid gap-x-6 gap-y-10 md:grid-cols-3 lg:grid-cols-4">
-          {projectList.map((project) => (
-            <ProjectCard key={project.slug} project={project} />
-          ))}
-        </div>
+          <div className="grid gap-x-6 gap-y-10 md:grid-cols-3 lg:grid-cols-4">
+            {stayList.map((stay) => (
+              <StayCard key={stay.slug} stay={stay} />
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Location & connectivity */}
+      {/* Vrindavan & the temples */}
       <section className="bg-secondary/60 py-24 md:py-32">
         <div className="container-luxe grid gap-14 lg:grid-cols-2 lg:items-center">
           <Reveal>
             <img
-              src={img.indoreAerial}
-              alt="Aerial view of Indore at dusk"
+              src={templeImage}
+              alt={featuredStay.heroAlt}
               width={1600}
               height={1200}
               loading="lazy"
@@ -182,18 +210,18 @@ function Home() {
           </Reveal>
           <Reveal delay={0.15}>
             <p className="mb-4 text-xs uppercase tracking-[0.28em] text-brand">
-              Location & Connectivity
+              Vrindavan &amp; the Temples
             </p>
             <h2 className="font-display text-4xl leading-[1.05] tracking-tight text-foreground md:text-5xl">
-              Indore — Central India's growth hub
+              Stay close to the spiritual heart of Brij
             </h2>
             <p className="mt-6 hidden text-[0.98rem] leading-relaxed text-muted-foreground md:block">
-              Infrastructure here arrived ahead of demand. The Super Corridor, the western ring road
-              and the metro alignment were built on projections rather than pressure, which is why
-              commutes have held while the city has grown.
+              Our stays are within a short walk or drive of ISKCON Vrindavan, Prem Mandir and Banke
+              Bihari Temple. Wake up for the Mangala Aarti, return for the evening light show, and
+              spend the hours between at your ease.
             </p>
             <RevealGroup className="mt-10 flex flex-col gap-6" stagger={0.1}>
-              {locationTags.map((tag) => (
+              {uspTags.map((tag) => (
                 <RevealItem
                   key={tag.title}
                   className="flex items-start gap-4 border-t border-border pt-5"
@@ -210,43 +238,34 @@ function Home() {
         </div>
       </section>
 
-      {/* Upcoming destinations */}
+      {/* Services */}
       <section className="container-luxe py-24 md:py-32">
         <SectionHeading
-          eyebrow="Holiday & Weekend Homes"
-          title="Escape to Nature"
-          intro="Retreats within a comfortable drive of Indore — managed by us, so a second home does not become a second job."
-          action={
-            <Button asChild variant="luxeOutline" size="luxeSm">
-              <Link to="/upcoming-projects">All destinations</Link>
-            </Button>
-          }
-          className="mb-10"
+          eyebrow="Services"
+          title="Hospitality that fits your journey"
+          intro="From a weekend darshan to a month-long stay, we host every kind of guest — travelers, devotees, families and professionals."
+          className="mb-14"
         />
-        <div className="mb-12 flex flex-wrap gap-3">
-          {["All", ...upcomingCategories].map((c) => (
-            <button
-              key={c}
-              type="button"
-              onClick={() => setCategory(c)}
-              className={`cursor-pointer rounded-full border px-5 py-2 text-xs tracking-[0.14em] uppercase transition-colors duration-300 ${
-                category === c
-                  ? "border-brand bg-brand text-white"
-                  : "border-border text-muted-foreground hover:border-brand hover:text-brand"
-              }`}
-            >
-              {c}
-            </button>
+        <RevealGroup className="grid gap-6 md:grid-cols-2 lg:grid-cols-4" stagger={0.1}>
+          {services.map((s) => (
+            <RevealItem key={s.title} className="h-full">
+              <div className="card-soft flex h-full flex-col gap-3 p-6">
+                <span className="grid h-11 w-11 place-items-center rounded-full bg-brand/10 text-brand">
+                  <s.icon className="h-5 w-5" strokeWidth={1.6} />
+                </span>
+                <h3 className="mt-1 font-serif text-lg text-foreground">{s.title}</h3>
+                <p className="text-sm leading-relaxed text-muted-foreground">{s.caption}</p>
+              </div>
+            </RevealItem>
           ))}
-        </div>
-        <ProjectGrid projects={destinations} columns={3} variant="compact" />
+        </RevealGroup>
       </section>
 
-      {/* Feature block + collage */}
+      {/* The Brij Stays standard */}
       <section className="container-luxe pb-24 md:pb-32">
         <SectionHeading
           eyebrow="The Brij Stays Standard"
-          title={"A home built the way\nyou always imagined"}
+          title={"Hospitality the way\nyou always imagined"}
           className="mb-14"
         />
         <div className="grid gap-14 lg:grid-cols-12">
@@ -276,12 +295,12 @@ function Home() {
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* Verified guest ratings */}
       <section className="bg-secondary/60 py-24 md:py-32">
         <div className="container-luxe">
           <SectionHeading
-            eyebrow="In Their Words"
-            title="Residents on living with us"
+            eyebrow="Guest Reviews"
+            title="Verified ratings from Airbnb guests"
             className="mb-14"
           />
           <TestimonialsCarousel items={testimonialList} />
@@ -292,7 +311,7 @@ function Home() {
       <section className="container-luxe py-24 md:py-32">
         <SectionHeading
           eyebrow="Insights & Updates"
-          title="Notes from the studio"
+          title="Notes from Vrindavan"
           action={
             <Button asChild variant="luxeOutline" size="luxeSm">
               <Link to="/media">All articles</Link>
@@ -313,13 +332,19 @@ function Home() {
       <section id="enquire" className="bg-secondary/60 py-24 md:py-32">
         <div className="container-luxe grid gap-14 lg:grid-cols-12 lg:items-center">
           <div className="lg:col-span-5">
-            <p className="mb-4 text-xs uppercase tracking-[0.28em] text-brand">Get in Touch</p>
+            <p className="mb-4 text-xs uppercase tracking-[0.28em] text-brand">Plan Your Stay</p>
             <h2 className="font-display text-4xl leading-[1.05] tracking-tight text-foreground md:text-5xl">
-              Ready to find your perfect home?
+              Ready to plan your stay in Vrindavan?
             </h2>
             <p className="mt-6 max-w-sm text-base leading-relaxed text-muted-foreground">
-              Leave your details and a member of our team will call you back within one working day.
+              Leave your details and we will call you back within one working day. For faster
+              confirmation, message us on WhatsApp.
             </p>
+            <WhatsAppInquiry
+              title="a stay in Vrindavan"
+              label="Chat on WhatsApp"
+              className="mt-8"
+            />
           </div>
           <div className="rounded-3xl border border-border bg-white p-8 shadow-[var(--shadow-soft)] lg:col-span-7 lg:p-10">
             <EnquiryForm source="home" />

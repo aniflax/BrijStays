@@ -45,10 +45,10 @@ function ContactPage() {
     <>
       <PageHero
         eyebrow="Contact"
-        title={"Let's Talk About\nYour Next Home"}
+        title={"Plan Your Stay\nin Vrindavan"}
         subtitle="Monday – Sunday: 24/7 Operations. We reply to every enquiry promptly."
         image={img.hero1}
-        imageAlt="Minimalist residence facade at dusk"
+        imageAlt="Boutique stay in Vrindavan at dusk"
         priority
       />
 
@@ -79,6 +79,7 @@ function ContactPage() {
                   <span className="text-muted-foreground">{site.hours}</span>
                 </li>
               </ul>
+              <p className="mt-6 text-xs text-muted-foreground">{site.gst}</p>
               <div className="mt-8 flex items-center gap-3">
                 {site.socials.map((s) => {
                   const Icon = socialIcons[s.icon as keyof typeof socialIcons];
@@ -104,7 +105,7 @@ function ContactPage() {
             <Reveal>
               <p className="eyebrow mb-5">Send an enquiry</p>
               <h2 className="font-display text-4xl leading-[1.05] tracking-tight text-foreground md:text-5xl">
-                Tell us what you are looking for
+                Tell us about your stay
               </h2>
               <EnquiryForm
                 className="mt-10"

@@ -5,22 +5,22 @@ import { PageHero } from "@/components/site/PageHero";
 import { SectionHeading } from "@/components/site/SectionHeading";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { CtaBanner } from "@/components/site/CtaBanner";
-import { img } from "@/lib/data/images";
+import { img, stayImages } from "@/lib/data/images";
 import { director } from "@/lib/data/teamMembers";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About Brij Stays — Thoughtful Living in Indore" },
+      { title: "About Brij Stays — Boutique Stays in Vrindavan" },
       {
         name: "description",
         content:
-          "Our vision, mission and standard: how Brij Stays plans, specifies and delivers residences in Indore, Madhya Pradesh.",
+          "Our vision, mission and standard: how Brij Stays curates premium, comfortable and warm boutique stays in Vrindavan, Uttar Pradesh.",
       },
       { property: "og:title", content: "About Brij Stays" },
       {
         property: "og:description",
-        content: "Redefining the standard of thoughtful living in Indore, Madhya Pradesh.",
+        content: "Premium, comfortable and curated boutique stays in Vrindavan.",
       },
     ],
   }),
@@ -28,10 +28,10 @@ export const Route = createFileRoute("/about")({
 });
 
 const checklist = [
-  "Thoughtfully designed spaces that hold a family as it grows",
-  "Attention to detail in every specification and every joint",
-  "Prime locations chosen for the commute they spare you",
-  "A commitment to customer satisfaction long past possession",
+  "Premium stays verified on Airbnb with real guest reviews",
+  "Prime central locations close to ISKCON, Prem Mandir and Banke Bihari",
+  "24/7 guest support and concierge-style local guidance",
+  "Transparent pricing and flexible check-in, confirmed on WhatsApp",
 ];
 
 function AboutPage() {
@@ -39,10 +39,10 @@ function AboutPage() {
     <>
       <PageHero
         eyebrow="About Us"
-        title={"Redefining the Standard\nof Thoughtful Living"}
-        subtitle="We build a small number of residences in Indore each year, and we build them to be lived in for decades."
-        image={img.hero3}
-        imageAlt="Aerial view of a landscaped residential community at dusk"
+        title={"Hospitality rooted in\nthe heart of Brij"}
+        subtitle="Premium, comfortable and curated stays in Vrindavan — hosted with warmth, integrity and personal care."
+        image={stayImages["shyam-rang-palace"]?.hero ?? img.hero3}
+        imageAlt="Hand-painted heritage stay interior in Vrindavan"
         priority
       />
 
@@ -54,9 +54,10 @@ function AboutPage() {
               The foundation of everything we do
             </h2>
             <p className="mt-6 text-[0.98rem] leading-relaxed text-muted-foreground">
-              Brij Stays exists because too much of what gets built in growing cities is designed to
-              be sold rather than lived in. We took the opposite position: fewer projects, longer
-              timelines, and a specification we would accept for our own families.
+              Brij Stays was founded on a simple belief: the place you stay shapes how you
+              experience a place. We bring warm, personal home-sharing together with modern,
+              high-quality stays — so every guest in Vrindavan feels welcomed, valued and entirely
+              at home.
             </p>
           </Reveal>
           <RevealGroup className="flex flex-col gap-5 lg:col-span-6" stagger={0.1}>
@@ -75,23 +76,25 @@ function AboutPage() {
           <Reveal>
             <p className="eyebrow mb-5">Our Mission</p>
             <h3 className="font-display text-2xl leading-snug">
-              To build homes in Central India that are still worth owning a generation from now.
+              To deliver consistent high-quality service, exceptional guest experiences and modern
+              amenities across all our locations.
             </h3>
             <p className="mt-5 text-[0.95rem] leading-relaxed text-muted-foreground">
-              That means resisting the temptation to add floors, shrink balconies or substitute
-              specification once a project is sold. Every decision after booking is made in the
-              buyer's favour, because the decision was made honestly before it.
+              That means hygienic, fully furnished rooms, dependable support around the clock, and
+              the small courtesies that turn a stay into a memory. Every property is curated before
+              it is listed and cared for after every checkout.
             </p>
           </Reveal>
           <Reveal delay={0.15}>
             <p className="eyebrow mb-5">Our Vision</p>
             <h3 className="font-display text-2xl leading-snug">
-              To be the developer Indore families recommend without being asked.
+              To become a trusted name in hospitality — combining comfort, affordability and
+              personalized care.
             </h3>
             <p className="mt-5 text-[0.95rem] leading-relaxed text-muted-foreground">
-              We measure ourselves on referrals rather than launches. More than half of our buyers
-              come from someone who already lives in a Brij Stays home, which is the only marketing
-              metric we take seriously.
+              We measure ourselves on the guests who return, and on the travellers who arrive
+              because someone they trust recommended us. That is the only marketing metric we take
+              seriously.
             </p>
           </Reveal>
         </div>
@@ -100,8 +103,8 @@ function AboutPage() {
       <section className="container-luxe py-24 md:py-32">
         <Reveal className="mx-auto max-w-3xl text-center">
           <p className="font-display text-[clamp(1.5rem,3.2vw,2.5rem)] leading-[1.3] italic">
-            “A home is not sold in an afternoon. It is chosen over months, and lived in for decades
-            — we build for the second part.”
+            “A stay is not measured in nights. It is measured in how welcome a guest feels the
+            moment they arrive.”
           </p>
           <p className="mt-8 text-[0.7rem] tracking-[0.2em] text-muted-foreground uppercase">
             {director.name} · {director.role}
@@ -142,13 +145,13 @@ function AboutPage() {
       </section>
 
       <CtaBanner
-        eyebrow="Visit Us"
-        title="See the difference on site"
-        intro="Specification arguments are settled quickly on a site visit. Ours run Monday to Saturday."
-        image={img.projectSilverwood}
-        imageAlt="Duplex villa exterior at dusk"
-        ctaLabel="Book a Visit"
-        ctaTo="/contact"
+        eyebrow="Plan Your Stay"
+        title="Experience Brij Stays for yourself"
+        intro="Browse the collection and message us on WhatsApp — we will help you choose the stay that fits your journey."
+        image={stayImages["anand-van"]?.hero ?? img.projectSilverwood}
+        imageAlt="Chic apartment with a sunrise balcony in Vrindavan"
+        ctaLabel="Explore Stays"
+        ctaTo="/stays"
       />
     </>
   );

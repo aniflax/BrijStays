@@ -29,23 +29,23 @@ function PrivacyPolicyPage() {
           id: "information-we-collect",
           heading: "Information we collect",
           paragraphs: [
-            "We collect only what an enquiry needs: your name, phone number, email address, the project you are interested in and anything you choose to tell us in the message field.",
-            "If you apply for a role, we also hold the details and documents you submit for that application.",
+            "We collect only what an enquiry needs: your name, phone number, email address, the stay you are interested in and anything you choose to tell us in the message field.",
+            "If you contact us through WhatsApp, we hold the conversation for the purpose of serving your enquiry.",
           ],
         },
         {
           id: "how-we-use-it",
           heading: "How we use it",
           paragraphs: [
-            "Your details are used to respond to your enquiry, arrange site visits and share project material you have asked for. We do not sell or rent your information to anyone.",
-            "We may contact you about a project you enquired about. You can ask us to stop at any time and we will.",
+            "Your details are used to respond to your enquiry, arrange bookings and share stay information you have asked for. We do not sell or rent your information to anyone.",
+            "We may contact you about a stay you enquired about. You can ask us to stop at any time and we will.",
           ],
         },
         {
           id: "retention-and-security",
           heading: "Retention and security",
           paragraphs: [
-            "Enquiry records are retained for as long as needed to serve you and to meet legal obligations, then deleted. Access is limited to the sales and management team.",
+            "Enquiry records are retained for as long as needed to serve you and to meet legal obligations, then deleted. Access is limited to the Brij Stays team.",
           ],
         },
         {

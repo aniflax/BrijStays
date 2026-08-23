@@ -69,11 +69,7 @@ export function RevealGroup({
   );
 }
 
-export function RevealItem({
-  children,
-  className,
-  as = "div",
-}: Omit<RevealProps, "delay">) {
+export function RevealItem({ children, className, as = "div" }: Omit<RevealProps, "delay">) {
   const Comp = motion[as];
   return (
     <Comp className={className} variants={fadeUp}>

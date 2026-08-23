@@ -7,50 +7,16 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import type { RouterSubscriber } from "@tanstack/react-router";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { WhatsAppButton } from "@/components/site/WhatsAppButton";
 import { Toaster } from "@/components/ui/sonner";
 import { SiteProvider } from "@/lib/site-context";
 import { fetchSite } from "@/lib/site";
-
-declare global {
-  interface Window {
-    gtag?: (...args: unknown[]) => void;
-  }
-}
-
-function usePageViewTracking() {
-  const router = useRouter();
-  const isInitialLoad = useRef(true);
-
-  useEffect(() => {
-    const sendPageView = () => {
-      // The gtag config snippet already fires page_view on the initial page
-      // load; only track subsequent client-side navigations.
-      if (isInitialLoad.current) {
-        isInitialLoad.current = false;
-        return;
-      }
-      try {
-        const { pathname, search, hash } = router.state.location;
-        window.gtag?.("event", "page_view", {
-          page_path: `${pathname}${search}${hash}`,
-          page_title: document.title,
-        });
-      } catch {
-        // Analytics must never break navigation.
-      }
-    };
-    const unsubscribe = router.subscribe("onResolved", sendPageView);
-    return unsubscribe;
-  }, [router]);
-}
 
 function NotFoundComponent() {
   return (
@@ -113,15 +79,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Brij Stays — Thoughtful Homes in Indore" },
+      { title: "Brij Stays — Premium Stays in Vrindavan" },
       {
         name: "description",
         content:
-          "Brij Stays builds considered residences in Indore, Madhya Pradesh — where living finds its meaning.",
+          "Brij Stays curates premium, comfortable boutique stays in Vrindavan, Uttar Pradesh — near ISKCON, Prem Mandir and Banke Bihari.",
       },
       { name: "author", content: "Brij Stays" },
-      { name: "google-adsense-account", content: "ca-pub-4893209698743849" },
       { property: "og:site_name", content: "Brij Stays" },
+      { property: "og:locale", content: "en_IN" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -133,24 +99,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&family=Poppins:wght@400;500;600;700&display=swap",
-      },
-    ],
-    scripts: [
-      {
-        src: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4893209698743849",
-        async: true,
-        crossOrigin: "anonymous",
-      },
-      {
-        src: "https://www.googletagmanager.com/gtag/js?id=G-8R20S13F6M",
-        async: true,
-      },
-      {
-        children: `window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-
-gtag('config', 'G-8R20S13F6M');`,
       },
     ],
   }),
@@ -181,8 +129,6 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const { site } = Route.useLoaderData();
-
-  usePageViewTracking();
 
   return (
     <QueryClientProvider client={queryClient}>

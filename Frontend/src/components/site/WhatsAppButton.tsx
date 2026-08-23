@@ -1,11 +1,16 @@
 import { useSite } from "@/lib/site-context";
+import { WHATSAPP_NUMBER } from "@/lib/site";
 
 export function WhatsAppButton() {
   const site = useSite();
-  if (!site.whatsapp) return null;
+  const href =
+    site.whatsapp ||
+    `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+      "Hi Brij Stays, I'd like to know more about your stays in Vrindavan.",
+    )}`;
   return (
     <a
-      href={site.whatsapp}
+      href={href}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat with Brij Stays on WhatsApp"

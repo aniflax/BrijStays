@@ -23,6 +23,8 @@ const buttonVariants = cva(
         luxeLight:
           "border border-background/40 bg-transparent text-background font-medium transition-all duration-300 hover:bg-background hover:text-foreground",
         gold: "bg-brand text-white font-medium transition-all duration-300 hover:bg-brand-hover hover:-translate-y-0.5",
+        whatsapp:
+          "bg-[#25D366] text-white font-medium transition-all duration-300 hover:bg-[#1ebe5b] hover:-translate-y-0.5",
         pill: "border border-border bg-transparent text-foreground font-medium transition-colors duration-300 hover:border-brand hover:text-brand",
       },
       size: {
@@ -40,7 +42,6 @@ const buttonVariants = cva(
     },
   },
 );
-
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {

@@ -25,7 +25,6 @@ export type ApplicationPayload = {
 export type ApiResult = { ok: true; id: string } | { ok: false; error: string };
 
 async function mockRequest(label: string, payload: unknown): Promise<ApiResult> {
-  // eslint-disable-next-line no-console
   console.log(`[${label}]`, payload);
   await new Promise((resolve) => setTimeout(resolve, 900));
   return { ok: true, id: `mock_${Date.now()}` };

@@ -4,8 +4,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { projectList } from "@/lib/data/projects";
-import { upcomingProjectList } from "@/lib/data/upcomingProjects";
+import { stayList } from "@/lib/data/stays";
 
 type NavChild = { label: string; to: string; params?: Record<string, string> };
 type NavItem = { label: string; to?: string; children?: NavChild[] };
@@ -13,17 +12,16 @@ type NavItem = { label: string; to?: string; children?: NavChild[] };
 const companyChildren: NavChild[] = [
   { label: "About Us", to: "/about" },
   { label: "Founders & Leadership", to: "/director" },
-  { label: "Careers", to: "/careers" },
   { label: "Privacy Policy", to: "/privacy-policy" },
   { label: "Terms & Conditions", to: "/terms-and-conditions" },
 ];
 
-const projectsChildren: NavChild[] = [
-  { label: "All Residences", to: "/projects" },
-  ...projectList.map((p) => ({
-    label: `${p.name} — ${p.locality}`,
-    to: "/projects/$slug",
-    params: { slug: p.slug },
+const staysChildren: NavChild[] = [
+  { label: "All Stays", to: "/stays" },
+  ...stayList.map((s) => ({
+    label: s.name,
+    to: "/stays/$slug",
+    params: { slug: s.slug },
   })),
 ];
 
@@ -34,7 +32,7 @@ const mediaChildren: NavChild[] = [
 
 const topLinks: NavItem[] = [
   { label: "About Us", children: companyChildren },
-  { label: "Properties", children: projectsChildren },
+  { label: "Stays", children: staysChildren },
   { label: "Media", children: mediaChildren },
 ];
 
@@ -107,25 +105,10 @@ const navItems: NavItem[] = [
     children: companyChildren,
   },
   {
-    label: "Projects",
-    children: projectsChildren,
+    label: "Stays",
+    children: staysChildren,
   },
-  {
-    label: "Upcoming Projects",
-    children: [
-      { label: "All Destinations", to: "/upcoming-projects" },
-      ...upcomingProjectList.map((p) => ({
-        label: p.name,
-        to: "/upcoming-projects/$slug",
-        params: { slug: p.slug },
-      })),
-    ],
-  },
-  { label: "Careers", to: "/careers" },
-  {
-    label: "Media",
-    children: mediaChildren,
-  },
+  { label: "Media", children: mediaChildren },
   { label: "Contact", to: "/contact" },
 ];
 

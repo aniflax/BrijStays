@@ -34,13 +34,14 @@ export function BlogCard({ post, featured = false }: { post: BlogPost; featured?
         />
       </Link>
       <div className={featured ? "flex flex-col" : "flex flex-1 flex-col pt-5"}>
-
         <div className="flex items-center gap-3 text-[0.66rem] tracking-[0.16em] uppercase">
           <span className="text-brand">{post.category}</span>
           <span className="h-px w-4 bg-border" />
           <span className="text-muted-foreground">{formatDate(post.publishedAt)}</span>
         </div>
-        <h3 className={`mt-4 font-display leading-snug ${featured ? "text-3xl md:text-4xl" : "text-xl"}`}>
+        <h3
+          className={`mt-4 font-display leading-snug ${featured ? "text-3xl md:text-4xl" : "text-xl"}`}
+        >
           <Link
             to="/media/$slug"
             params={{ slug: post.slug }}
@@ -49,7 +50,9 @@ export function BlogCard({ post, featured = false }: { post: BlogPost; featured?
             {post.title}
           </Link>
         </h3>
-        <p className="mt-3 hidden text-sm leading-relaxed text-muted-foreground md:block">{post.excerpt}</p>
+        <p className="mt-3 hidden text-sm leading-relaxed text-muted-foreground md:block">
+          {post.excerpt}
+        </p>
         <p className="mt-5 text-[0.68rem] tracking-[0.16em] text-muted-foreground/70 uppercase">
           {post.readingTime}
         </p>

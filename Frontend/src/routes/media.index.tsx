@@ -13,12 +13,12 @@ export const Route = createFileRoute("/media/")({
       {
         name: "description",
         content:
-          "Market notes, buyer guides and construction thinking from the Brij Stays studio in Indore.",
+          "Travel guides, temple guides and notes on staying well from the Brij Stays team in Vrindavan.",
       },
       { property: "og:title", content: "Insights & Updates — Brij Stays" },
       {
         property: "og:description",
-        content: "Notes on the Indore property market, specification and buying well.",
+        content: "Notes on Vrindavan, temple visits and planning a comfortable stay.",
       },
     ],
   }),
@@ -33,7 +33,7 @@ function MediaPage() {
       <PageHero
         eyebrow="Media"
         title={"Insights &\nUpdates"}
-        subtitle="What we are reading, measuring and building — written for buyers rather than for search engines."
+        subtitle="Travel notes, temple guides and staying well in Vrindavan — written for guests, not for search engines."
         image={img.interior2}
         imageAlt="Reading corner with soft daylight"
         priority

@@ -35,7 +35,9 @@ export function MapCard({
         rel="noopener noreferrer"
         className={cn(
           "link-underline mt-3 inline-flex items-center gap-1.5 text-sm font-medium transition-colors",
-          tone === "dark" ? "text-cream/70 hover:text-brand" : "text-muted-foreground hover:text-brand",
+          tone === "dark"
+            ? "text-cream/70 hover:text-brand"
+            : "text-muted-foreground hover:text-brand",
         )}
       >
         {title}

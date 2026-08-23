@@ -49,7 +49,7 @@ function DirectorPage() {
             </h1>
             <div className="mt-8 h-px w-24 bg-brand" />
             <p className="mt-8 max-w-md text-base leading-relaxed text-muted-foreground md:text-lg">
-              Two founders. One standard of thoughtful living.
+              Two founders. One standard of warm, thoughtful hospitality.
             </p>
           </div>
         </div>
@@ -117,8 +117,8 @@ function DirectorPage() {
         <div className="container-x mx-auto max-w-3xl">
           <Leaf className="mx-auto h-8 w-8 text-brand" />
           <p className="mx-auto mt-8 max-w-2xl font-display text-2xl leading-snug text-foreground md:text-3xl">
-            We don&rsquo;t just build spaces. We build trust, relationships and places people are
-            proud to call home.
+            We don&rsquo;t just host guests. We build trust, relationships and places people are
+            proud to return to.
           </p>
         </div>
       </section>

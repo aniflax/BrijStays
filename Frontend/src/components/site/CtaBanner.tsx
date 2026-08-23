@@ -9,7 +9,7 @@ export function CtaBanner({
   image,
   imageAlt,
   ctaLabel = "Learn More",
-  ctaTo = "/projects",
+  ctaTo = "/stays",
 }: {
   eyebrow?: string;
   title: string;
@@ -17,7 +17,7 @@ export function CtaBanner({
   image: string;
   imageAlt: string;
   ctaLabel?: string;
-  ctaTo?: "/projects" | "/upcoming-projects" | "/contact" | "/about";
+  ctaTo?: "/stays" | "/contact" | "/about";
 }) {
   return (
     <section className="mt-16 md:mt-20">
@@ -36,9 +36,7 @@ export function CtaBanner({
           <div className="relative p-10 text-white md:p-20">
             <p className="mb-4 text-xs uppercase tracking-[0.3em] text-white/80">{eyebrow}</p>
             <h2 className="max-w-3xl font-display text-4xl leading-[1.05] md:text-6xl">{title}</h2>
-            {intro ? (
-              <p className="mt-5 max-w-xl text-white/80 md:text-lg">{intro}</p>
-            ) : null}
+            {intro ? <p className="mt-5 max-w-xl text-white/80 md:text-lg">{intro}</p> : null}
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 to={ctaTo}

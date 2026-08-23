@@ -8,7 +8,8 @@ export const Route = createFileRoute("/terms-and-conditions")({
       { title: "Terms & Conditions — Brij Stays" },
       {
         name: "description",
-        content: "Terms governing the use of the Brij Stays website and the material published on it.",
+        content:
+          "Terms governing the use of the Brij Stays website and the material published on it.",
       },
       { property: "og:title", content: "Terms & Conditions — Brij Stays" },
       { property: "og:description", content: "Website terms, disclaimers and content ownership." },
@@ -23,15 +24,15 @@ export const Route = createFileRoute("/terms-and-conditions")({
           id: "use-of-site",
           heading: "Use of this site",
           paragraphs: [
-            "By using this website you agree to these terms. The site is provided for information about Brij Stays projects in Madhya Pradesh and is not an offer or a contract.",
+            "By using this website you agree to these terms. The site is provided for information about Brij Stays accommodation in Vrindavan, Uttar Pradesh, and is not an offer or a contract.",
           ],
         },
         {
-          id: "project-information",
-          heading: "Project information and imagery",
+          id: "stay-information",
+          heading: "Stay information and imagery",
           paragraphs: [
-            "Plans, dimensions, specifications and imagery are indicative and subject to approvals and design refinement. Renders are artistic impressions.",
-            "Nothing on this site should be relied upon in place of the agreement to sell and approved sanction plans, which prevail in all cases.",
+            "Property descriptions, photographs, amenities and specifications are indicative and drawn from our published listings. Photography is representative of the actual stay.",
+            "Nothing on this site should be relied upon in place of the confirmation we share directly with you for a booking.",
           ],
         },
         {
@@ -45,7 +46,7 @@ export const Route = createFileRoute("/terms-and-conditions")({
           id: "governing-law",
           heading: "Governing law",
           paragraphs: [
-            "These terms are governed by the laws of India, and disputes are subject to the exclusive jurisdiction of the courts at Indore, Madhya Pradesh.",
+            "These terms are governed by the laws of India, and disputes are subject to the exclusive jurisdiction of the courts at Mathura, Uttar Pradesh.",
           ],
         },
       ]}

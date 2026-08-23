@@ -36,27 +36,29 @@ export type HeroSlide = {
   imageAlt: string;
 };
 
-export type SpecTag = { label: string; value: string };
-
-export type Project = {
+export type Stay = {
   slug: string;
   name: string;
-  locality: string;
-  city: string;
-  status: "live" | "upcoming";
-  category?: "Beach & Lake" | "Mountain" | "Farmland";
-  builtForm: string;
-  unitSizes: string;
-  possession: string;
-  tagline: string;
-  description: string;
-  longDescription: string[];
-  specs: SpecTag[];
-  coverImage: string;
-  coverAlt: string;
+  location: string;
+  shortDescription: string;
+  description: string[];
+  highlights: string[];
+  heroImage: string;
+  heroAlt: string;
   gallery: { src: string; alt: string }[];
-  amenitySlugs: string[];
+  guestCapacity: number;
+  bedrooms: number;
+  bathrooms: number;
+  roomType: string;
+  amenities: string[];
+  airbnbUrl: string;
+  rating: number;
+  ratingCount: number;
+  category: string;
+  building?: string;
+  featured: boolean;
   mapQuery: string;
+  coords: { lat: number; lng: number };
 };
 
 export type BlogPost = {
@@ -88,21 +90,4 @@ export type TeamMember = {
   photo?: string;
   signature?: string;
   quote?: string;
-};
-
-export type Amenity = {
-  slug: string;
-  label: string;
-  description: string;
-  icon: string;
-};
-
-export type JobOpening = {
-  slug: string;
-  title: string;
-  department: string;
-  location: string;
-  type: string;
-  description: string;
-  responsibilities: string[];
 };

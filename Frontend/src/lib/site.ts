@@ -15,19 +15,25 @@ export type Site = {
   phoneHref: string;
   whatsapp: string;
   hours: string;
-  rera: string;
+  gst: string;
   socials: SiteSocial[];
   directorImage: string;
 };
 
+/** WhatsApp number for stay inquiries (international format, no + or spaces). */
+export const WHATSAPP_NUMBER = "918826287015";
+/** Display form of the same number. */
+export const WHATSAPP_DISPLAY = "+91 88262 87015";
+export const INSTAGRAM_URL = "https://www.instagram.com/brijstays/?hl=en";
+
 export const STATIC_SITE = {
   name: "Brij Stays",
-  tagline: "Where Living Finds Its Meaning",
-  mission: "Redefining the standard of thoughtful living in Indore, Madhya Pradesh.",
+  tagline: "Premium stays in Vrindavan",
+  mission: "Premium, comfortable and curated boutique stays in Vrindavan.",
   address:
     "Flat No. 110, 1st Floor, Krishna Castle Group Housing-5, Omaxe Eternity, Vrindavan, Mathura, Uttar Pradesh – 281121",
   hours: "Monday – Sunday: 24/7 Operations",
-  rera: "RERA registered · Indore, Madhya Pradesh",
+  gst: "GST · Non-GST",
 } as const;
 
 /** Where the Google Map previews point. */
@@ -35,12 +41,10 @@ export const MAP_QUERY =
   "Flat No. 110, 1st Floor, Krishna Castle Group Housing-5, Omaxe Eternity, Vrindavan, Mathura, Uttar Pradesh – 281121";
 
 /** Raw shape of the Strapi "Personal Informations" single type. */
-export type StrapiMedia =
-  | {
-      url?: string | null;
-      data?: { attributes?: { url?: string | null } | null } | null;
-    }
-  | null;
+export type StrapiMedia = {
+  url?: string | null;
+  data?: { attributes?: { url?: string | null } | null } | null;
+} | null;
 
 export type PersonalInformation = {
   email?: string | null;
@@ -53,18 +57,13 @@ export type PersonalInformation = {
   directorImage?: StrapiMedia;
 };
 
-export const enquiryTypes = ["Home Buyer", "Broker", "Investor", "Corporate", "NRI Buyer"] as const;
-
-const socialIcons: {
-  key: "instagram" | "facebook" | "youtube" | "linkedin";
-  label: string;
-  icon: string;
-}[] = [
-  { key: "instagram", label: "Instagram", icon: "Instagram" },
-  { key: "facebook", label: "Facebook", icon: "Facebook" },
-  { key: "linkedin", label: "LinkedIn", icon: "Linkedin" },
-  { key: "youtube", label: "YouTube", icon: "Youtube" },
-];
+export const enquiryTypes = [
+  "Stay Booking",
+  "Corporate / Bulk Booking",
+  "Long-term Stay",
+  "Group Booking",
+  "Other",
+] as const;
 
 /**
  * Builds a usable WhatsApp deep-link from a Strapi value that may be stored as
@@ -83,17 +82,21 @@ export function buildWhatsAppHref(value: string | null | undefined, phone: strin
 
 export function normalizeSite(info: PersonalInformation | null | undefined): Site {
   const i = info ?? {};
-  const phone = i.phone ?? "";
+  const phone = i.phone ?? WHATSAPP_DISPLAY;
   return {
     ...STATIC_SITE,
-    email: i.email ?? "",
+    email: i.email ?? "brijstays70@gmail.com",
     phoneDisplay: phone,
     phoneHref: phone ? `tel:+${phone.replace(/\D/g, "")}` : "",
     whatsapp: buildWhatsAppHref(i.whatsapp, phone),
     hours: STATIC_SITE.hours,
-    socials: socialIcons
-      .filter((s) => i[s.key])
-      .map((s) => ({ label: s.label, href: i[s.key] as string, icon: s.icon })),
+    gst: STATIC_SITE.gst,
+    socials: [
+      { label: "Instagram", href: i.instagram ?? INSTAGRAM_URL, icon: "Instagram" },
+      ...(i.facebook ? [{ label: "Facebook", href: i.facebook, icon: "Facebook" as const }] : []),
+      ...(i.youtube ? [{ label: "YouTube", href: i.youtube, icon: "Youtube" as const }] : []),
+      ...(i.linkedin ? [{ label: "LinkedIn", href: i.linkedin, icon: "Linkedin" as const }] : []),
+    ],
     directorImage: resolveMediaUrl(i.directorImage),
   };
 }
@@ -113,14 +116,42 @@ function resolveMediaUrl(media: StrapiMedia | undefined): string {
 
 export const EMPTY_SITE: Site = {
   ...STATIC_SITE,
-  email: "",
-  phoneDisplay: "",
-  phoneHref: "",
-  whatsapp: "",
+  email: "brijstays70@gmail.com",
+  phoneDisplay: WHATSAPP_DISPLAY,
+  phoneHref: `tel:+${WHATSAPP_NUMBER}`,
+  whatsapp: `https://wa.me/${WHATSAPP_NUMBER}`,
   hours: STATIC_SITE.hours,
-  socials: [],
+  gst: STATIC_SITE.gst,
+  socials: [{ label: "Instagram", href: INSTAGRAM_URL, icon: "Instagram" }],
   directorImage: "",
 };
+
+export type WhatsAppExtras = {
+  checkIn?: string;
+  checkOut?: string;
+  guests?: number;
+  requirements?: string;
+};
+
+/**
+ * Builds a wa.me deep link with a pre-filled inquiry message for a specific
+ * property. Structured so check-in / check-out / guest count / requirements
+ * can be appended later without rebuilding the component.
+ */
+export function buildStayWhatsAppHref(
+  title: string,
+  number: string = WHATSAPP_NUMBER,
+  extras?: WhatsAppExtras,
+): string {
+  let message = `Hi Brij Stays, I am interested in booking the "${title}". Please share the availability, pricing, and booking details.`;
+  const lines: string[] = [];
+  if (extras?.checkIn) lines.push(`Check-in: ${extras.checkIn}`);
+  if (extras?.checkOut) lines.push(`Check-out: ${extras.checkOut}`);
+  if (extras?.guests) lines.push(`Guests: ${extras.guests}`);
+  if (extras?.requirements) lines.push(`Requirements: ${extras.requirements}`);
+  if (lines.length) message = `${message}\n\n${lines.join("\n")}`;
+  return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+}
 
 // Replace this placeholder with the real public Strapi base URL before launch.
 const PRODUCTION_STRAPI_URL = "https://cms.example.com";

@@ -22,11 +22,7 @@ export function Logo({
       >
         BRIJ
       </span>
-      <span
-        className={cn(
-          "text-[0.6rem] tracking-[0.35em] text-brand sm:text-[0.65rem]",
-        )}
-      >
+      <span className={cn("text-[0.6rem] tracking-[0.35em] text-brand sm:text-[0.65rem]")}>
         STAYS
       </span>
     </Link>

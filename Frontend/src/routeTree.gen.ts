@@ -11,17 +11,14 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
-import { Route as CareersRouteImport } from './routes/careers'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DirectorRouteImport } from './routes/director'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as TermsAndConditionsRouteImport } from './routes/terms-and-conditions'
 import { Route as MediaIndexRouteImport } from './routes/media.index'
 import { Route as MediaSlugRouteImport } from './routes/media.$slug'
-import { Route as ProjectsIndexRouteImport } from './routes/projects.index'
-import { Route as ProjectsSlugRouteImport } from './routes/projects.$slug'
-import { Route as UpcomingProjectsIndexRouteImport } from './routes/upcoming-projects.index'
-import { Route as UpcomingProjectsSlugRouteImport } from './routes/upcoming-projects.$slug'
+import { Route as StaysIndexRouteImport } from './routes/stays.index'
+import { Route as StaysSlugRouteImport } from './routes/stays.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -31,11 +28,6 @@ const IndexRoute = IndexRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CareersRoute = CareersRouteImport.update({
-  id: '/careers',
-  path: '/careers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -68,135 +60,104 @@ const MediaSlugRoute = MediaSlugRouteImport.update({
   path: '/media/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
-  id: '/projects/',
-  path: '/projects/',
+const StaysIndexRoute = StaysIndexRouteImport.update({
+  id: '/stays/',
+  path: '/stays/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
-  id: '/projects/$slug',
-  path: '/projects/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const UpcomingProjectsIndexRoute = UpcomingProjectsIndexRouteImport.update({
-  id: '/upcoming-projects/',
-  path: '/upcoming-projects/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const UpcomingProjectsSlugRoute = UpcomingProjectsSlugRouteImport.update({
-  id: '/upcoming-projects/$slug',
-  path: '/upcoming-projects/$slug',
+const StaysSlugRoute = StaysSlugRouteImport.update({
+  id: '/stays/$slug',
+  path: '/stays/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
   '/director': typeof DirectorRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/media/$slug': typeof MediaSlugRoute
-  '/projects/$slug': typeof ProjectsSlugRoute
-  '/upcoming-projects/$slug': typeof UpcomingProjectsSlugRoute
+  '/stays/$slug': typeof StaysSlugRoute
   '/media/': typeof MediaIndexRoute
-  '/projects/': typeof ProjectsIndexRoute
-  '/upcoming-projects/': typeof UpcomingProjectsIndexRoute
+  '/stays/': typeof StaysIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
   '/director': typeof DirectorRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/media/$slug': typeof MediaSlugRoute
-  '/projects/$slug': typeof ProjectsSlugRoute
-  '/upcoming-projects/$slug': typeof UpcomingProjectsSlugRoute
+  '/stays/$slug': typeof StaysSlugRoute
   '/media': typeof MediaIndexRoute
-  '/projects': typeof ProjectsIndexRoute
-  '/upcoming-projects': typeof UpcomingProjectsIndexRoute
+  '/stays': typeof StaysIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
   '/director': typeof DirectorRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/media/$slug': typeof MediaSlugRoute
-  '/projects/$slug': typeof ProjectsSlugRoute
-  '/upcoming-projects/$slug': typeof UpcomingProjectsSlugRoute
+  '/stays/$slug': typeof StaysSlugRoute
   '/media/': typeof MediaIndexRoute
-  '/projects/': typeof ProjectsIndexRoute
-  '/upcoming-projects/': typeof UpcomingProjectsIndexRoute
+  '/stays/': typeof StaysIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
-    | '/careers'
     | '/contact'
     | '/director'
     | '/privacy-policy'
     | '/terms-and-conditions'
     | '/media/$slug'
-    | '/projects/$slug'
-    | '/upcoming-projects/$slug'
+    | '/stays/$slug'
     | '/media/'
-    | '/projects/'
-    | '/upcoming-projects/'
+    | '/stays/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/careers'
     | '/contact'
     | '/director'
     | '/privacy-policy'
     | '/terms-and-conditions'
     | '/media/$slug'
-    | '/projects/$slug'
-    | '/upcoming-projects/$slug'
+    | '/stays/$slug'
     | '/media'
-    | '/projects'
-    | '/upcoming-projects'
+    | '/stays'
   id:
     | '__root__'
     | '/'
     | '/about'
-    | '/careers'
     | '/contact'
     | '/director'
     | '/privacy-policy'
     | '/terms-and-conditions'
     | '/media/$slug'
-    | '/projects/$slug'
-    | '/upcoming-projects/$slug'
+    | '/stays/$slug'
     | '/media/'
-    | '/projects/'
-    | '/upcoming-projects/'
+    | '/stays/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  CareersRoute: typeof CareersRoute
   ContactRoute: typeof ContactRoute
   DirectorRoute: typeof DirectorRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   TermsAndConditionsRoute: typeof TermsAndConditionsRoute
   MediaSlugRoute: typeof MediaSlugRoute
-  ProjectsSlugRoute: typeof ProjectsSlugRoute
-  UpcomingProjectsSlugRoute: typeof UpcomingProjectsSlugRoute
+  StaysSlugRoute: typeof StaysSlugRoute
   MediaIndexRoute: typeof MediaIndexRoute
-  ProjectsIndexRoute: typeof ProjectsIndexRoute
-  UpcomingProjectsIndexRoute: typeof UpcomingProjectsIndexRoute
+  StaysIndexRoute: typeof StaysIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -213,13 +174,6 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/careers': {
-      id: '/careers'
-      path: '/careers'
-      fullPath: '/careers'
-      preLoaderRoute: typeof CareersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -264,32 +218,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MediaSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/projects/': {
-      id: '/projects/'
-      path: '/projects'
-      fullPath: '/projects/'
-      preLoaderRoute: typeof ProjectsIndexRouteImport
+    '/stays/': {
+      id: '/stays/'
+      path: '/stays'
+      fullPath: '/stays/'
+      preLoaderRoute: typeof StaysIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/projects/$slug': {
-      id: '/projects/$slug'
-      path: '/projects/$slug'
-      fullPath: '/projects/$slug'
-      preLoaderRoute: typeof ProjectsSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/upcoming-projects/': {
-      id: '/upcoming-projects/'
-      path: '/upcoming-projects'
-      fullPath: '/upcoming-projects/'
-      preLoaderRoute: typeof UpcomingProjectsIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/upcoming-projects/$slug': {
-      id: '/upcoming-projects/$slug'
-      path: '/upcoming-projects/$slug'
-      fullPath: '/upcoming-projects/$slug'
-      preLoaderRoute: typeof UpcomingProjectsSlugRouteImport
+    '/stays/$slug': {
+      id: '/stays/$slug'
+      path: '/stays/$slug'
+      fullPath: '/stays/$slug'
+      preLoaderRoute: typeof StaysSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -298,17 +238,14 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  CareersRoute: CareersRoute,
   ContactRoute: ContactRoute,
   DirectorRoute: DirectorRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   TermsAndConditionsRoute: TermsAndConditionsRoute,
   MediaSlugRoute: MediaSlugRoute,
-  ProjectsSlugRoute: ProjectsSlugRoute,
-  UpcomingProjectsSlugRoute: UpcomingProjectsSlugRoute,
+  StaysSlugRoute: StaysSlugRoute,
   MediaIndexRoute: MediaIndexRoute,
-  ProjectsIndexRoute: ProjectsIndexRoute,
-  UpcomingProjectsIndexRoute: UpcomingProjectsIndexRoute,
+  StaysIndexRoute: StaysIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
