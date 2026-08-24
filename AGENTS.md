@@ -1,8 +1,8 @@
 # Brij Stays — Architecture
 
-Brij Stays is a hospitality/accommodation marketing site currently being converted from the Unityaliving codebase. It will use a headless CMS architecture with a React/TanStack Start server-rendered frontend and a Strapi backend.
+Brij Stays is a hospitality/accommodation marketing site being converted from the Unityaliving codebase. It uses a headless CMS architecture with a React/TanStack Start server-rendered frontend and a Strapi backend.
 
-## Planned topology
+## Topology
 
 ```
 Browser ──> Brij Stays frontend (Cloudflare Workers, SSR)
@@ -12,28 +12,30 @@ Browser ──> Brij Stays frontend (Cloudflare Workers, SSR)
              Strapi CMS (Render)
                     │
                     ├── Neon PostgreSQL (via Render environment variables)
-                    └── Cloudflare R2 buckets (media, via S3-compatible provider)
+                    └── Cloudflare R2 media (via S3-compatible provider)
 ```
 
-The frontend, CMS, and CDN/custom domains have not yet been assigned. Do not assume or introduce Unityaliving domains in Brij Stays configuration.
+- Frontend (Cloudflare Workers): `https://brijstays.in`
+- Backend/CMS (Render): `https://admin.brijstays.in`
+- Media CDN (R2): `https://cdn.brijstays.in`
 
 ## Repository and deployment
 
 - **GitHub repository:** `git@github.com:aniflax/BrijStays.git` (default branch: `main`).
-- **Frontend:** deploy `Frontend/` to Cloudflare Workers after Cloudflare configuration is created.
-- **Backend:** deploy `backend/` to Render after the Render service is created.
-- A push to `main` should be configured to deploy both services automatically once those integrations exist.
+- **Frontend:** deploy `Frontend/` to Cloudflare Workers.
+- **Backend:** deploy `backend/` to Render (`admin.brijstays.in`).
+- A push to `main` deploys both services automatically.
 - Environment variables and secrets must be configured in the relevant Cloudflare and Render dashboards; never commit them.
 - **Commit policy:** any changes to the code must be pushed to `main` immediately after being made. Commits must not include co-author/attribution trailers (e.g. `Co-authored-by: ...`); all commits are authored by **aniflax** alone.
 
 ## Services
 
-| Piece | Planned platform | Domain | Notes |
+| Piece | Platform | Domain | Notes |
 | --- | --- | --- | --- |
-| Frontend | Cloudflare Workers | To be assigned | React + TanStack Start SSR application |
-| Backend (CMS) | Render | To be assigned | Strapi v5 REST API |
+| Frontend | Cloudflare Workers | `brijstays.in` | React + TanStack Start SSR application |
+| Backend (CMS) | Render | `admin.brijstays.in` | Strapi v5 REST API |
 | Database | Neon PostgreSQL | — | Connection details supplied through Render environment variables |
-| Media storage | Cloudflare R2 | To be assigned | Two R2 buckets for media, accessed through Strapi's S3-compatible provider |
+| Media storage | Cloudflare R2 | `cdn.brijstays.in` | Two R2 buckets for media, accessed through Strapi's S3-compatible provider |
 
 ## Repository layout
 
@@ -44,14 +46,15 @@ The frontend, CMS, and CDN/custom domains have not yet been assigned. Do not ass
 
 Backend (configure in **Render**):
 
-- Database: `DATABASE_CLIENT=postgres`, `DATABASE_URL`, `DATABASE_SSL`
+- Runtime: `HOST`, `PORT`, `PUBLIC_URL=https://admin.brijstays.in`
+- Database: `DATABASE_CLIENT=postgres`, `DATABASE_URL`, `DATABASE_SSL=true`
 - Strapi secrets: `APP_KEYS`, `ADMIN_JWT_SECRET`, `API_TOKEN_SALT`, `JWT_SECRET`, `TRANSFER_TOKEN_SALT`, `ENCRYPTION_KEY`
-- R2/S3 media configuration: `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_ENDPOINT`, bucket-name variables for both buckets, `S3_REGION`, and the eventual public CDN URL(s)
-- `CORS_ORIGINS` for the deployed frontend domain(s)
+- R2/S3 media configuration: `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_ENDPOINT`, `R2_MEDIA_BUCKET`, `R2_MEDIA_PUBLIC_URL`, `S3_REGION`
+- `CORS_ORIGINS` — `https://brijstays.in,https://www.brijstays.in`
 
 Frontend (configure in **Cloudflare Workers**):
 
-- `STRAPI_URL` — the complete public Render/Strapi base URL, without a trailing slash or `/api`
+- `STRAPI_URL` — `https://admin.brijstays.in`, the complete public Render/Strapi base URL, without a trailing slash or `/api`
 - `VITE_STRAPI_URL` — optional build-time alternative when the application requires it
 
 ## Local development
@@ -62,6 +65,6 @@ Frontend (configure in **Cloudflare Workers**):
 ## Deployment notes
 
 - Build the frontend with `cd Frontend && npm run build`; deploy its generated Cloudflare Worker output using the configured Cloudflare workflow.
-- Render should build and run the backend from `backend/` in production mode.
+- Render builds and runs the backend from `backend/` in production mode.
 - Configure R2 bucket credentials and the Neon connection string only as platform secrets/environment variables.
-- Before enabling production traffic, set CORS to the final frontend domain and confirm that API and media URLs resolve correctly.
+- CORS is set to the frontend domains; confirm that API and media URLs resolve correctly.

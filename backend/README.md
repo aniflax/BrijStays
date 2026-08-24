@@ -1,8 +1,8 @@
 # Brij Stays — Backend (Strapi 5)
 
-The Brij Stays backend is a Strapi 5 headless CMS being prepared for deployment on Render. It will use Neon PostgreSQL for data and two Cloudflare R2 buckets for media. The production infrastructure and domains have not yet been created.
+The Brij Stays backend is a Strapi 5 headless CMS deployed on Render, using Neon PostgreSQL for data and Cloudflare R2 for media.
 
-## Planned architecture
+## Architecture
 
 ```
 Brij Stays Cloudflare Worker frontend
@@ -12,10 +12,12 @@ Brij Stays Cloudflare Worker frontend
         Strapi 5 CMS on Render (this project)
                  │
                  ├── Neon PostgreSQL
-                 └── Two Cloudflare R2 media buckets
+                 └── Cloudflare R2 media buckets
 ```
 
-The database should be reachable only by Render. Configure public API permissions deliberately for the frontend's needs.
+Backend URL: `https://admin.brijstays.in`
+Media CDN URL: `https://cdn.brijstays.in`
+Frontend domain: `https://brijstays.in`
 
 ## Getting started
 
@@ -32,13 +34,17 @@ Visit `http://localhost:1337/admin`. Local development uses SQLite (`.tmp/data.d
 
 ## Environment variables
 
+Configure all values in Render, never in Git. Set `DATABASE_CLIENT=postgres` in production to use Neon instead of the local SQLite default.
+
 | Variable | Purpose |
 | --- | --- |
-| `HOST`, `PORT` | Server host and port |
+| `HOST`, `PORT` | Server host and port (Render sets `PORT` itself) |
+| `PUBLIC_URL` | Public backend URL, e.g. `https://admin.brijstays.in` |
 | `DATABASE_CLIENT=postgres` | Uses PostgreSQL in production |
 | `DATABASE_URL` | Neon PostgreSQL connection string |
-| `DATABASE_SSL`, `DATABASE_SCHEMA` | Neon connection options |
-| `APP_KEYS` | Strapi app keys (comma-separated) |
+| `DATABASE_SSL=true` | Neon requires SSL |
+| `DATABASE_SCHEMA` | Neon schema (default `public`) |
+| `APP_KEYS` | Strapi app keys (comma-separated, at least 4) |
 | `ADMIN_JWT_SECRET` | Admin-panel JWT secret |
 | `API_TOKEN_SALT` | API-token salt |
 | `JWT_SECRET` | Users-permissions JWT secret |
@@ -47,11 +53,12 @@ Visit `http://localhost:1337/admin`. Local development uses SQLite (`.tmp/data.d
 | `R2_ACCESS_KEY_ID` | Cloudflare R2 access key |
 | `R2_SECRET_ACCESS_KEY` | Cloudflare R2 secret key |
 | `R2_ENDPOINT` | R2 S3-compatible endpoint |
-| `S3_REGION` | R2 region (usually `auto`) |
-| Primary and secondary bucket variables | Configure separate bucket names and public media/CDN URLs when the two buckets are created |
-| `CORS_ORIGINS` | Comma-separated allowed frontend origins |
+| `S3_REGION` | R2 region (`auto`) |
+| `R2_MEDIA_BUCKET` | Primary R2 bucket name (`brijstays`) |
+| `R2_MEDIA_PUBLIC_URL` | Public media/CDN base URL (`https://cdn.brijstays.in`) |
+| `CORS_ORIGINS` | Comma-separated frontend origins, e.g. `https://brijstays.in,https://www.brijstays.in` |
 
-Configure all production values in Render, never in Git. Production database credentials, R2 credentials, bucket names, and final domains are not yet assigned.
+See [`.env.example`](./.env.example) for the full template with placeholder values.
 
 ## Scripts
 
@@ -61,15 +68,12 @@ npm run build     # build the Strapi admin panel
 npm run start     # production server
 ```
 
-## Deployment
+## Deployment (Render)
 
-Deployment is not configured yet. When ready:
-
-1. Create a Render web service sourced from `backend/` in `aniflax/BrijStays`.
-2. Configure Neon PostgreSQL environment variables and all Strapi secrets.
-3. Configure R2 credentials and separate bucket/public URL settings for the two media buckets.
-4. Set `CORS_ORIGINS` to the final Cloudflare frontend domain.
-5. Enable automatic deploys from `main`.
+1. Render web service rooted at `backend/` in `aniflax/BrijStays`.
+2. Set the environment variables above (Neon database, Strapi secrets, R2 credentials).
+3. Set `CORS_ORIGINS` to the Cloudflare frontend domain(s).
+4. Enable automatic deploys from `main`.
 
 ## API and content types
 

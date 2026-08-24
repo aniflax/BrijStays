@@ -1,37 +1,40 @@
 # Brij Stays Frontend
 
-Server-rendered hospitality/accommodation marketing site built with **TanStack Start** (Vite + React 19 + Tailwind + Framer Motion). It is planned for deployment to **Cloudflare Workers** as a Nitro server (`.output`). No production domain, Worker name, or Cloudflare deployment pipeline has been configured yet.
+Server-rendered hospitality/accommodation marketing site built with **TanStack Start** (Vite + React + Tailwind + Framer Motion). Deployed to **Cloudflare Workers** as a Nitro server (`.output`).
+
+- Frontend (Cloudflare Workers): `https://brijstays.in`
+- Backend/CMS (Render): `https://admin.brijstays.in`
+- Media CDN (R2): `https://cdn.brijstays.in`
 
 ## Repository and deployment
 
 - Repository: `git@github.com:aniflax/BrijStays.git`, branch `main`.
-- Deploy this `Frontend/` directory to Cloudflare Workers once the Cloudflare project is created.
-- Configure automatic deployments from `main` after the Cloudflare integration is set up.
-- Do not reuse legacy URLs, worker names, or deployment configuration from the source project.
+- This `Frontend/` directory deploys to a Cloudflare Workers project.
+- Automatic deployments run from `main`.
 
 ## Stack and build
 
 - Build: `npm run build` → `vite build` (Cloudflare preset) → `.output/`.
 - Local development: `npm run dev` → `http://localhost:3000`.
-- Deployment will use the configured Cloudflare workflow or `wrangler deploy` when a Worker configuration exists.
+- Deployment uses the configured Cloudflare workflow or `wrangler deploy`.
 
 ## Backend connectivity
 
-`src/lib/site.ts` resolves the Strapi backend URL and fetches site-wide information. Its existing code may contain legacy defaults; replace those with Brij Stays configuration when the backend URL is available.
+`src/lib/site.ts` resolves the Strapi backend URL and fetches site-wide information. The production fallback is `https://admin.brijstays.in`.
 
 Resolution order:
 
 1. Runtime `process.env.STRAPI_URL`
 2. Build-time `VITE_STRAPI_URL`
-3. Local development fallback (`http://localhost:1337`)
+3. Production fallback `https://admin.brijstays.in` (or `http://localhost:1337` in dev)
 
-For production, configure `STRAPI_URL` in the Cloudflare Worker as the full public Brij Stays Strapi/Render URL—no trailing slash and no `/api`. Do not rely on an inherited production fallback.
+For production, configure `STRAPI_URL` in the Cloudflare Worker as `https://admin.brijstays.in` — no trailing slash and no `/api`. Changing the Worker variable requires a Worker redeploy.
 
 ## Data flow
 
 - The root loader calls `fetchSite()` and wraps the application in `SiteProvider`.
 - `src/lib/site-context.tsx` exposes site data to shared components.
-- The inherited implementation fetches `GET {STRAPI_URL}/api/personal-information` and caches it for roughly five minutes in Worker memory.
+- The implementation fetches `GET {STRAPI_URL}/api/personal-information` and caches it for roughly five minutes in Worker memory.
 - Confirm the final Strapi content types and public permissions as part of the Brij Stays CMS setup. The inherited "Personal Informations" type is not a final product requirement.
 
 ## Key files
@@ -46,4 +49,4 @@ For production, configure `STRAPI_URL` in the Cloudflare Worker as the full publ
 
 - Configure `STRAPI_URL` and any other runtime variables in Cloudflare; never commit secrets.
 - Cloudflare variable/secret changes require a Worker redeploy.
-- Add the final frontend domain to the backend's `CORS_ORIGINS` setting before production launch.
+- On the backend (Render), add the frontend origin `https://brijstays.in` (and `https://www.brijstays.in`) to `CORS_ORIGINS` before production launch.

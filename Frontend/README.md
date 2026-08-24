@@ -1,16 +1,16 @@
 # Brij Stays — Frontend
 
-The Brij Stays frontend is a React + TanStack Start server-rendered hospitality/accommodation website. It is being converted from an existing codebase and is not deployed yet.
+The Brij Stays frontend is a React + TanStack Start server-rendered hospitality/accommodation website, deployed to Cloudflare Workers (Nitro server, `.output/`).
 
-## Planned stack
+## Stack
 
 - **TanStack Start** on Vite with file-based routing and SSR
-- **React 19** and TypeScript
+- **React** and TypeScript
 - **Tailwind CSS** and Framer Motion
 - **Cloudflare Workers** deployment as a Nitro server (`.output/`)
 - **Strapi** REST API hosted on Render
 
-## Planned architecture
+## Architecture
 
 ```
 Browser ──> Brij Stays Cloudflare Worker (SSR frontend)
@@ -23,7 +23,9 @@ Browser ──> Brij Stays Cloudflare Worker (SSR frontend)
                     └── Cloudflare R2 media buckets
 ```
 
-The public frontend domain and Strapi base URL have not yet been assigned. Do not use legacy URLs or inherited production defaults.
+- Frontend domain: `https://brijstays.in`
+- Backend/CMS (Render): `https://admin.brijstays.in`
+- Media CDN (R2): `https://cdn.brijstays.in`
 
 ## Getting started
 
@@ -42,10 +44,12 @@ Visit `http://localhost:3000`. For local CMS data, run the backend at `http://lo
 
 | Variable | Where | Purpose |
 | --- | --- | --- |
-| `STRAPI_URL` | Cloudflare Worker runtime variable | Full public Brij Stays Strapi base URL |
+| `STRAPI_URL=https://admin.brijstays.in` | Cloudflare Worker runtime variable | Full public Brij Stays Strapi base URL |
 | `VITE_STRAPI_URL` | Build-time variable | Optional alternative to `STRAPI_URL` |
 
-Set `STRAPI_URL` without a trailing slash or `/api`, for example `https://admin.example.com`. The actual Brij Stays backend domain is still to be determined.
+Set `STRAPI_URL` without a trailing slash or `/api`. In production the Worker reads `process.env.STRAPI_URL` at runtime; if it is absent the code falls back to `https://admin.brijstays.in`.
+
+Add `https://brijstays.in` and `https://www.brijstays.in` to the backend's `CORS_ORIGINS` so the browser permits API calls from the deployed frontend.
 
 ## Scripts
 
@@ -59,12 +63,10 @@ npm run format    # prettier
 
 ## Deployment
 
-Cloudflare deployment is not configured yet. Once it is:
-
-1. Create the Cloudflare Workers project for `Frontend/`.
-2. Set `STRAPI_URL` and any required variables/secrets in Cloudflare.
+1. Cloudflare Workers project for `Frontend/`.
+2. Set the `STRAPI_URL` runtime variable in Cloudflare.
 3. Configure deployments from `main` in `aniflax/BrijStays`.
-4. Add the final frontend origin to the backend's `CORS_ORIGINS` setting.
+4. On the backend (Render), add `https://brijstays.in` (and `https://www.brijstays.in`) to `CORS_ORIGINS`.
 
 ## Project structure
 

@@ -153,8 +153,9 @@ export function buildStayWhatsAppHref(
   return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 }
 
-// Replace this placeholder with the real public Strapi base URL before launch.
-const PRODUCTION_STRAPI_URL = "https://cms.example.com";
+// Public Strapi/Render base URL. Use the Cloudflare Worker runtime variable
+// STRAPI_URL to override this; the fallback only applies when that is absent.
+const PRODUCTION_STRAPI_URL = "https://admin.brijstays.in";
 
 /**
  * Sanitizes a raw backend URL value from env vars so common mistakes (trailing
