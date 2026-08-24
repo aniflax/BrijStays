@@ -29,16 +29,16 @@ export function Footer() {
             {site.mission}
           </p>
           <div className="mt-6 flex gap-3">
-            {site.socials.map((s) => {
-              const Icon = socialIcons[s.icon as keyof typeof socialIcons];
-              if (!Icon) return null;
+            {Object.entries(socialIcons).map(([key, Icon]) => {
+              const social = site.socials.find((s) => s.icon.toLowerCase() === key.toLowerCase());
+              const href = social?.href;
               return (
                 <a
-                  key={s.label}
-                  href={s.href}
+                  key={key}
+                  href={href || undefined}
                   target="_blank"
                   rel="noreferrer"
-                  aria-label={s.label}
+                  aria-label={social?.label ?? key}
                   className="rounded-full border border-border p-2 text-muted-foreground transition-colors hover:bg-foreground hover:text-background"
                 >
                   <Icon size={16} strokeWidth={1.6} />

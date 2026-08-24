@@ -157,9 +157,13 @@ export function Header() {
             )}
             <Link
               to="/"
-              className="font-baloo text-[26px] leading-none font-bold tracking-[-0.5px] whitespace-nowrap text-[#111] max-[600px]:text-[22px]"
+              className="flex items-baseline gap-2 whitespace-nowrap"
+              aria-label="Brij Stays — Home"
             >
-              Brij Stays
+              <span className="font-serif text-2xl leading-none font-semibold tracking-wider text-[#111] max-[600px]:text-xl">
+                BRIJ
+              </span>
+              <span className="text-[0.6rem] leading-none tracking-[0.35em] text-brand">STAYS</span>
             </Link>
           </div>
 
