@@ -54,7 +54,7 @@ Configure all values in Render, never in Git. Set `DATABASE_CLIENT=postgres` in 
 | `R2_SECRET_ACCESS_KEY` | Cloudflare R2 secret key |
 | `R2_ENDPOINT` | R2 S3-compatible endpoint |
 | `S3_REGION` | R2 region (`auto`) |
-| `R2_MEDIA_BUCKET` | Primary R2 bucket name (`brijstays`) |
+| `R2_BUCKET_NAME` | Primary R2 bucket name (`brijstays`) |
 | `R2_MEDIA_PUBLIC_URL` | Public media/CDN base URL (`https://cdn.brijstays.in`) |
 | `CORS_ORIGINS` | Comma-separated frontend origins, e.g. `https://brijstays.in,https://www.brijstays.in` |
 

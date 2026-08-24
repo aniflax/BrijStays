@@ -34,7 +34,7 @@ Headless CMS for Brij Stays, built with **Strapi 5**. Deployed on **Render**, us
 - Runtime: `HOST`, `PORT`, `PUBLIC_URL=https://admin.brijstays.in`
 - Database: `DATABASE_CLIENT=postgres`, `DATABASE_URL`, `DATABASE_SSL=true`, `DATABASE_SCHEMA`
 - Strapi secrets: `APP_KEYS`, `ADMIN_JWT_SECRET`, `API_TOKEN_SALT`, `JWT_SECRET`, `TRANSFER_TOKEN_SALT`, `ENCRYPTION_KEY`
-- R2/S3: `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_ENDPOINT`, `S3_REGION=auto`, `R2_MEDIA_BUCKET`, `R2_MEDIA_PUBLIC_URL`
+- R2/S3: `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_ENDPOINT`, `S3_REGION=auto`, `R2_BUCKET_NAME`, `R2_MEDIA_PUBLIC_URL`
 - CORS: `CORS_ORIGINS`
 
 Never commit production secrets, database URLs, R2 credentials, or deployment-domain tokens. Keep secret values in the Render dashboard; use placeholder values in `.env.example`.

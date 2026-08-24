@@ -49,7 +49,7 @@ Backend (configure in **Render**):
 - Runtime: `HOST`, `PORT`, `PUBLIC_URL=https://admin.brijstays.in`
 - Database: `DATABASE_CLIENT=postgres`, `DATABASE_URL`, `DATABASE_SSL=true`
 - Strapi secrets: `APP_KEYS`, `ADMIN_JWT_SECRET`, `API_TOKEN_SALT`, `JWT_SECRET`, `TRANSFER_TOKEN_SALT`, `ENCRYPTION_KEY`
-- R2/S3 media configuration: `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_ENDPOINT`, `R2_MEDIA_BUCKET`, `R2_MEDIA_PUBLIC_URL`, `S3_REGION`
+- R2/S3 media configuration: `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_ENDPOINT`, `R2_BUCKET_NAME`, `R2_MEDIA_PUBLIC_URL`, `S3_REGION`
 - `CORS_ORIGINS` — `https://brijstays.in,https://www.brijstays.in`
 
 Frontend (configure in **Cloudflare Workers**):
