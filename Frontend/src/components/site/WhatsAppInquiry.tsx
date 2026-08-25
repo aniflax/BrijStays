@@ -26,6 +26,7 @@ export function WhatsAppInquiry({
 }) {
   const site = useSite();
   const href = buildStayWhatsAppHref(title, waNumberFromHref(site.whatsapp), extras);
+  if (!href) return null;
   return (
     <Button
       asChild

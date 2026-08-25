@@ -5,7 +5,7 @@ import { StayGrid } from "@/components/site/StayGrid";
 import { CtaBanner } from "@/components/site/CtaBanner";
 import { stayList } from "@/lib/data/stays";
 import { img } from "@/lib/data/images";
-import { INSTAGRAM_URL } from "@/lib/site";
+import { useSite } from "@/lib/site-context";
 
 export const Route = createFileRoute("/stays/")({
   head: () => ({
@@ -28,6 +28,8 @@ export const Route = createFileRoute("/stays/")({
 });
 
 function StaysPage() {
+  const site = useSite();
+  const instagram = site.socials.find((s) => s.icon === "Instagram")?.href;
   return (
     <>
       <PageHero
@@ -70,7 +72,7 @@ function StaysPage() {
           <p className="text-sm text-muted-foreground">
             Follow daily life at our stays on{" "}
             <a
-              href={INSTAGRAM_URL}
+              href={instagram}
               target="_blank"
               rel="noopener noreferrer"
               className="link-underline text-foreground hover:text-brand"

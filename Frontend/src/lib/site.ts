@@ -26,12 +26,6 @@ export type Site = {
   coFounderImage: string;
 };
 
-/** WhatsApp number for stay inquiries (international format, no + or spaces). */
-export const WHATSAPP_NUMBER = "918826287015";
-/** Display form of the same number. */
-export const WHATSAPP_DISPLAY = "+91 88262 87015";
-export const INSTAGRAM_URL = "https://www.instagram.com/brijstays/?hl=en";
-
 export const STATIC_SITE = {
   name: "Brij Stays",
   tagline: "Premium stays in Vrindavan",
@@ -90,28 +84,28 @@ export function buildWhatsAppHref(value: string | null | undefined, phone: strin
 
 /**
  * Extracts the numeric WhatsApp number from a wa.me deep-link (e.g.
- * `https://wa.me/918826287015` → `918826287015`). Falls back to the bundled
- * constant when the CMS hasn't provided one.
+ * `https://wa.me/918826287015` → `918826287015`). Empty when the CMS hasn't
+ * provided one.
  */
 export function waNumberFromHref(href: string): string {
   const match = href.match(/wa\.me\/([^?#]+)/);
-  const digits = (match?.[1] ?? "").replace(/\D/g, "");
-  return digits || WHATSAPP_NUMBER;
+  return (match?.[1] ?? "").replace(/\D/g, "");
 }
 
 export function normalizeSite(info: PersonalInformation | null | undefined): Site {
   const i = info ?? {};
-  const phone = i.phone ?? WHATSAPP_DISPLAY;
+  const phone = i.phone ?? "";
+  const instagram = i.instagram ?? "";
   return {
     ...STATIC_SITE,
-    email: i.email ?? "brijstays70@gmail.com",
+    email: i.email ?? "",
     phoneDisplay: phone,
     phoneHref: phone ? `tel:+${phone.replace(/\D/g, "")}` : "",
     whatsapp: buildWhatsAppHref(i.whatsapp, phone),
     hours: STATIC_SITE.hours,
     gst: STATIC_SITE.gst,
     socials: [
-      { label: "Instagram", href: i.instagram ?? INSTAGRAM_URL, icon: "Instagram" },
+      ...(instagram ? [{ label: "Instagram", href: instagram, icon: "Instagram" as const }] : []),
       ...(i.facebook ? [{ label: "Facebook", href: i.facebook, icon: "Facebook" as const }] : []),
       ...(i.youtube ? [{ label: "YouTube", href: i.youtube, icon: "Youtube" as const }] : []),
       ...(i.linkedin ? [{ label: "LinkedIn", href: i.linkedin, icon: "Linkedin" as const }] : []),
@@ -137,13 +131,13 @@ export function resolveMediaUrl(media: StrapiMedia | undefined): string {
 
 export const EMPTY_SITE: Site = {
   ...STATIC_SITE,
-  email: "brijstays70@gmail.com",
-  phoneDisplay: WHATSAPP_DISPLAY,
-  phoneHref: `tel:+${WHATSAPP_NUMBER}`,
-  whatsapp: `https://wa.me/${WHATSAPP_NUMBER}`,
+  email: "",
+  phoneDisplay: "",
+  phoneHref: "",
+  whatsapp: "",
   hours: STATIC_SITE.hours,
   gst: STATIC_SITE.gst,
-  socials: [{ label: "Instagram", href: INSTAGRAM_URL, icon: "Instagram" }],
+  socials: [],
   founderImage: "",
   coFounderImage: "",
 };
@@ -160,11 +154,8 @@ export type WhatsAppExtras = {
  * property. Structured so check-in / check-out / guest count / requirements
  * can be appended later without rebuilding the component.
  */
-export function buildStayWhatsAppHref(
-  title: string,
-  number: string = WHATSAPP_NUMBER,
-  extras?: WhatsAppExtras,
-): string {
+export function buildStayWhatsAppHref(title: string, number = "", extras?: WhatsAppExtras): string {
+  if (!number) return "";
   let message = `Hi Brij Stays, I am interested in booking the "${title}". Please share the availability, pricing, and booking details.`;
   const lines: string[] = [];
   if (extras?.checkIn) lines.push(`Check-in: ${extras.checkIn}`);

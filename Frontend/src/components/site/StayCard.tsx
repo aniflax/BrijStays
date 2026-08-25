@@ -68,16 +68,18 @@ export function StayCard({ stay, className }: { stay: Stay; className?: string }
         </Button>
 
         <div className="mt-4 flex flex-wrap gap-2">
-          <a
-            href={whatsappHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Inquire about ${stay.name} on WhatsApp`}
-            className="inline-flex h-10 flex-1 min-w-[130px] cursor-pointer items-center justify-center gap-2 rounded-full border border-foreground/20 px-4 text-sm font-medium text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-brand hover:text-brand"
-          >
-            <WhatsAppGlyph className="h-4 w-4" />
-            WhatsApp
-          </a>
+          {whatsappHref ? (
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Inquire about ${stay.name} on WhatsApp`}
+              className="inline-flex h-10 flex-1 min-w-[130px] cursor-pointer items-center justify-center gap-2 rounded-full border border-foreground/20 px-4 text-sm font-medium text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-brand hover:text-brand"
+            >
+              <WhatsAppGlyph className="h-4 w-4" />
+              WhatsApp
+            </a>
+          ) : null}
           <a
             href={stay.airbnbUrl}
             target="_blank"
