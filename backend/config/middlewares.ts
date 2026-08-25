@@ -7,11 +7,14 @@ type Env = {
 
 export default ({ env }: { env: Env }) => {
   const localOrigins = ['http://localhost:3000', 'http://localhost:8080'];
+  // Production origins are included by default so the deployed API stays
+  // browser-reachable even before CORS_ORIGINS is set in the Render dashboard.
+  const defaultOrigins = ['https://brijstays.in', 'https://www.brijstays.in'];
   const envOrigins = env('CORS_ORIGINS', '')
     .split(',')
     .map((origin: string) => origin.trim())
     .filter(Boolean);
-  const origins = Array.from(new Set([...localOrigins, ...envOrigins]));
+  const origins = Array.from(new Set([...localOrigins, ...defaultOrigins, ...envOrigins]));
 
   // Media CDN origin (Cloudflare R2) served through https://cdn.brijstays.in.
   // Strapi's default CSP only allows 'self', data:, blob: and market-assets,

@@ -1,14 +1,34 @@
-// Blog data fetched from the Strapi "Blogs" collection type.
-// Falls back to the bundled static posts when the backend is unreachable.
+// Blog data fetched from the Strapi "Blogs" collection type. All CMS reads run
+// through a server function, so they always happen on the Worker (never the
+// browser) — client-side navigation works without backend CORS and stays fast.
+// Falls back to the bundled static posts when Strapi is unreachable.
 
+import { createServerFn } from "@tanstack/react-start";
 import { STRAPI_URL, resolveMediaUrl } from "./site";
 import type { StrapiMedia } from "./site";
 import { blogPostList } from "./data/blogPosts";
 import type { BlogPost } from "./data/types";
+import { readEdgeCache, writeEdgeCache } from "./server-cache";
 
 const FETCH_TIMEOUT_MS = 15_000;
 const CACHE_TTL_MS = 5 * 60 * 1000;
+const EDGE_CACHE_TTL_SECONDS = 5 * 60;
 const MAX_ATTEMPTS = 2;
+
+const BLOGS_QUERY = [
+  "sort[0]=date:desc",
+  "fields[0]=Type",
+  "fields[1]=ReadingTime",
+  "fields[2]=Title",
+  "fields[3]=shortTag",
+  "fields[4]=date",
+  "fields[5]=Blog",
+  "fields[6]=Ending",
+  "fields[7]=imp",
+  "fields[8]=showOnhomePage",
+  "populate[image][fields][0]=url",
+  "populate[image][fields][1]=alternativeText",
+].join("&");
 
 type StrapiBlogDocument = {
   id: number;
@@ -78,49 +98,63 @@ function normalizeBlog(doc: StrapiBlogDocument): BlogPost {
 let cachedPosts: BlogPost[] | null = null;
 let cachedAt = 0;
 
-export async function fetchBlogPosts(force = false): Promise<BlogPost[]> {
-  const now = Date.now();
-  if (!force && cachedPosts && now - cachedAt < CACHE_TTL_MS) return cachedPosts;
+export const fetchBlogPostsFromCms = createServerFn()
+  .validator((data: { force?: boolean } | undefined) => data)
+  .handler(async ({ data }) => {
+    const force = data?.force === true;
 
-  let posts: BlogPost[] | null = null;
-  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
-    try {
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
-      let res: Response;
-      try {
-        res = await fetch(`${STRAPI_URL}/api/blogs?populate=*&sort[0]=date:desc`, {
-          headers: { Accept: "application/json" },
-          signal: controller.signal,
-        });
-      } finally {
-        clearTimeout(timer);
-      }
-      if (!res.ok) throw new Error(`Strapi responded with ${res.status}`);
-      const json = (await res.json()) as { data?: StrapiBlogDocument[] };
-      posts = (json.data ?? []).map(normalizeBlog);
-      break;
-    } catch (err) {
-      console.error("[blog] Failed to fetch blogs from Strapi:", err);
+    if (!force) {
+      const edge = await readEdgeCache<BlogPost[]>("blogs");
+      if (edge) return edge;
+      const now = Date.now();
+      if (cachedPosts && now - cachedAt < CACHE_TTL_MS) return cachedPosts;
     }
-  }
 
-  cachedPosts = posts ?? blogPostList;
-  cachedAt = Date.now();
-  return cachedPosts;
+    let posts: BlogPost[] | null = null;
+    for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+      try {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+        let res: Response;
+        try {
+          res = await fetch(`${STRAPI_URL}/api/blogs?${BLOGS_QUERY}`, {
+            headers: { Accept: "application/json" },
+            signal: controller.signal,
+          });
+        } finally {
+          clearTimeout(timer);
+        }
+        if (!res.ok) throw new Error(`Strapi responded with ${res.status}`);
+        const json = (await res.json()) as { data?: StrapiBlogDocument[] };
+        posts = (json.data ?? []).map(normalizeBlog);
+        break;
+      } catch (err) {
+        console.error("[blog] Failed to fetch blogs from Strapi:", err);
+      }
+    }
+
+    const result = posts ?? blogPostList;
+    cachedPosts = result;
+    cachedAt = Date.now();
+    await writeEdgeCache("blogs", result, EDGE_CACHE_TTL_SECONDS);
+    return result;
+  });
+
+export async function fetchBlogPosts(): Promise<BlogPost[]> {
+  return fetchBlogPostsFromCms();
 }
 
 export async function getBlogPost(slug: string): Promise<BlogPost | undefined> {
-  let posts = await fetchBlogPosts();
+  let posts = await fetchBlogPostsFromCms();
   let found = posts.find((p) => p.slug === slug);
-  if (!found && cachedPosts) {
-    posts = await fetchBlogPosts(true);
+  if (!found) {
+    posts = await fetchBlogPostsFromCms({ data: { force: true } });
     found = posts.find((p) => p.slug === slug);
   }
   return found;
 }
 
 export async function getRelatedPosts(slug: string, limit = 3): Promise<BlogPost[]> {
-  const posts = await fetchBlogPosts();
+  const posts = await fetchBlogPostsFromCms();
   return posts.filter((p) => p.slug !== slug).slice(0, limit);
 }

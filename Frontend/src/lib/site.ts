@@ -2,6 +2,11 @@
 // Email, phone, WhatsApp, and social links are fetched from the Strapi backend
 // ("Personal Informations" single type). The remaining site details, including
 // business hours, stay defined here in the frontend.
+// CMS reads run through a server function so they always happen on the Worker
+// (never the browser) — client-side navigation works without backend CORS.
+
+import { createServerFn } from "@tanstack/react-start";
+import { readEdgeCache, writeEdgeCache } from "./server-cache";
 
 export type SiteSocial = { label: string; href: string; icon: string };
 
@@ -205,6 +210,7 @@ export const STRAPI_URL = resolveStrapiUrl();
 let cachedSite: Site | null = null;
 let cachedAt = 0;
 const CACHE_TTL_MS = 5 * 60 * 1000;
+const EDGE_CACHE_TTL_SECONDS = 5 * 60;
 const FETCH_TIMEOUT_MS = 15_000;
 const MAX_ATTEMPTS = 2;
 
@@ -221,39 +227,49 @@ async function fetchSiteOnce(): Promise<Response> {
   }
 }
 
+export const fetchSiteFromCms = createServerFn()
+  .validator((data: { force?: boolean } | undefined) => data)
+  .handler(async ({ data }) => {
+    const force = data?.force === true;
+
+    if (!force) {
+      const edge = await readEdgeCache<Site>("site");
+      if (edge) return edge;
+      const now = Date.now();
+      if (cachedSite && now - cachedAt < CACHE_TTL_MS) return cachedSite;
+    }
+
+    let site: Site | null = null;
+    let lastError: unknown;
+    for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+      try {
+        const res = await fetchSiteOnce();
+        if (!res.ok) throw new Error(`Strapi responded with ${res.status}`);
+        const json = (await res.json()) as { data?: PersonalInformation };
+        site = normalizeSite(json.data);
+        break;
+      } catch (err) {
+        lastError = err;
+      }
+    }
+
+    if (!site) {
+      console.error("[site] Failed to fetch personal information from Strapi:", lastError);
+    }
+    const result = site ?? EMPTY_SITE;
+    cachedSite = result;
+    cachedAt = Date.now();
+    await writeEdgeCache("site", result, EDGE_CACHE_TTL_SECONDS);
+    return result;
+  });
+
 /**
- * Fetches the "Personal Informations" single type from Strapi.
- * Falls back to an empty site (no hardcoded real data) if the backend is
- * unreachable, so pages still render. Retries once on transient failures.
+ * Fetches the "Personal Informations" single type from Strapi through a server
+ * function. Falls back to an empty site (no hardcoded real data) if the backend
+ * is unreachable, so pages still render.
  */
 export async function fetchSite(force = false): Promise<Site> {
-  const now = Date.now();
-  if (!force && cachedSite && now - cachedAt < CACHE_TTL_MS) {
-    return cachedSite;
-  }
-
-  let site: Site | null = null;
-  let lastError: unknown;
-  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
-    try {
-      const res = await fetchSiteOnce();
-      if (!res.ok) throw new Error(`Strapi responded with ${res.status}`);
-      const json = (await res.json()) as { data?: PersonalInformation };
-      site = normalizeSite(json.data);
-      break;
-    } catch (err) {
-      lastError = err;
-    }
-  }
-
-  if (site) {
-    cachedSite = site;
-  } else {
-    console.error("[site] Failed to fetch personal information from Strapi:", lastError);
-    cachedSite = EMPTY_SITE;
-  }
-  cachedAt = Date.now();
-  return cachedSite;
+  return fetchSiteFromCms({ data: { force } });
 }
 
 export function mapEmbedFor(query: string) {
