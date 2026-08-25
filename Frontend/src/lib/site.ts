@@ -17,7 +17,8 @@ export type Site = {
   hours: string;
   gst: string;
   socials: SiteSocial[];
-  directorImage: string;
+  founderImage: string;
+  coFounderImage: string;
 };
 
 /** WhatsApp number for stay inquiries (international format, no + or spaces). */
@@ -54,7 +55,9 @@ export type PersonalInformation = {
   facebook?: string | null;
   youtube?: string | null;
   linkedin?: string | null;
-  directorImage?: StrapiMedia;
+  twitter?: string | null;
+  founder?: StrapiMedia;
+  coFounder?: StrapiMedia;
 };
 
 export const enquiryTypes = [
@@ -96,8 +99,10 @@ export function normalizeSite(info: PersonalInformation | null | undefined): Sit
       ...(i.facebook ? [{ label: "Facebook", href: i.facebook, icon: "Facebook" as const }] : []),
       ...(i.youtube ? [{ label: "YouTube", href: i.youtube, icon: "Youtube" as const }] : []),
       ...(i.linkedin ? [{ label: "LinkedIn", href: i.linkedin, icon: "Linkedin" as const }] : []),
+      ...(i.twitter ? [{ label: "Twitter", href: i.twitter, icon: "Twitter" as const }] : []),
     ],
-    directorImage: resolveMediaUrl(i.directorImage),
+    founderImage: resolveMediaUrl(i.founder),
+    coFounderImage: resolveMediaUrl(i.coFounder),
   };
 }
 
@@ -123,7 +128,8 @@ export const EMPTY_SITE: Site = {
   hours: STATIC_SITE.hours,
   gst: STATIC_SITE.gst,
   socials: [{ label: "Instagram", href: INSTAGRAM_URL, icon: "Instagram" }],
-  directorImage: "",
+  founderImage: "",
+  coFounderImage: "",
 };
 
 export type WhatsAppExtras = {

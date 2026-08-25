@@ -3,6 +3,7 @@ import { Leaf, Quote } from "lucide-react";
 
 import { img } from "@/lib/data/images";
 import { leadership } from "@/lib/data/teamMembers";
+import { useSite } from "@/lib/site-context";
 
 export const Route = createFileRoute("/director")({
   head: () => ({
@@ -25,6 +26,7 @@ export const Route = createFileRoute("/director")({
 });
 
 function DirectorPage() {
+  const site = useSite();
   return (
     <>
       {/* Hero — image fills the section, text overlaid on a soft fade */}
@@ -59,12 +61,14 @@ function DirectorPage() {
       <section className="bg-background py-24 md:py-32">
         <div className="container-x mx-auto max-w-6xl">
           <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-24">
-            {leadership.map((member) => (
+            {leadership.map((member, index) => {
+              const photo = index === 0 ? site.founderImage : site.coFounderImage;
+              return (
               <div key={member.name} className="relative text-center lg:text-left">
                 <div className="overflow-hidden rounded-t-[2rem] bg-secondary">
-                  {member.photo ? (
+                  {photo ? (
                     <img
-                      src={member.photo}
+                      src={photo}
                       alt={`Portrait of ${member.name}`}
                       width={1008}
                       height={1264}
@@ -107,7 +111,8 @@ function DirectorPage() {
                   ))}
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

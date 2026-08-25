@@ -1,10 +1,10 @@
 import { Link } from "@tanstack/react-router";
-import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Youtube } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Twitter, Youtube } from "lucide-react";
 
 import { useSite } from "@/lib/site-context";
 import { MAP_QUERY, mapEmbedFor, mapLinkFor } from "@/lib/site";
 
-const socialIcons = { Instagram, Facebook, Linkedin, Youtube } as const;
+const socialIcons = { Instagram, Facebook, Linkedin, Youtube, Twitter } as const;
 
 const exploreLinks = [
   { label: "Stays", to: "/stays" },

@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Clock, Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Youtube } from "lucide-react";
+import { Clock, Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Twitter, Youtube } from "lucide-react";
 
 import { PageHero } from "@/components/site/PageHero";
 import { EnquiryForm } from "@/components/site/EnquiryForm";
@@ -9,7 +9,7 @@ import { img } from "@/lib/data/images";
 import { useSite } from "@/lib/site-context";
 import { fetchSite, type Site } from "@/lib/site";
 
-const socialIcons = { Instagram, Facebook, Linkedin, Youtube } as const;
+const socialIcons = { Instagram, Facebook, Linkedin, Youtube, Twitter } as const;
 
 export const Route = createFileRoute("/contact")({
   loader: async () => {

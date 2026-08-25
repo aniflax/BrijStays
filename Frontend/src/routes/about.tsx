@@ -7,6 +7,7 @@ import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { CtaBanner } from "@/components/site/CtaBanner";
 import { img, stayImages } from "@/lib/data/images";
 import { director } from "@/lib/data/teamMembers";
+import { useSite } from "@/lib/site-context";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -35,6 +36,7 @@ const checklist = [
 ];
 
 function AboutPage() {
+  const site = useSite();
   return (
     <>
       <PageHero
@@ -121,7 +123,7 @@ function AboutPage() {
         <Reveal className="grid gap-10 border border-border p-8 md:grid-cols-12 md:p-10">
           <div className="md:col-span-3">
             <img
-              src={director.photo}
+              src={site.founderImage || director.photo}
               alt={`Portrait of ${director.name}`}
               className="aspect-[4/5] w-full rounded-2xl object-cover"
             />

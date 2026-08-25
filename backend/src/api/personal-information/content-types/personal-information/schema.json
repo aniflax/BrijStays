@@ -32,7 +32,15 @@
     "linkedin": {
       "type": "string"
     },
-    "directorImage": {
+    "twitter": {
+      "type": "string"
+    },
+    "founder": {
+      "type": "media",
+      "multiple": false,
+      "required": false
+    },
+    "coFounder": {
       "type": "media",
       "multiple": false,
       "required": false
