@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Leaf, Quote } from "lucide-react";
+import { Leaf } from "lucide-react";
 
 import { img } from "@/lib/data/images";
 import { leadership } from "@/lib/data/teamMembers";
@@ -64,53 +64,52 @@ function DirectorPage() {
             {leadership.map((member, index) => {
               const photo = index === 0 ? site.founderImage : site.coFounderImage;
               return (
-              <div key={member.name} className="relative text-center lg:text-left">
-                <div className="overflow-hidden rounded-t-[2rem] bg-secondary">
-                  {photo ? (
-                    <img
-                      src={photo}
-                      alt={`Portrait of ${member.name}`}
-                      width={1008}
-                      height={1264}
-                      loading="eager"
-                      decoding="async"
-                      className="aspect-[4/5] w-full object-cover"
-                    />
-                  ) : null}
-                </div>
+                <div key={member.name} className="relative text-center lg:text-left">
+                  <div className="overflow-hidden rounded-t-[2rem] bg-secondary">
+                    {photo ? (
+                      <img
+                        src={photo}
+                        alt={`Portrait of ${member.name}`}
+                        width={1008}
+                        height={1264}
+                        loading="eager"
+                        decoding="async"
+                        className="aspect-[4/5] w-full object-cover"
+                      />
+                    ) : null}
+                  </div>
 
-                <div className="mt-10">
-                  <h2 className="font-display text-3xl text-foreground md:text-4xl">
-                    {member.name}
-                  </h2>
-                  <p className="mt-2 text-xs uppercase tracking-[0.28em] text-brand">
-                    {member.role}
-                  </p>
-
-                  {member.quote ? (
-                    <div className="mt-8">
-                      <Quote className="mx-auto h-8 w-8 text-brand lg:mx-0" />
-                      <p className="mt-3 font-serif text-xl italic leading-snug text-foreground/85 md:text-2xl">
-                        “{member.quote}”
-                      </p>
-                    </div>
-                  ) : null}
-
-                  <div className="mx-auto mt-8 h-px w-24 bg-brand lg:mx-0" />
-
-                  <p className="mt-8 text-[0.95rem] leading-[1.85] text-muted-foreground">
-                    {member.bio[0]}
-                  </p>
-                  {member.bio.slice(1).map((paragraph) => (
-                    <p
-                      key={paragraph}
-                      className="mt-6 text-[0.95rem] leading-[1.85] text-muted-foreground"
-                    >
-                      {paragraph}
+                  <div className="mt-10">
+                    <h2 className="font-display text-3xl text-foreground md:text-4xl">
+                      {member.name}
+                    </h2>
+                    <p className="mt-2 text-xs uppercase tracking-[0.28em] text-brand">
+                      {member.role}
                     </p>
-                  ))}
+
+                    {member.quote ? (
+                      <div className="mt-8">
+                        <p className="font-serif text-xl italic leading-snug text-foreground/85 md:text-2xl">
+                          “{member.quote}”
+                        </p>
+                      </div>
+                    ) : null}
+
+                    <div className="mx-auto mt-8 h-px w-24 bg-brand lg:mx-0" />
+
+                    <p className="mt-8 text-[0.95rem] leading-[1.85] text-muted-foreground">
+                      {member.bio[0]}
+                    </p>
+                    {member.bio.slice(1).map((paragraph) => (
+                      <p
+                        key={paragraph}
+                        className="mt-6 text-[0.95rem] leading-[1.85] text-muted-foreground"
+                      >
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
                 </div>
-              </div>
               );
             })}
           </div>
