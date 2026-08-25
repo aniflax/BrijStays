@@ -2,8 +2,9 @@ import "./lib/error-capture";
 
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
-import { resetBlogCache } from "./lib/blog";
+import { resetBlogCache, fetchBlogPosts } from "./lib/blog";
 import { resetSiteCache } from "./lib/site";
+import { stayList } from "./lib/data/stays";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -126,8 +127,78 @@ async function handlePurgeWebhook(request: Request, env: unknown): Promise<Respo
   });
 }
 
+const SITE_URL = "https://brijstays.in";
+
+const sitemapStaticPaths = [
+  "",
+  "/stays",
+  "/about",
+  "/director",
+  "/contact",
+  "/media",
+  "/privacy-policy",
+  "/terms-and-conditions",
+];
+
+function xmlEscape(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
+/**
+ * Generates the XML sitemap dynamically so stays and CMS blog posts stay in
+ * sync with content. Includes the static routes, every stay detail page, and
+ * every blog post (with the bundled fallback posts when Strapi is unreachable).
+ */
+async function buildSitemapXml(): Promise<string> {
+  const lastmod = new Date().toISOString();
+  const urls: string[] = [];
+  const push = (path: string) =>
+    urls.push(`  <url><loc>${SITE_URL}${path}</loc><lastmod>${lastmod}</lastmod></url>`);
+
+  for (const path of sitemapStaticPaths) push(path);
+  for (const stay of stayList) push(`/stays/${xmlEscape(stay.slug)}`);
+
+  let posts: Awaited<ReturnType<typeof fetchBlogPosts>> = [];
+  try {
+    posts = await fetchBlogPosts();
+  } catch {
+    posts = [];
+  }
+  if (posts.length === 0) {
+    const { blogPostList } = await import("./lib/data/blogPosts");
+    posts = blogPostList;
+  }
+  for (const post of posts) push(`/media/${xmlEscape(post.slug)}`);
+
+  return [
+    `<?xml version="1.0" encoding="UTF-8"?>`,
+    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`,
+    ...urls,
+    `</urlset>`,
+  ].join("\n");
+}
+
+async function handleSitemap(request: Request): Promise<Response | null> {
+  const url = new URL(request.url);
+  if (request.method !== "GET" || url.pathname !== "/sitemap.xml") return null;
+  const xml = await buildSitemapXml();
+  return new Response(xml, {
+    headers: {
+      "content-type": "application/xml; charset=utf-8",
+      "cache-control": "public, max-age=3600",
+    },
+  });
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
+    const sitemapResponse = await handleSitemap(request);
+    if (sitemapResponse) return sitemapResponse;
     const purgeResponse = await handlePurgeWebhook(request, env);
     if (purgeResponse) return purgeResponse;
     try {
