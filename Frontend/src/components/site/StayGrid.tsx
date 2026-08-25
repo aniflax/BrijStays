@@ -15,7 +15,7 @@ export function StayGrid({
   return (
     <RevealGroup
       className={cn(
-        "grid grid-cols-2 gap-x-6 gap-y-10",
+        "grid grid-cols-1 gap-x-6 gap-y-10",
         columns === 2 && "sm:grid-cols-2",
         columns === 3 && "sm:grid-cols-2 lg:grid-cols-3",
         columns === 4 && "sm:grid-cols-2 lg:grid-cols-4",

@@ -1,9 +1,13 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Leaf } from "lucide-react";
+import { ChevronDown, Leaf } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 
+import { Button } from "@/components/ui/button";
 import { img } from "@/lib/data/images";
 import { leadership } from "@/lib/data/teamMembers";
 import { useSite } from "@/lib/site-context";
+import type { TeamMember } from "@/lib/data/types";
 
 export const Route = createFileRoute("/director")({
   head: () => ({
@@ -60,7 +64,26 @@ function DirectorPage() {
       {/* Founders — two centered columns */}
       <section className="bg-background py-24 md:py-32">
         <div className="container-x mx-auto max-w-6xl">
-          <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-24">
+          <div className="mb-12 text-center">
+            <p className="eyebrow">Leadership</p>
+            <h2 className="mt-4 font-display text-3xl leading-tight tracking-tight text-foreground md:text-4xl">
+              Meet the founders
+            </h2>
+          </div>
+
+          {/* Mobile & tablet — compact two-column cards with "Know more" */}
+          <div className="grid grid-cols-2 items-start gap-3 sm:gap-6 lg:hidden">
+            {leadership.map((member, index) => (
+              <FounderCard
+                key={member.name}
+                member={member}
+                photo={index === 0 ? site.founderImage : site.coFounderImage}
+              />
+            ))}
+          </div>
+
+          {/* Desktop — full leadership profiles */}
+          <div className="hidden items-start gap-24 lg:grid lg:grid-cols-2">
             {leadership.map((member, index) => {
               const photo = index === 0 ? site.founderImage : site.coFounderImage;
               return (
@@ -127,5 +150,65 @@ function DirectorPage() {
         </div>
       </section>
     </>
+  );
+}
+
+function FounderCard({ member, photo }: { member: TeamMember; photo?: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="flex flex-col rounded-3xl border border-border bg-white p-3 text-center shadow-[var(--shadow-soft)] sm:p-4">
+      {photo ? (
+        <img
+          src={photo}
+          alt={`Portrait of ${member.name}`}
+          width={1008}
+          height={1264}
+          loading="lazy"
+          decoding="async"
+          className="aspect-square w-full rounded-2xl object-cover"
+        />
+      ) : null}
+      <h3 className="mt-3 font-display text-sm leading-tight text-foreground sm:mt-4 sm:text-base">
+        {member.name}
+      </h3>
+      <p className="mt-1 text-[0.55rem] uppercase tracking-[0.2em] text-brand sm:text-[0.65rem]">
+        {member.role}
+      </p>
+      <Button
+        type="button"
+        variant="pill"
+        size="sm"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="mt-3 w-full px-2 text-[0.62rem] uppercase tracking-[0.16em] sm:mt-4 sm:text-xs"
+      >
+        {open ? "Show less" : "Know more"}
+        <ChevronDown
+          className={`h-3.5 w-3.5 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+        />
+      </Button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="overflow-hidden"
+          >
+            <div className="mt-3 border-t border-border pt-3 text-left sm:mt-4 sm:pt-4">
+              {member.bio.map((paragraph) => (
+                <p
+                  key={paragraph}
+                  className="mt-2.5 text-[0.72rem] leading-relaxed text-muted-foreground first:mt-0 sm:text-[0.85rem]"
+                >
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
