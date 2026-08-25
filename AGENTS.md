@@ -65,8 +65,12 @@ Frontend (configure in **Cloudflare Workers**):
 CMS data (blogs + site info) and SSR responses are cached at the Cloudflare
 edge for up to 10 minutes, so CMS edits don't appear instantly without a purge.
 
-- **Manual:** `cd Frontend/scripts && ./purge-cache.sh`. Reads `CF_API_TOKEN`
-  and `CF_ZONE`/`CF_ZONE_ID` from `Frontend/scripts/.deploy.env` (gitignored).
+- **Manual (AI/workflow):** after any change that updates the live site — a
+  frontend deploy or a CMS content edit — run
+  `cd Frontend/scripts && ./purge-cache.sh` immediately so changes appear
+  without waiting for the 10-minute TTL. The script reads `CF_API_TOKEN` and
+  `CF_ZONE`/`CF_ZONE_ID` from `Frontend/scripts/.deploy.env` (gitignored) and
+  purges the whole zone (CDN + `_cache/blogs` + `_cache/site` Cache API).
 - **Automatic:** Strapi webhooks POST to `https://brijstays.in/api/purge-cache`.
   The Worker resets its in-process blog/site caches, then calls the Cloudflare
   purge-everything API (clears the CDN and the `_cache/blogs` + `_cache/site`
