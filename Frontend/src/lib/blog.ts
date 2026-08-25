@@ -10,76 +10,67 @@ const FETCH_TIMEOUT_MS = 15_000;
 const CACHE_TTL_MS = 5 * 60 * 1000;
 const MAX_ATTEMPTS = 2;
 
-type StrapiBlockChild = { text?: string };
-
-type StrapiBlock = {
-  type: string;
-  level?: number;
-  children?: StrapiBlockChild[] | (StrapiBlockChild & { children?: StrapiBlockChild[] })[];
-};
-
-type StrapiBlogAttributes = {
+type StrapiBlogDocument = {
+  id: number;
+  documentId: string;
   Type?: string | null;
   ReadingTime?: string | null;
   Title?: string | null;
   shortTag?: string | null;
   date?: string | null;
-  Blog?: StrapiBlock[] | null;
+  Blog?: string | null;
   Ending?: string | null;
   image?: { url?: string | null; alternativeText?: string | null } | null;
   imp?: boolean | null;
   showOnhomePage?: boolean | null;
 };
 
-type StrapiBlogEntity = {
-  id: number;
-  documentId: string;
-  attributes: StrapiBlogAttributes;
-};
-
-function blockText(children: StrapiBlockChild[] = []): string {
-  return children.map((c) => c.text ?? "").join("");
+/** Removes bold/italic markdown markers, keeping the inner text. */
+function stripMarkdown(text: string): string {
+  return text.replace(/\*\*(.+?)\*\*/g, "$1").replace(/_([^_]*)_/g, "$1");
 }
 
-/** Flattens Strapi rich-text blocks into the frontend's simple block shape. */
-function normalizeBlocks(blocks: StrapiBlock[] | null | undefined): BlogPost["body"] {
-  if (!Array.isArray(blocks)) return [];
-  return blocks.flatMap((block): BlogPost["body"] => {
-    if (block.type === "list" && Array.isArray(block.children)) {
-      return block.children
-        .map((item) => {
-          const text = blockText(
-            "children" in item ? (item.children as StrapiBlockChild[]) : [],
-          ).trim();
-          return text ? [{ type: "paragraph" as const, text }] : [];
-        })
-        .flat();
+/**
+ * Converts Strapi's markdown richtext string into the frontend's simple block
+ * shape. Blank lines separate blocks; `**...**` lines become headings and
+ * `_..._` lines become pull quotes.
+ */
+function markdownToBlocks(markdown: string): BlogPost["body"] {
+  const blocks: BlogPost["body"] = [];
+  for (const raw of markdown.split(/\n\s*\n/)) {
+    const line = raw.trim();
+    if (!line) continue;
+    if (line.startsWith("**") && line.endsWith("**")) {
+      blocks.push({ type: "heading", text: stripMarkdown(line.slice(2, -2)) });
+    } else if (
+      (line.startsWith("_") && line.endsWith("_")) ||
+      (line.startsWith("*") && line.endsWith("*"))
+    ) {
+      blocks.push({ type: "quote", text: stripMarkdown(line.slice(1, -1)) });
+    } else {
+      blocks.push({ type: "paragraph", text: stripMarkdown(line) });
     }
-    if (block.type === "paragraph" || block.type === "heading" || block.type === "quote") {
-      const text = blockText(block.children as StrapiBlockChild[]).trim();
-      return text ? [{ type: block.type, text }] : [];
-    }
-    return [];
-  });
+  }
+  return blocks;
 }
 
-function normalizeBlog(entity: StrapiBlogEntity): BlogPost {
-  const a = entity.attributes;
-  const body = normalizeBlocks(a.Blog);
+/** Strapi v5 returns documents flat, without the v4 `attributes` wrapper. */
+function normalizeBlog(doc: StrapiBlogDocument): BlogPost {
+  const body = markdownToBlocks(doc.Blog ?? "");
   const firstParagraph = body.find((b) => b.type === "paragraph")?.text ?? "";
   return {
-    slug: entity.documentId,
-    title: a.Title ?? "Untitled",
+    slug: doc.documentId,
+    title: doc.Title ?? "Untitled",
     excerpt: firstParagraph,
-    category: a.Type ?? "",
-    readingTime: a.ReadingTime ?? "",
-    coverImage: resolveMediaUrl(a.image as StrapiMedia),
-    coverAlt: a.image?.alternativeText ?? a.Title ?? "",
-    author: a.shortTag ?? "",
-    publishedAt: a.date ?? "",
-    ending: a.Ending ?? "",
-    imp: Boolean(a.imp),
-    showOnHomePage: Boolean(a.showOnhomePage),
+    category: doc.Type ?? "",
+    readingTime: doc.ReadingTime ?? "",
+    coverImage: resolveMediaUrl(doc.image as StrapiMedia),
+    coverAlt: doc.image?.alternativeText ?? doc.Title ?? "",
+    author: doc.shortTag ?? "",
+    publishedAt: doc.date ?? "",
+    ending: doc.Ending ?? "",
+    imp: Boolean(doc.imp),
+    showOnHomePage: Boolean(doc.showOnhomePage),
     body,
   };
 }
@@ -106,7 +97,7 @@ export async function fetchBlogPosts(force = false): Promise<BlogPost[]> {
         clearTimeout(timer);
       }
       if (!res.ok) throw new Error(`Strapi responded with ${res.status}`);
-      const json = (await res.json()) as { data?: StrapiBlogEntity[] };
+      const json = (await res.json()) as { data?: StrapiBlogDocument[] };
       posts = (json.data ?? []).map(normalizeBlog);
       break;
     } catch (err) {
