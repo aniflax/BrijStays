@@ -13,9 +13,28 @@ export default ({ env }: { env: Env }) => {
     .filter(Boolean);
   const origins = Array.from(new Set([...localOrigins, ...envOrigins]));
 
+  // Media CDN origin (Cloudflare R2) served through https://cdn.brijstays.in.
+  // Strapi's default CSP only allows 'self', data:, blob: and market-assets,
+  // so the CDN must be added explicitly or admin/media previews are blocked.
+  const cdnUrl = (env('R2_MEDIA_PUBLIC_URL', '') || 'https://cdn.brijstays.in').replace(
+    /\/+$/,
+    '',
+  );
+
   return [
     'strapi::errors',
-    'strapi::security',
+    {
+      name: 'strapi::security',
+      config: {
+        contentSecurityPolicy: {
+          useDefaults: true,
+          directives: {
+            'img-src': ["'self'", 'data:', 'blob:', 'https://market-assets.strapi.io', cdnUrl],
+            'media-src': ["'self'", 'data:', 'blob:', cdnUrl],
+          },
+        },
+      },
+    },
     {
       name: 'strapi::cors',
       config: {
