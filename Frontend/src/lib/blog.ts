@@ -75,11 +75,16 @@ function markdownToBlocks(markdown: string): BlogPost["body"] {
 }
 
 /** Strapi v5 returns documents flat, without the v4 `attributes` wrapper. */
+function slugifyType(type: string | null | undefined, fallback: string): string {
+  const slug = (type ?? "").trim().toLowerCase().replace(/\s+/g, "-");
+  return slug || fallback;
+}
+
 function normalizeBlog(doc: StrapiBlogDocument): BlogPost {
   const body = markdownToBlocks(doc.Blog ?? "");
   const firstParagraph = body.find((b) => b.type === "paragraph")?.text ?? "";
   return {
-    slug: doc.documentId,
+    slug: slugifyType(doc.Type, doc.documentId),
     title: doc.Title ?? "Untitled",
     excerpt: firstParagraph,
     category: doc.Type ?? "",
