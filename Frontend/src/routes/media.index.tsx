@@ -3,10 +3,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHero } from "@/components/site/PageHero";
 import { BlogCard } from "@/components/site/BlogCard";
 import { RevealGroup, RevealItem } from "@/components/motion/Reveal";
-import { blogPostList } from "@/lib/data/blogPosts";
+import { fetchBlogPosts } from "@/lib/blog";
 import { img } from "@/lib/data/images";
 
 export const Route = createFileRoute("/media/")({
+  loader: async () => {
+    const posts = await fetchBlogPosts();
+    return { posts };
+  },
   head: () => ({
     meta: [
       { title: "Insights & Updates — Brij Stays Media" },
@@ -26,7 +30,9 @@ export const Route = createFileRoute("/media/")({
 });
 
 function MediaPage() {
-  const [featured, ...rest] = blogPostList;
+  const { posts } = Route.useLoaderData();
+  const featured = posts.find((p) => p.imp) ?? posts[0];
+  const rest = posts.filter((p) => p.slug !== featured?.slug);
 
   return (
     <>

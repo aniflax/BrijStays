@@ -3,13 +3,14 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { PageHero } from "@/components/site/PageHero";
 import { BlogCard } from "@/components/site/BlogCard";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
-import { getBlogPost, getRelatedPosts } from "@/lib/data/blogPosts";
+import { getBlogPost, getRelatedPosts } from "@/lib/blog";
 
 export const Route = createFileRoute("/media/$slug")({
-  loader: ({ params }) => {
-    const post = getBlogPost(params.slug);
+  loader: async ({ params }) => {
+    const post = await getBlogPost(params.slug);
     if (!post) throw notFound();
-    return { post, related: getRelatedPosts(params.slug, 3) };
+    const related = await getRelatedPosts(params.slug, 3);
+    return { post, related };
   },
   head: ({ loaderData }) => {
     if (!loaderData) {
@@ -54,7 +55,6 @@ function ArticlePage() {
               year: "numeric",
             })}
           </p>
-          <p className="mt-8 font-display text-xl leading-relaxed italic">{post.excerpt}</p>
           <div className="mt-10 flex flex-col gap-6">
             {post.body.map((block, i) =>
               block.type === "heading" ? (
@@ -75,6 +75,11 @@ function ArticlePage() {
               ),
             )}
           </div>
+          {post.ending ? (
+            <p className="mt-12 border-l-2 border-gold pl-6 font-display text-xl leading-relaxed italic">
+              {post.ending}
+            </p>
+          ) : null}
         </Reveal>
       </article>
 

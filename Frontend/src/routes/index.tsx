@@ -15,10 +15,15 @@ import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/button";
 import { stayList } from "@/lib/data/stays";
 import { testimonialList } from "@/lib/data/testimonials";
-import { blogPostList } from "@/lib/data/blogPosts";
+import { fetchBlogPosts } from "@/lib/blog";
 import { galleryStrip, img, stayImages } from "@/lib/data/images";
 
 export const Route = createFileRoute("/")({
+  loader: async () => {
+    const posts = await fetchBlogPosts();
+    const homePosts = posts.filter((p) => p.showOnHomePage).slice(0, 3);
+    return { homePosts };
+  },
   head: () => ({
     meta: [
       { title: "Brij Stays — Premium Stays in Vrindavan" },
@@ -111,6 +116,7 @@ const uspTags = [
 ];
 
 function Home() {
+  const { homePosts } = Route.useLoaderData();
   const featuredStay = stayList[0]!;
   const templeImage = stayImages[featuredStay.slug]?.hero ?? img.hero2;
 
@@ -320,7 +326,7 @@ function Home() {
           className="mb-14"
         />
         <RevealGroup className="grid gap-x-4 gap-y-10 md:grid-cols-3" stagger={0.12}>
-          {blogPostList.slice(0, 3).map((post) => (
+          {homePosts.map((post) => (
             <RevealItem key={post.slug}>
               <BlogCard post={post} />
             </RevealItem>

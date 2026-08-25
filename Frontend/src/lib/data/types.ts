@@ -64,15 +64,22 @@ export type Stay = {
 };
 
 export type BlogPost = {
+  /** Static fallback slug or the Strapi documentId for CMS-managed posts. */
   slug: string;
   title: string;
   excerpt: string;
   category: string;
-  publishedAt: string;
   readingTime: string;
   coverImage: string;
   coverAlt: string;
   author: string;
+  publishedAt: string;
+  /** Closing line shown at the end of the article. */
+  ending: string;
+  /** When true, the post is shown big/featured on the media page. */
+  imp: boolean;
+  /** When true, the post is shown on the homepage. */
+  showOnHomePage: boolean;
   /** Mirrors Strapi rich-text blocks output. */
   body: { type: "paragraph" | "heading" | "quote"; text: string }[];
 };

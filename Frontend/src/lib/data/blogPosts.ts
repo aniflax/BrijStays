@@ -15,6 +15,10 @@ export const blogPostEntities: StrapiEntity<BlogPost>[] = [
       coverImage: stayImages["nest-in-the-forest"]?.hero ?? img.hero2,
       coverAlt: "Boutique stay near ISKCON in Vrindavan",
       author: "Brij Stays",
+      imp: true,
+      showOnHomePage: true,
+      ending:
+        "The best itineraries leave room for the unexpected — a chai stop, a longer darshan, a conversation with a fellow traveller.",
       body: [
         {
           type: "paragraph",
@@ -38,10 +42,6 @@ export const blogPostEntities: StrapiEntity<BlogPost>[] = [
           type: "paragraph",
           text: "Spend the rest of the day at your own pace — a long lunch at a pure-vegetarian restaurant, some shopping in the bazaars, and an early night before your journey home.",
         },
-        {
-          type: "quote",
-          text: "The best itineraries leave room for the unexpected — a chai stop, a longer darshan, a conversation with a fellow traveller.",
-        },
       ],
     },
   },
@@ -58,6 +58,9 @@ export const blogPostEntities: StrapiEntity<BlogPost>[] = [
       coverImage: img.hero1,
       coverAlt: "Temple town of Vrindavan at dusk",
       author: "Brij Stays",
+      imp: false,
+      showOnHomePage: true,
+      ending: "",
       body: [
         {
           type: "paragraph",
@@ -98,6 +101,10 @@ export const blogPostEntities: StrapiEntity<BlogPost>[] = [
       coverImage: img.hero3,
       coverAlt: "Vrindavan streets and temple spires",
       author: "Brij Stays",
+      imp: false,
+      showOnHomePage: true,
+      ending:
+        "Come with an open day and a closed itinerary — Vrindavan rewards the unhurried traveller.",
       body: [
         {
           type: "paragraph",
@@ -122,10 +129,6 @@ export const blogPostEntities: StrapiEntity<BlogPost>[] = [
         {
           type: "paragraph",
           text: "Streets around the main temples are car-restricted at certain hours for crowd control, so plan to walk the last stretch. Evenings after the aartis are the liveliest time; early mornings are the calmest.",
-        },
-        {
-          type: "quote",
-          text: "Come with an open day and a closed itinerary — Vrindavan rewards the unhurried traveller.",
         },
       ],
     },
