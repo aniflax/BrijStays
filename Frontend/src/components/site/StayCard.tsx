@@ -10,11 +10,14 @@ import { cn } from "@/lib/utils";
 export function StayCard({
   stay,
   showWhatsApp = true,
+  compact = false,
   className,
 }: {
   stay: Stay;
   /** Hide the WhatsApp button — used on the homepage where the detail page already has it. */
   showWhatsApp?: boolean;
+  /** Compact sizing so two cards fit per row on phones (homepage featured grid). */
+  compact?: boolean;
   className?: string;
 }) {
   const site = useSite();
@@ -23,7 +26,8 @@ export function StayCard({
   return (
     <article
       className={cn(
-        "group flex h-full flex-col rounded-2xl border border-border bg-white p-3 transition-shadow duration-500 hover:shadow-xl md:p-6",
+        "group flex h-full flex-col rounded-2xl border border-border bg-white transition-shadow duration-500 hover:shadow-xl",
+        compact ? "p-2 md:p-3" : "p-3 md:p-6",
         className,
       )}
     >
@@ -40,15 +44,25 @@ export function StayCard({
           height={1200}
           loading="lazy"
           decoding="async"
-          className="img-zoom aspect-[4/5] w-full object-cover"
+          className={cn("img-zoom w-full object-cover", compact ? "aspect-[3/4]" : "aspect-[4/5]")}
         />
       </Link>
 
-      <div className="flex flex-1 flex-col pt-5">
-        <p className="text-xs uppercase tracking-[0.2em] text-brand">
+      <div className={cn("flex flex-1 flex-col", compact ? "pt-3 md:pt-4" : "pt-5")}>
+        <p
+          className={cn(
+            "uppercase tracking-[0.2em] text-brand",
+            compact ? "text-[0.6rem] md:text-xs" : "text-xs",
+          )}
+        >
           {stay.category} · {stay.location}
         </p>
-        <h3 className="mt-2 font-serif text-2xl leading-tight">
+        <h3
+          className={cn(
+            "mt-2 font-serif leading-tight",
+            compact ? "text-base md:text-lg" : "text-2xl",
+          )}
+        >
           <Link
             to="/stays/$slug"
             params={{ slug: stay.slug }}
@@ -57,12 +71,15 @@ export function StayCard({
             {stay.shortName}
           </Link>
         </h3>
-        <ul className="mt-4 flex flex-wrap gap-2">
+        <ul className={cn("flex flex-wrap gap-2", compact ? "mt-3 hidden sm:flex" : "mt-4")}>
           {[`${stay.guestCapacity} guests`, `${stay.bedrooms} bed`, `${stay.bathrooms} bath`].map(
             (value) => (
               <li
                 key={value}
-                className="rounded-full border border-border px-3 py-1.5 text-[0.68rem] tracking-[0.12em] text-muted-foreground uppercase"
+                className={cn(
+                  "rounded-full border border-border tracking-[0.12em] text-muted-foreground uppercase",
+                  compact ? "px-2.5 py-1 text-[0.6rem]" : "px-3 py-1.5 text-[0.68rem]",
+                )}
               >
                 {value}
               </li>
@@ -70,8 +87,21 @@ export function StayCard({
           )}
         </ul>
 
-        <div className="mt-6 flex flex-wrap gap-2">
-          <Button asChild variant="luxeOutline" size="luxeSm" className="flex-1 min-w-[110px]">
+        <div
+          className={cn(
+            "mt-6 flex flex-wrap gap-2",
+            compact && "mt-auto gap-1.5 pt-3 md:mt-6 md:gap-2",
+          )}
+        >
+          <Button
+            asChild
+            variant="luxeOutline"
+            size="luxeSm"
+            className={cn(
+              "flex-1 min-w-[110px]",
+              compact && "h-8 min-w-0 px-2 text-xs md:h-10 md:min-w-[110px] md:px-4 md:text-sm",
+            )}
+          >
             <Link to="/stays/$slug" params={{ slug: stay.slug }}>
               View Stay
             </Link>
@@ -82,9 +112,14 @@ export function StayCard({
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Inquire about ${stay.name} on WhatsApp`}
-              className="inline-flex h-10 flex-1 min-w-[110px] cursor-pointer items-center justify-center gap-2 rounded-full border border-foreground/20 px-4 text-sm font-medium text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-brand hover:text-brand"
+              className={cn(
+                "inline-flex flex-1 min-w-[110px] cursor-pointer items-center justify-center gap-2 rounded-full border border-foreground/20 px-4 text-sm font-medium text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-brand hover:text-brand",
+                compact
+                  ? "h-8 min-w-0 gap-1 px-2 text-xs md:h-10 md:min-w-[110px] md:gap-2 md:px-4 md:text-sm"
+                  : "h-10",
+              )}
             >
-              <WhatsAppGlyph className="h-4 w-4" />
+              <WhatsAppGlyph className="h-3.5 w-3.5 md:h-4 md:w-4" />
               WhatsApp
             </a>
           ) : null}
@@ -93,9 +128,14 @@ export function StayCard({
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`View ${stay.name} on Airbnb`}
-            className="inline-flex h-10 flex-1 min-w-[100px] cursor-pointer items-center justify-center gap-1.5 rounded-full border border-foreground/20 px-4 text-sm font-medium text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-brand hover:text-brand"
+            className={cn(
+              "inline-flex flex-1 min-w-[100px] cursor-pointer items-center justify-center gap-1.5 rounded-full border border-foreground/20 px-4 text-sm font-medium text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-brand hover:text-brand",
+              compact
+                ? "h-8 min-w-0 px-2 text-xs md:h-10 md:min-w-[100px] md:px-4 md:text-sm"
+                : "h-10",
+            )}
           >
-            Airbnb <ArrowUpRight className="h-3.5 w-3.5" />
+            Airbnb <ArrowUpRight className="h-3 w-3 md:h-3.5 md:w-3.5" />
           </a>
         </div>
       </div>

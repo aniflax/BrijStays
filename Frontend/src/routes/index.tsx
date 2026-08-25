@@ -192,9 +192,9 @@ function Home() {
           />
         </div>
         <div className="container-luxe">
-          <div className="grid gap-x-6 gap-y-10 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4 lg:gap-x-6 lg:gap-y-10">
             {stayList.map((stay) => (
-              <StayCard key={stay.slug} stay={stay} showWhatsApp={false} />
+              <StayCard key={stay.slug} stay={stay} showWhatsApp={false} compact />
             ))}
           </div>
         </div>
