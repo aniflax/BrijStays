@@ -7,7 +7,16 @@ import { buildStayWhatsAppHref, waNumberFromHref } from "@/lib/site";
 import { useSite } from "@/lib/site-context";
 import { cn } from "@/lib/utils";
 
-export function StayCard({ stay, className }: { stay: Stay; className?: string }) {
+export function StayCard({
+  stay,
+  showWhatsApp = true,
+  className,
+}: {
+  stay: Stay;
+  /** Hide the WhatsApp button — used on the homepage where the detail page already has it. */
+  showWhatsApp?: boolean;
+  className?: string;
+}) {
   const site = useSite();
   const whatsappHref = buildStayWhatsAppHref(stay.name, waNumberFromHref(site.whatsapp));
 
@@ -68,7 +77,7 @@ export function StayCard({ stay, className }: { stay: Stay; className?: string }
         </Button>
 
         <div className="mt-4 flex flex-wrap gap-2">
-          {whatsappHref ? (
+          {showWhatsApp && whatsappHref ? (
             <a
               href={whatsappHref}
               target="_blank"
