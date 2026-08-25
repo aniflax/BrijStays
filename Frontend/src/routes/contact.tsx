@@ -1,5 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Clock, Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Twitter, Youtube } from "lucide-react";
+import {
+  Clock,
+  Facebook,
+  Instagram,
+  Linkedin,
+  Mail,
+  MapPin,
+  Phone,
+  Twitter,
+  Youtube,
+} from "lucide-react";
 
 import { PageHero } from "@/components/site/PageHero";
 import { EnquiryForm } from "@/components/site/EnquiryForm";
@@ -54,7 +64,7 @@ function ContactPage() {
 
       <section className="container-luxe py-24 md:py-32">
         <div className="grid gap-16 lg:grid-cols-12">
-          <Reveal className="lg:col-span-5">
+          <Reveal className="order-last lg:order-none lg:col-span-5">
             <div className="border border-border p-8">
               <p className="eyebrow mb-6">Visit or call</p>
               <ul className="flex flex-col gap-6 text-sm">
@@ -101,7 +111,7 @@ function ContactPage() {
             <MapCard className="mt-8" tone="light" height={340} />
           </Reveal>
 
-          <div className="lg:col-span-7" id="callback">
+          <div className="order-first lg:order-none lg:col-span-7" id="callback">
             <Reveal>
               <p className="eyebrow mb-5">Send an enquiry</p>
               <h2 className="font-display text-4xl leading-[1.05] tracking-tight text-foreground md:text-5xl">
