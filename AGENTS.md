@@ -56,9 +56,9 @@ Frontend (configure in **Cloudflare Workers**):
 
 - `STRAPI_URL` — `https://admin.brijstays.in`, the complete public Render/Strapi base URL, without a trailing slash or `/api`
 - `VITE_STRAPI_URL` — optional build-time alternative when the application requires it
-- Cache purge (automatic webhook): `PURGE_SECRET` — a shared secret the Strapi webhook sends as `x-strapi-secret`
 - Cache purge (automatic webhook): `CF_API_TOKEN` — Cloudflare API token with Zone → Cache Purge → Purge permission
 - Cache purge (automatic webhook): `CF_ZONE_ID` (or `CF_ZONE=brijstays.in` to auto-look-up the zone)
+- Cache purge (optional): `PURGE_SECRET` — if set, the webhook only accepts requests carrying `x-strapi-secret: <PURGE_SECRET>`. If unset, the webhook is open.
 
 ## Cache purging
 
@@ -67,16 +67,16 @@ edge for up to 10 minutes, so CMS edits don't appear instantly without a purge.
 
 - **Manual:** `cd Frontend/scripts && ./purge-cache.sh`. Reads `CF_API_TOKEN`
   and `CF_ZONE`/`CF_ZONE_ID` from `Frontend/scripts/.deploy.env` (gitignored).
-- **Automatic:** Strapi webhooks POST to `https://brijstays.in/api/purge-cache`
-  with header `x-strapi-secret: <PURGE_SECRET>`. The Worker verifies the secret
-  against `PURGE_SECRET`, resets its in-process blog/site caches, then calls the
-  Cloudflare purge-everything API (clears the CDN and the `_cache/blogs` +
-  `_cache/site` Cache API entries). Implemented in `Frontend/src/server.ts`
-  (`handlePurgeWebhook`).
+- **Automatic:** Strapi webhooks POST to `https://brijstays.in/api/purge-cache`.
+  The Worker resets its in-process blog/site caches, then calls the Cloudflare
+  purge-everything API (clears the CDN and the `_cache/blogs` + `_cache/site`
+  Cache API entries). Implemented in `Frontend/src/server.ts`
+  (`handlePurgeWebhook`). When `PURGE_SECRET` is configured, the request must
+  also send `x-strapi-secret: <PURGE_SECRET>`; otherwise no secret is required.
 - **To configure the webhook:** in Strapi admin → Settings → Webhooks, add one
-  with URL `https://brijstays.in/api/purge-cache`, secret = `PURGE_SECRET`, and
-  events for the **Blog** collection (create/update/delete/publish) and the
-  **Personal Information** single type.
+  with URL `https://brijstays.in/api/purge-cache` (leave the secret field blank
+  unless `PURGE_SECRET` is set), and events for the **Blog** collection
+  (create/update/delete/publish) and the **Personal Information** single type.
 
 ## Local development
 

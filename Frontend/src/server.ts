@@ -77,20 +77,18 @@ async function lookupZoneId(token: string, zone: string): Promise<string> {
  * Strapi webhook receiver. Strapi POSTs to /api/purge-cache whenever a
  * configured content type changes, and this clears the Cloudflare zone cache
  * (which also drops the `_cache/blogs` + `_cache/site` Cache API entries) plus
- * the in-process caches, so CMS edits appear on the site immediately.
+ * the in-process caches, so CMS edits appear on the site immediately. The
+ * webhook only requires the `x-strapi-secret` header when `PURGE_SECRET` is
+ * configured.
  */
 async function handlePurgeWebhook(request: Request, env: unknown): Promise<Response | null> {
   const url = new URL(request.url);
   if (request.method !== "POST" || url.pathname !== "/api/purge-cache") return null;
 
   const secret = readSecret(env, "PURGE_SECRET");
-  if (!secret) {
-    return new Response(JSON.stringify({ error: "PURGE_SECRET not configured" }), {
-      status: 500,
-      headers: { "content-type": "application/json" },
-    });
-  }
-  if (request.headers.get("x-strapi-secret") !== secret) {
+  // PURGE_SECRET is optional: when it is not configured the webhook is open.
+  // When it is configured, the request must present the matching secret.
+  if (secret && request.headers.get("x-strapi-secret") !== secret) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
       headers: { "content-type": "application/json" },
