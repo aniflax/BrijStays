@@ -1,7 +1,10 @@
+import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Banknote, ChevronDown, Home, MapPin, Play, Search } from "lucide-react";
+import { Banknote, ChevronDown, Home, MapPin, Play, Search, type LucideIcon } from "lucide-react";
 
 import houseImage from "@/assets/house.png";
+import { stayList } from "@/lib/data/stays";
+import { waNumberFromHref } from "@/lib/site";
 import { useSite } from "@/lib/site-context";
 import { cn } from "@/lib/utils";
 
@@ -19,26 +22,48 @@ const heroSocials = [
   { label: "LinkedIn", path: linkedinPath },
 ];
 
-const searchFields = [
-  {
-    label: "Location",
-    icon: MapPin,
-    value: "Vrindavan, Uttar Pradesh",
-  },
-  {
-    label: "Stay Type",
-    icon: Home,
-    value: "Curated Boutique Stays",
-  },
-  {
-    label: "Guests",
-    icon: Banknote,
-    value: "2 – 3 Guests",
-  },
-];
+const stayTypeOptions = ["All Stays", ...Array.from(new Set(stayList.map((s) => s.category)))];
+const guestOptions = ["2 – 3 Guests", "1 – 2 Guests", "3 – 4 Guests", "4 – 5 Guests"];
+
+type MenuKey = "Stay Type" | "Guests" | null;
 
 export function Hero() {
   const site = useSite();
+  const [stayType, setStayType] = useState("All Stays");
+  const [guests, setGuests] = useState("2 – 3 Guests");
+  const [openMenu, setOpenMenu] = useState<MenuKey>(null);
+
+  const searchHref = useMemo(() => {
+    const number = waNumberFromHref(site.whatsapp);
+    if (!number) return "/stays";
+    const stay = stayType === "All Stays" ? "a curated boutique stay" : `a ${stayType} stay`;
+    const message = `Hi Brij Stays, I am looking for ${stay} in Vrindavan for ${guests}. Please share availability, pricing, and booking details.`;
+    return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+  }, [stayType, guests, site.whatsapp]);
+
+  function handleSelect(key: Exclude<MenuKey, null>, value: string) {
+    if (key === "Stay Type") setStayType(value);
+    else setGuests(value);
+    setOpenMenu(null);
+  }
+
+  const searchFields: {
+    key: string;
+    label: string;
+    icon: LucideIcon;
+    value: string;
+    options: string[] | null;
+  }[] = [
+    {
+      key: "Location",
+      label: "Location",
+      icon: MapPin,
+      value: "Vrindavan, Uttar Pradesh",
+      options: null,
+    },
+    { key: "Stay Type", label: "Stay Type", icon: Home, value: stayType, options: stayTypeOptions },
+    { key: "Guests", label: "Guests", icon: Banknote, value: guests, options: guestOptions },
+  ];
 
   return (
     <section className="overflow-hidden bg-white">
@@ -144,43 +169,113 @@ export function Hero() {
                 "max-[600px]:grid max-[600px]:grid-cols-1 max-[600px]:gap-[18px]",
               )}
             >
+              {openMenu ? (
+                <div
+                  className="fixed inset-0 z-20 cursor-default"
+                  aria-hidden
+                  onClick={() => setOpenMenu(null)}
+                />
+              ) : null}
+
               {searchFields.map((field, i) => (
-                <div key={field.label} className="contents">
+                <div key={field.key} className="contents">
                   {i > 0 ? (
                     <div className="h-[45px] w-px shrink-0 bg-[#e5e5e5] max-[1000px]:hidden" />
                   ) : null}
                   <div
                     className={cn(
-                      "flex min-w-0 flex-1 flex-col justify-center gap-[5px] px-7 font-poppins",
+                      "relative flex min-w-0 flex-1 flex-col justify-center gap-[5px] px-7 font-poppins",
                       "first:pl-0",
                       "max-[1000px]:w-[45%] max-[1000px]:flex-none max-[1000px]:p-0",
                       "max-[600px]:w-full",
                     )}
                   >
-                    <div className="flex items-center gap-[7px] text-xs leading-none font-normal text-[#777]">
-                      <field.icon className="h-[14px] w-[14px] shrink-0" strokeWidth={1.8} />
-                      {field.label}
-                    </div>
-                    <div className="flex items-center justify-between gap-2.5">
-                      <div className="text-sm leading-[1.2] font-semibold whitespace-nowrap text-[#111]">
-                        {field.value}
-                      </div>
-                      <ChevronDown
-                        className="h-[15px] w-[15px] shrink-0 text-[#111]"
-                        strokeWidth={2}
-                      />
-                    </div>
+                    {field.options ? (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setOpenMenu(
+                              openMenu === (field.key as MenuKey) ? null : (field.key as MenuKey),
+                            )
+                          }
+                          aria-haspopup="listbox"
+                          aria-expanded={openMenu === (field.key as MenuKey)}
+                          className="flex cursor-pointer flex-col justify-center gap-[5px] text-left"
+                        >
+                          <div className="flex items-center gap-[7px] text-xs leading-none font-normal text-[#777]">
+                            <field.icon className="h-[14px] w-[14px] shrink-0" strokeWidth={1.8} />
+                            {field.label}
+                          </div>
+                          <div className="flex items-center justify-between gap-2.5">
+                            <span className="text-sm leading-[1.2] font-semibold whitespace-nowrap text-[#111]">
+                              {field.value}
+                            </span>
+                            <ChevronDown
+                              className={cn(
+                                "h-[15px] w-[15px] shrink-0 text-[#111] transition-transform duration-200",
+                                openMenu === (field.key as MenuKey) && "rotate-180",
+                              )}
+                              strokeWidth={2}
+                            />
+                          </div>
+                        </button>
+                        {openMenu === (field.key as MenuKey) ? (
+                          <div
+                            role="listbox"
+                            aria-label={field.label}
+                            className="absolute top-full right-0 left-0 z-30 mt-2 min-w-[190px] rounded-2xl border border-[#e7e7e7] bg-white p-2 shadow-[0_18px_45px_rgba(0,0,0,.12)] max-[1000px]:left-auto max-[1000px]:right-0"
+                          >
+                            {field.options.map((option) => (
+                              <button
+                                key={option}
+                                type="button"
+                                role="option"
+                                aria-selected={option === field.value}
+                                onClick={() =>
+                                  handleSelect(field.key as Exclude<MenuKey, null>, option)
+                                }
+                                className={cn(
+                                  "block w-full cursor-pointer rounded-xl px-3 py-2 text-left text-sm text-[#111] transition-colors duration-150 hover:bg-[#f5f5f5]",
+                                  option === field.value && "font-semibold text-[#111]",
+                                )}
+                              >
+                                {option}
+                              </button>
+                            ))}
+                          </div>
+                        ) : null}
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex items-center gap-[7px] text-xs leading-none font-normal text-[#777]">
+                          <field.icon className="h-[14px] w-[14px] shrink-0" strokeWidth={1.8} />
+                          {field.label}
+                        </div>
+                        <div className="flex items-center justify-between gap-2.5">
+                          <div className="text-sm leading-[1.2] font-semibold whitespace-nowrap text-[#111]">
+                            {field.value}
+                          </div>
+                          <ChevronDown
+                            className="h-[15px] w-[15px] shrink-0 text-[#111]"
+                            strokeWidth={2}
+                          />
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               ))}
 
-              <Link
-                to="/stays"
-                aria-label="Search stays"
+              <a
+                href={searchHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Search stays on WhatsApp"
                 className="ml-3 grid h-14 w-14 shrink-0 cursor-pointer place-items-center rounded-full bg-[#111] text-white transition-opacity duration-200 hover:opacity-80 max-[1000px]:ml-auto max-[600px]:ml-0 max-[600px]:h-[52px] max-[600px]:w-[52px]"
               >
                 <Search className="h-5 w-5" strokeWidth={2.2} />
-              </Link>
+              </a>
             </div>
           </div>
         </div>
