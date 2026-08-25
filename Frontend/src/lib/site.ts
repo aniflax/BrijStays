@@ -209,8 +209,8 @@ export const STRAPI_URL = resolveStrapiUrl();
 
 let cachedSite: Site | null = null;
 let cachedAt = 0;
-const CACHE_TTL_MS = 5 * 60 * 1000;
-const EDGE_CACHE_TTL_SECONDS = 5 * 60;
+const CACHE_TTL_MS = 10 * 60 * 1000;
+const EDGE_CACHE_TTL_SECONDS = 10 * 60;
 const FETCH_TIMEOUT_MS = 15_000;
 const MAX_ATTEMPTS = 2;
 

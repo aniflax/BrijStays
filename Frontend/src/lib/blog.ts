@@ -11,8 +11,8 @@ import type { BlogPost } from "./data/types";
 import { readEdgeCache, writeEdgeCache } from "./server-cache";
 
 const FETCH_TIMEOUT_MS = 15_000;
-const CACHE_TTL_MS = 5 * 60 * 1000;
-const EDGE_CACHE_TTL_SECONDS = 5 * 60;
+const CACHE_TTL_MS = 10 * 60 * 1000;
+const EDGE_CACHE_TTL_SECONDS = 10 * 60;
 const MAX_ATTEMPTS = 2;
 
 const BLOGS_QUERY = [
