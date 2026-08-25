@@ -3,11 +3,13 @@ import { ArrowUpRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import type { Stay } from "@/lib/data/types";
-import { buildStayWhatsAppHref, WHATSAPP_NUMBER } from "@/lib/site";
+import { buildStayWhatsAppHref, waNumberFromHref } from "@/lib/site";
+import { useSite } from "@/lib/site-context";
 import { cn } from "@/lib/utils";
 
 export function StayCard({ stay, className }: { stay: Stay; className?: string }) {
-  const whatsappHref = buildStayWhatsAppHref(stay.name, WHATSAPP_NUMBER);
+  const site = useSite();
+  const whatsappHref = buildStayWhatsAppHref(stay.name, waNumberFromHref(site.whatsapp));
 
   return (
     <article

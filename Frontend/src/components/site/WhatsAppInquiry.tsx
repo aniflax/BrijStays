@@ -1,7 +1,8 @@
 import { MessageCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { buildStayWhatsAppHref, WHATSAPP_NUMBER, type WhatsAppExtras } from "@/lib/site";
+import { buildStayWhatsAppHref, waNumberFromHref, type WhatsAppExtras } from "@/lib/site";
+import { useSite } from "@/lib/site-context";
 import { cn } from "@/lib/utils";
 
 /**
@@ -23,7 +24,8 @@ export function WhatsAppInquiry({
   tone?: "light" | "dark";
   className?: string;
 }) {
-  const href = buildStayWhatsAppHref(title, WHATSAPP_NUMBER, extras);
+  const site = useSite();
+  const href = buildStayWhatsAppHref(title, waNumberFromHref(site.whatsapp), extras);
   return (
     <Button
       asChild

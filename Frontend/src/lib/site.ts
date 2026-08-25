@@ -88,6 +88,17 @@ export function buildWhatsAppHref(value: string | null | undefined, phone: strin
   return number ? `https://wa.me/${number}` : "";
 }
 
+/**
+ * Extracts the numeric WhatsApp number from a wa.me deep-link (e.g.
+ * `https://wa.me/918826287015` → `918826287015`). Falls back to the bundled
+ * constant when the CMS hasn't provided one.
+ */
+export function waNumberFromHref(href: string): string {
+  const match = href.match(/wa\.me\/([^?#]+)/);
+  const digits = (match?.[1] ?? "").replace(/\D/g, "");
+  return digits || WHATSAPP_NUMBER;
+}
+
 export function normalizeSite(info: PersonalInformation | null | undefined): Site {
   const i = info ?? {};
   const phone = i.phone ?? WHATSAPP_DISPLAY;
