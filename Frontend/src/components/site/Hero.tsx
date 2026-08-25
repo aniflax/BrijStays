@@ -36,8 +36,15 @@ export function Hero() {
   const searchHref = useMemo(() => {
     const number = waNumberFromHref(site.whatsapp);
     if (!number) return "/stays";
-    const stay = stayType === "All Stays" ? "a curated boutique stay" : `a ${stayType} stay`;
-    const message = `Hi Brij Stays, I am looking for ${stay} in Vrindavan for ${guests}. Please share availability, pricing, and booking details.`;
+    const message = [
+      "Hi Brij Stays, I am looking for a stay with the following details:",
+      "",
+      `Location: Vrindavan, Uttar Pradesh`,
+      `Stay Type: ${stayType}`,
+      `Guests: ${guests}`,
+      "",
+      "Please share availability, pricing, and booking details.",
+    ].join("\n");
     return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
   }, [stayType, guests, site.whatsapp]);
 
@@ -66,7 +73,7 @@ export function Hero() {
   ];
 
   return (
-    <section className="overflow-hidden bg-white">
+    <section className="overflow-x-clip bg-white">
       <div className="mx-auto w-full max-w-[1720px] px-6 md:px-10 xl:px-24">
         <div className="pt-[62px] pb-[50px]">
           <div className="relative mt-[15px] min-[1001px]:h-[650px]">
