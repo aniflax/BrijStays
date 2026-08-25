@@ -272,6 +272,12 @@ export async function fetchSite(force = false): Promise<Site> {
   return fetchSiteFromCms({ data: { force } });
 }
 
+/** Clears the in-process site cache so the next read refetches from Strapi. */
+export function resetSiteCache(): void {
+  cachedSite = null;
+  cachedAt = 0;
+}
+
 export function mapEmbedFor(query: string) {
   return `https://www.google.com/maps?q=${encodeURIComponent(query)}&hl=en&z=13&output=embed`;
 }

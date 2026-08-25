@@ -2,6 +2,8 @@ import "./lib/error-capture";
 
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
+import { resetBlogCache } from "./lib/blog";
+import { resetSiteCache } from "./lib/site";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -44,8 +46,92 @@ function isH3SwallowedErrorBody(body: string): boolean {
   }
 }
 
+/**
+ * Reads a secret from every source that exposes Worker bindings: the direct
+ * `env` argument, Nitro's `globalThis.__env__` (set by the cloudflare-module
+ * preset before dispatching to the SSR entry), and `process.env` (available
+ * under nodejs_compat and in local development).
+ */
+function readSecret(env: unknown, key: string): string {
+  const candidates = [
+    env,
+    (globalThis as { __env__?: Record<string, string | undefined> }).__env__,
+    typeof process !== "undefined" ? process.env : undefined,
+  ] as (Record<string, string | undefined> | undefined)[];
+  for (const candidate of candidates) {
+    const value = candidate?.[key];
+    if (value) return value;
+  }
+  return "";
+}
+
+async function lookupZoneId(token: string, zone: string): Promise<string> {
+  const res = await fetch(`https://api.cloudflare.com/client/v4/zones?name=${zone}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const json = (await res.json()) as { result?: { id?: string }[] };
+  return json.result?.[0]?.id ?? "";
+}
+
+/**
+ * Strapi webhook receiver. Strapi POSTs to /api/purge-cache whenever a
+ * configured content type changes, and this clears the Cloudflare zone cache
+ * (which also drops the `_cache/blogs` + `_cache/site` Cache API entries) plus
+ * the in-process caches, so CMS edits appear on the site immediately.
+ */
+async function handlePurgeWebhook(request: Request, env: unknown): Promise<Response | null> {
+  const url = new URL(request.url);
+  if (request.method !== "POST" || url.pathname !== "/api/purge-cache") return null;
+
+  const secret = readSecret(env, "PURGE_SECRET");
+  if (!secret) {
+    return new Response(JSON.stringify({ error: "PURGE_SECRET not configured" }), {
+      status: 500,
+      headers: { "content-type": "application/json" },
+    });
+  }
+  if (request.headers.get("x-strapi-secret") !== secret) {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { "content-type": "application/json" },
+    });
+  }
+
+  const apiToken = readSecret(env, "CF_API_TOKEN");
+  let zoneId = readSecret(env, "CF_ZONE_ID");
+  if (!zoneId) {
+    const zone = readSecret(env, "CF_ZONE");
+    if (zone) zoneId = await lookupZoneId(apiToken, zone);
+  }
+  if (!apiToken || !zoneId) {
+    return new Response(JSON.stringify({ error: "Cloudflare credentials not configured" }), {
+      status: 500,
+      headers: { "content-type": "application/json" },
+    });
+  }
+
+  resetBlogCache();
+  resetSiteCache();
+
+  const res = await fetch(`https://api.cloudflare.com/client/v4/zones/${zoneId}/purge_cache`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ purge_everything: true }),
+  });
+  const json = await res.json();
+  return new Response(JSON.stringify(json), {
+    status: res.ok ? 200 : 502,
+    headers: { "content-type": "application/json" },
+  });
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
+    const purgeResponse = await handlePurgeWebhook(request, env);
+    if (purgeResponse) return purgeResponse;
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);

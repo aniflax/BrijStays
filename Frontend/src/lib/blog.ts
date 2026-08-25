@@ -158,3 +158,9 @@ export async function getRelatedPosts(slug: string, limit = 3): Promise<BlogPost
   const posts = await fetchBlogPostsFromCms();
   return posts.filter((p) => p.slug !== slug).slice(0, limit);
 }
+
+/** Clears the in-process blog cache so the next read refetches from Strapi. */
+export function resetBlogCache(): void {
+  cachedPosts = null;
+  cachedAt = 0;
+}
