@@ -70,20 +70,19 @@ export function StayCard({
           )}
         </ul>
 
-        <Button asChild variant="luxeOutline" size="luxeSm" className="mt-6 w-fit">
-          <Link to="/stays/$slug" params={{ slug: stay.slug }}>
-            View Stay
-          </Link>
-        </Button>
-
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-6 flex flex-wrap gap-2">
+          <Button asChild variant="luxeOutline" size="luxeSm" className="flex-1 min-w-[110px]">
+            <Link to="/stays/$slug" params={{ slug: stay.slug }}>
+              View Stay
+            </Link>
+          </Button>
           {showWhatsApp && whatsappHref ? (
             <a
               href={whatsappHref}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Inquire about ${stay.name} on WhatsApp`}
-              className="inline-flex h-10 flex-1 min-w-[130px] cursor-pointer items-center justify-center gap-2 rounded-full border border-foreground/20 px-4 text-sm font-medium text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-brand hover:text-brand"
+              className="inline-flex h-10 flex-1 min-w-[110px] cursor-pointer items-center justify-center gap-2 rounded-full border border-foreground/20 px-4 text-sm font-medium text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-brand hover:text-brand"
             >
               <WhatsAppGlyph className="h-4 w-4" />
               WhatsApp
@@ -94,7 +93,7 @@ export function StayCard({
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`View ${stay.name} on Airbnb`}
-            className="inline-flex h-10 flex-1 min-w-[90px] cursor-pointer items-center justify-center gap-1.5 rounded-full border border-foreground/20 px-4 text-sm font-medium text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-brand hover:text-brand"
+            className="inline-flex h-10 flex-1 min-w-[100px] cursor-pointer items-center justify-center gap-1.5 rounded-full border border-foreground/20 px-4 text-sm font-medium text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-brand hover:text-brand"
           >
             Airbnb <ArrowUpRight className="h-3.5 w-3.5" />
           </a>
