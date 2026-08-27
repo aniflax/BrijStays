@@ -52,5 +52,6 @@ export default ({ env }: { env: Env }) => {
     'strapi::session',
     'strapi::favicon',
     'strapi::public',
+    'global::admin-head-tags',
   ];
 };

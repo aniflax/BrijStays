@@ -15,8 +15,8 @@ export default (config: any, { strapi }: { strapi: any }) => {
     const inject = (html: string): string =>
       html.replace(
         '</head>',
-        '<link rel="icon" href="/favicon.png" type="image/png">' +
-          '<link rel="apple-touch-icon" href="/favicon.png">' +
+        '<link rel="icon" href="/Favicon%20brijstays.png" type="image/png">' +
+          '<link rel="apple-touch-icon" href="/Favicon%20brijstays.png">' +
           '</head>'
       );
 
