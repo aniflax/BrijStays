@@ -76,6 +76,27 @@ export function instagramEmbedUrl(rawUrl: string): string {
   return `https://www.instagram.com${clean}/embed/`;
 }
 
+/**
+ * Builds a cover-image URL for an Instagram post/reel. Instagram responds to
+ * `https://www.instagram.com/p/<shortcode>/media/?size=l` with a 302 redirect
+ * to the CDN JPEG, which browsers follow automatically when used as an img src.
+ */
+export function instagramThumbnailUrl(rawUrl: string): string {
+  const trimmed = rawUrl.trim();
+  if (!trimmed) return "";
+  let path: string;
+  try {
+    path = new URL(trimmed).pathname;
+  } catch {
+    path = trimmed.replace(/^https?:\/\/[^/]+/i, "");
+  }
+  // Path is like /reel/<code>/ or /p/<code>/
+  const segments = path.split("/").filter(Boolean);
+  const shortcode = segments[segments.length - 1];
+  if (!shortcode) return "";
+  return `https://www.instagram.com/p/${shortcode}/media/?size=l`;
+}
+
 function sortEntries<T extends { order?: number | null }>(entries: T[] | undefined): T[] {
   return [...(entries ?? [])].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 }
@@ -280,6 +301,7 @@ export const fetchInstagramVideosFromCms = createServerFn()
             url: entry.url ?? "",
             caption: entry.caption ?? "",
             embedUrl: instagramEmbedUrl(entry.url ?? ""),
+            thumbnailUrl: instagramThumbnailUrl(entry.url ?? ""),
           }));
         break;
       } catch (err) {

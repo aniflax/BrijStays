@@ -46,6 +46,8 @@ export type InstagramVideo = {
   caption: string;
   /** Pre-built `https://www.instagram.com/<path>/embed/` iframe source. */
   embedUrl: string;
+  /** Cover-image URL (Instagram redirects to the CDN JPEG). */
+  thumbnailUrl: string;
 };
 
 export type Stay = {
