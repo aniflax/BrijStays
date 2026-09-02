@@ -1,0 +1,325 @@
+{
+  "generatedAt": "2026-09-02T17:17:52.858Z",
+  "baseUrl": "https://admin.brijstays.in",
+  "stays": [
+    {
+      "slug": "all-things-pichwai",
+      "heroFileId": 13,
+      "heroUrl": "https://cdn.brijstays.in/hero_0930010541.webp",
+      "gallery": [
+        {
+          "fileId": 14,
+          "url": "https://cdn.brijstays.in/01_345c631f29.webp",
+          "name": "01.webp"
+        },
+        {
+          "fileId": 15,
+          "url": "https://cdn.brijstays.in/02_40ba918fa2.webp",
+          "name": "02.webp"
+        },
+        {
+          "fileId": 16,
+          "url": "https://cdn.brijstays.in/03_dc8bb5a872.webp",
+          "name": "03.webp"
+        },
+        {
+          "fileId": 17,
+          "url": "https://cdn.brijstays.in/04_d4f88ccb2c.webp",
+          "name": "04.webp"
+        },
+        {
+          "fileId": 18,
+          "url": "https://cdn.brijstays.in/05_61d401fdad.webp",
+          "name": "05.webp"
+        }
+      ]
+    },
+    {
+      "slug": "anand-van",
+      "heroFileId": 19,
+      "heroUrl": "https://cdn.brijstays.in/hero_5e5c202ac2.webp",
+      "gallery": [
+        {
+          "fileId": 20,
+          "url": "https://cdn.brijstays.in/01_d6f3aa4b64.webp",
+          "name": "01.webp"
+        },
+        {
+          "fileId": 21,
+          "url": "https://cdn.brijstays.in/02_66a122a06f.webp",
+          "name": "02.webp"
+        },
+        {
+          "fileId": 22,
+          "url": "https://cdn.brijstays.in/03_1b11534fe5.webp",
+          "name": "03.webp"
+        },
+        {
+          "fileId": 23,
+          "url": "https://cdn.brijstays.in/04_3ef99bd707.webp",
+          "name": "04.webp"
+        },
+        {
+          "fileId": 24,
+          "url": "https://cdn.brijstays.in/05_1f34b6b3a7.webp",
+          "name": "05.webp"
+        }
+      ]
+    },
+    {
+      "slug": "artistic-haven-shantivan",
+      "heroFileId": 25,
+      "heroUrl": "https://cdn.brijstays.in/hero_84780a2f62.webp",
+      "gallery": [
+        {
+          "fileId": 26,
+          "url": "https://cdn.brijstays.in/01_7477dddd0b.webp",
+          "name": "01.webp"
+        },
+        {
+          "fileId": 27,
+          "url": "https://cdn.brijstays.in/02_f9ee7a0c43.webp",
+          "name": "02.webp"
+        },
+        {
+          "fileId": 28,
+          "url": "https://cdn.brijstays.in/03_46e43097b5.webp",
+          "name": "03.webp"
+        },
+        {
+          "fileId": 29,
+          "url": "https://cdn.brijstays.in/04_56a4c2ee5c.webp",
+          "name": "04.webp"
+        },
+        {
+          "fileId": 30,
+          "url": "https://cdn.brijstays.in/05_f885d1fb35.webp",
+          "name": "05.webp"
+        }
+      ]
+    },
+    {
+      "slug": "nest-in-the-forest",
+      "heroFileId": 31,
+      "heroUrl": "https://cdn.brijstays.in/hero_441500c701.webp",
+      "gallery": [
+        {
+          "fileId": 32,
+          "url": "https://cdn.brijstays.in/01_c36c0b4556.webp",
+          "name": "01.webp"
+        },
+        {
+          "fileId": 33,
+          "url": "https://cdn.brijstays.in/02_71c9f364c2.webp",
+          "name": "02.webp"
+        },
+        {
+          "fileId": 34,
+          "url": "https://cdn.brijstays.in/03_ca3012c435.webp",
+          "name": "03.webp"
+        },
+        {
+          "fileId": 35,
+          "url": "https://cdn.brijstays.in/04_f61e543831.webp",
+          "name": "04.webp"
+        },
+        {
+          "fileId": 36,
+          "url": "https://cdn.brijstays.in/05_79fd6f7925.webp",
+          "name": "05.webp"
+        }
+      ]
+    },
+    {
+      "slug": "red-velvet-studio",
+      "heroFileId": 37,
+      "heroUrl": "https://cdn.brijstays.in/hero_0bbfd5fa9a.webp",
+      "gallery": [
+        {
+          "fileId": 38,
+          "url": "https://cdn.brijstays.in/01_c65b20572a.webp",
+          "name": "01.webp"
+        },
+        {
+          "fileId": 39,
+          "url": "https://cdn.brijstays.in/02_422f7873bb.webp",
+          "name": "02.webp"
+        },
+        {
+          "fileId": 40,
+          "url": "https://cdn.brijstays.in/03_f13673f64e.webp",
+          "name": "03.webp"
+        },
+        {
+          "fileId": 41,
+          "url": "https://cdn.brijstays.in/04_1f5582e28b.webp",
+          "name": "04.webp"
+        },
+        {
+          "fileId": 42,
+          "url": "https://cdn.brijstays.in/05_53ae29c3cc.webp",
+          "name": "05.webp"
+        }
+      ]
+    },
+    {
+      "slug": "royal-indian-odyssey",
+      "heroFileId": 43,
+      "heroUrl": "https://cdn.brijstays.in/hero_308f90d528.webp",
+      "gallery": [
+        {
+          "fileId": 44,
+          "url": "https://cdn.brijstays.in/01_bcb768db93.webp",
+          "name": "01.webp"
+        },
+        {
+          "fileId": 45,
+          "url": "https://cdn.brijstays.in/02_55cebf3df9.webp",
+          "name": "02.webp"
+        },
+        {
+          "fileId": 46,
+          "url": "https://cdn.brijstays.in/03_3233a1d8d4.webp",
+          "name": "03.webp"
+        },
+        {
+          "fileId": 47,
+          "url": "https://cdn.brijstays.in/04_1d232f7753.webp",
+          "name": "04.webp"
+        },
+        {
+          "fileId": 48,
+          "url": "https://cdn.brijstays.in/05_4100283ea6.webp",
+          "name": "05.webp"
+        }
+      ]
+    },
+    {
+      "slug": "shyam-rang-palace",
+      "heroFileId": 49,
+      "heroUrl": "https://cdn.brijstays.in/hero_5f14d017ae.webp",
+      "gallery": [
+        {
+          "fileId": 50,
+          "url": "https://cdn.brijstays.in/01_5f097827ca.webp",
+          "name": "01.webp"
+        },
+        {
+          "fileId": 51,
+          "url": "https://cdn.brijstays.in/02_c3406af7e1.webp",
+          "name": "02.webp"
+        },
+        {
+          "fileId": 52,
+          "url": "https://cdn.brijstays.in/03_8d62ca9407.webp",
+          "name": "03.webp"
+        },
+        {
+          "fileId": 53,
+          "url": "https://cdn.brijstays.in/04_f256e5f624.webp",
+          "name": "04.webp"
+        },
+        {
+          "fileId": 54,
+          "url": "https://cdn.brijstays.in/05_41b4220605.webp",
+          "name": "05.webp"
+        }
+      ]
+    },
+    {
+      "slug": "yoga-cafe",
+      "heroFileId": 55,
+      "heroUrl": "https://cdn.brijstays.in/hero_8f5c90caa2.webp",
+      "gallery": [
+        {
+          "fileId": 56,
+          "url": "https://cdn.brijstays.in/01_cd47862d1f.webp",
+          "name": "01.webp"
+        },
+        {
+          "fileId": 57,
+          "url": "https://cdn.brijstays.in/02_861f5b6422.webp",
+          "name": "02.webp"
+        },
+        {
+          "fileId": 58,
+          "url": "https://cdn.brijstays.in/03_209f013eca.webp",
+          "name": "03.webp"
+        },
+        {
+          "fileId": 59,
+          "url": "https://cdn.brijstays.in/04_e837162747.webp",
+          "name": "04.webp"
+        },
+        {
+          "fileId": 60,
+          "url": "https://cdn.brijstays.in/05_f58844a79c.webp",
+          "name": "05.webp"
+        }
+      ]
+    }
+  ],
+  "galleryImages": [
+    {
+      "fileId": 61,
+      "url": "https://cdn.brijstays.in/interior_1_5f30fc5a2c.jpg",
+      "name": "interior-1.jpg"
+    },
+    {
+      "fileId": 62,
+      "url": "https://cdn.brijstays.in/interior_2_bcc4b1f419.jpg",
+      "name": "interior-2.jpg"
+    },
+    {
+      "fileId": 63,
+      "url": "https://cdn.brijstays.in/interior_3_9be36c8a60.jpg",
+      "name": "interior-3.jpg"
+    },
+    {
+      "fileId": 64,
+      "url": "https://cdn.brijstays.in/interior_4_9461050f2c.jpg",
+      "name": "interior-4.jpg"
+    },
+    {
+      "fileId": 65,
+      "url": "https://cdn.brijstays.in/hero_1_ff2b60dd67.jpg",
+      "name": "hero-1.jpg"
+    },
+    {
+      "fileId": 66,
+      "url": "https://cdn.brijstays.in/hero_2_8d81413557.jpg",
+      "name": "hero-2.jpg"
+    },
+    {
+      "fileId": 67,
+      "url": "https://cdn.brijstays.in/hero_3_cc3f00cd22.jpg",
+      "name": "hero-3.jpg"
+    }
+  ],
+  "standardImages": [
+    {
+      "fileId": 68,
+      "url": "https://cdn.brijstays.in/interior_1_40a4f8bc5e.jpg",
+      "name": "interior-1.jpg"
+    },
+    {
+      "fileId": 69,
+      "url": "https://cdn.brijstays.in/interior_2_b461aba126.jpg",
+      "name": "interior-2.jpg"
+    },
+    {
+      "fileId": 70,
+      "url": "https://cdn.brijstays.in/interior_3_2703395717.jpg",
+      "name": "interior-3.jpg"
+    },
+    {
+      "fileId": 71,
+      "url": "https://cdn.brijstays.in/interior_4_0c6c2e3a17.jpg",
+      "name": "interior-4.jpg"
+    }
+  ],
+  "moreThanAStayImage": {
+    "fileId": 72,
+    "url": "https://cdn.brijstays.in/more_than_a_stay_45a89b71a2.png"
+  }
+}
