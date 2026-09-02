@@ -1,0 +1,109 @@
+{
+  "kind": "collectionType",
+  "collectionName": "stays",
+  "info": {
+    "singularName": "stay",
+    "pluralName": "stays",
+    "displayName": "Stays",
+    "description": "Property inventory — each stay is a verified Airbnb listing, fully editable from the CMS"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "shortName": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "category": {
+      "type": "string"
+    },
+    "building": {
+      "type": "string"
+    },
+    "roomType": {
+      "type": "string"
+    },
+    "shortDescription": {
+      "type": "text"
+    },
+    "description": {
+      "type": "text"
+    },
+    "highlights": {
+      "type": "text"
+    },
+    "amenities": {
+      "type": "text"
+    },
+    "airbnbUrl": {
+      "type": "string"
+    },
+    "mapQuery": {
+      "type": "string"
+    },
+    "guestCapacity": {
+      "type": "integer",
+      "default": 2
+    },
+    "bedrooms": {
+      "type": "integer",
+      "default": 1
+    },
+    "bathrooms": {
+      "type": "integer",
+      "default": 1
+    },
+    "rating": {
+      "type": "decimal",
+      "default": 0
+    },
+    "ratingCount": {
+      "type": "integer",
+      "default": 0
+    },
+    "latitude": {
+      "type": "decimal"
+    },
+    "longitude": {
+      "type": "decimal"
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "showOnHomePage": {
+      "type": "boolean",
+      "default": false
+    },
+    "heroImage": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "gallery": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    }
+  }
+}

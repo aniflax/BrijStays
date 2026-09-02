@@ -3,8 +3,9 @@ import "./lib/error-capture";
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
 import { resetBlogCache, fetchBlogPosts } from "./lib/blog";
+import { resetStaysCache, fetchStays } from "./lib/stays";
+import { resetHomepageCaches } from "./lib/homepage";
 import { resetSiteCache } from "./lib/site";
-import { stayList } from "./lib/data/stays";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -111,6 +112,8 @@ async function handlePurgeWebhook(request: Request, env: unknown): Promise<Respo
 
   resetBlogCache();
   resetSiteCache();
+  resetStaysCache();
+  resetHomepageCaches();
 
   const res = await fetch(`https://api.cloudflare.com/client/v4/zones/${zoneId}/purge_cache`, {
     method: "POST",
@@ -161,7 +164,18 @@ async function buildSitemapXml(): Promise<string> {
     urls.push(`  <url><loc>${SITE_URL}${path}</loc><lastmod>${lastmod}</lastmod></url>`);
 
   for (const path of sitemapStaticPaths) push(path);
-  for (const stay of stayList) push(`/stays/${xmlEscape(stay.slug)}`);
+
+  let stays: Awaited<ReturnType<typeof fetchStays>> = [];
+  try {
+    stays = await fetchStays();
+  } catch {
+    stays = [];
+  }
+  if (stays.length === 0) {
+    const { stayList } = await import("./lib/data/stays");
+    stays = stayList;
+  }
+  for (const stay of stays) push(`/stays/${xmlEscape(stay.slug)}`);
 
   let posts: Awaited<ReturnType<typeof fetchBlogPosts>> = [];
   try {

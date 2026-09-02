@@ -1,16 +1,6 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import {
-  ArrowUpRight,
-  Check,
-  MapPin,
-  ShieldCheck,
-  Sparkles,
-  Star,
-  Wifi,
-  X,
-} from "lucide-react";
-
+import { ArrowUpRight, Check, MapPin, ShieldCheck, Sparkles, Star, Wifi, X } from "lucide-react";
 import { PageHero } from "./PageHero";
 import { SectionHeading } from "./SectionHeading";
 import { MapCard } from "./MapCard";

@@ -3,11 +3,15 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageHero } from "@/components/site/PageHero";
 import { StayGrid } from "@/components/site/StayGrid";
 import { CtaBanner } from "@/components/site/CtaBanner";
-import { stayList } from "@/lib/data/stays";
+import { fetchStays } from "@/lib/stays";
 import { img } from "@/lib/data/images";
 import { useSite } from "@/lib/site-context";
 
 export const Route = createFileRoute("/stays/")({
+  loader: async () => {
+    const stays = await fetchStays();
+    return { stays };
+  },
   head: () => ({
     meta: [
       { title: "Stays in Vrindavan — Boutique Stays near ISKCON & Prem Mandir | Brij Stays" },
@@ -29,13 +33,14 @@ export const Route = createFileRoute("/stays/")({
 
 function StaysPage() {
   const site = useSite();
+  const { stays } = Route.useLoaderData();
   const instagram = site.socials.find((s) => s.icon === "Instagram")?.href;
   return (
     <>
       <PageHero
         eyebrow="Stays in Vrindavan"
         title={"Curated stays in the\nheart of Brij"}
-        subtitle="Eight boutique stays within easy reach of ISKCON, Prem Mandir and Banke Bihari — each one hosted with care."
+        subtitle={`${stays.length} boutique ${stays.length === 1 ? "stay" : "stays"} within easy reach of ISKCON, Prem Mandir and Banke Bihari — each one hosted with care.`}
         image={img.hero1}
         imageAlt="Boutique stay in Vrindavan"
         priority
@@ -45,14 +50,14 @@ function StaysPage() {
         <div className="mb-14 max-w-2xl">
           <p className="eyebrow mb-4">The Collection</p>
           <h2 className="font-display text-4xl leading-[1.05] tracking-tight text-foreground md:text-5xl">
-            Eight stays, one standard of hospitality
+            {stays.length} {stays.length === 1 ? "stay" : "stays"}, one standard of hospitality
           </h2>
           <p className="mt-6 text-base leading-relaxed text-muted-foreground">
             Every stay below is verified on Airbnb with real guest reviews. For availability and
             pricing, message us on WhatsApp — we confirm quickly, usually the same day.
           </p>
         </div>
-        <StayGrid stays={stayList} columns={4} />
+        <StayGrid stays={stays} columns={4} />
       </section>
 
       <section className="pb-24 md:pb-32">

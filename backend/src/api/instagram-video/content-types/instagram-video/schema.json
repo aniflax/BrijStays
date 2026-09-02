@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "instagram_videos",
+  "info": {
+    "singularName": "instagram-video",
+    "pluralName": "instagram-videos",
+    "displayName": "Instagram Videos",
+    "description": "Instagram reels/videos shown in the homepage Instagram section (two per row)"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "url": {
+      "type": "string",
+      "required": true
+    },
+    "caption": {
+      "type": "string"
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}

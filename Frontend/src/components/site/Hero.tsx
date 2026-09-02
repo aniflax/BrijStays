@@ -1,52 +1,71 @@
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Banknote, ChevronDown, Home, MapPin, Play, Search, type LucideIcon } from "lucide-react";
+import {
+  Banknote,
+  ChevronDown,
+  Home,
+  Instagram,
+  MapPin,
+  Play,
+  Search,
+  type LucideIcon,
+} from "lucide-react";
 
 import houseImage from "@/assets/house.png";
 import { stayList } from "@/lib/data/stays";
+import type { Stay } from "@/lib/data/types";
 import { waNumberFromHref } from "@/lib/site";
 import { useSite } from "@/lib/site-context";
 import { cn } from "@/lib/utils";
 
-const facebookPath = "M14 8h3V4h-3c-3.3 0-5 1.9-5 5v3H6v4h3v8h4v-8h3.2l.8-4H13V9c0-.7.3-1 1-1z";
-
-const twitterPath =
-  "M22 5.8c-.7.3-1.5.5-2.3.6.8-.5 1.4-1.3 1.7-2.2-.8.5-1.7.8-2.6 1A4.1 4.1 0 0 0 11.7 8c0 .3 0 .6.1.9-3.4-.2-6.4-1.8-8.4-4.2-.4.6-.6 1.3-.6 2.1 0 1.4.7 2.7 1.7 3.4-.6 0-1.2-.2-1.8-.5v.1c0 2 1.4 3.7 3.3 4.1-.3.1-.7.1-1 .1-.2 0-.5 0-.7-.1.5 1.6 2 2.8 3.8 2.8A8.3 8.3 0 0 1 3 18.5 11.7 11.7 0 0 0 9.3 20c7.5 0 11.6-6.2 11.6-11.6v-.5c.8-.6 1.5-1.3 2.1-2.1z";
-
-const linkedinPath =
-  "M6.5 8.5H3V21h3.5V8.5zM4.8 3C3.7 3 3 3.8 3 4.8s.7 1.8 1.8 1.8 1.8-.8 1.8-1.8S5.9 3 4.8 3zM21 13.8c0-3.8-2-5.6-4.8-5.6-2.2 0-3.2 1.2-3.8 2v-1.7H9V21h3.5v-6.2c0-1.6.3-3.2 2.3-3.2 2 0 2 1.9 2 3.3V21H21v-7.2z";
-
-const heroSocials = [
-  { label: "Facebook", path: facebookPath },
-  { label: "Twitter", path: twitterPath },
-  { label: "LinkedIn", path: linkedinPath },
-];
-
-const stayTypeOptions = ["All Stays", ...Array.from(new Set(stayList.map((s) => s.category)))];
 const guestOptions = ["2 – 3 Guests", "1 – 2 Guests", "3 – 4 Guests", "4 – 5 Guests"];
 
 type MenuKey = "Stay Type" | "Guests" | null;
 
-export function Hero() {
+const DEFAULT_AVAILABILITY_MESSAGE = [
+  "Hi Brij Stays, I am looking for a stay with the following details:",
+  "",
+  "Location: Vrindavan, Uttar Pradesh",
+];
+
+export function Hero({ stays = stayList }: { stays?: Stay[] }) {
   const site = useSite();
   const [stayType, setStayType] = useState("All Stays");
   const [guests, setGuests] = useState("2 – 3 Guests");
   const [openMenu, setOpenMenu] = useState<MenuKey>(null);
 
+  const categories = [
+    "All Stays",
+    ...Array.from(new Set(stays.map((s) => s.category).filter(Boolean))),
+  ];
+
+  const instagram = site.socials.find(
+    (s) => s.label.toLowerCase() === "instagram" || s.icon.toLowerCase() === "instagram",
+  )?.href;
+
+  const whatsappNumber = waNumberFromHref(site.whatsapp);
+
   const searchHref = useMemo(() => {
-    const number = waNumberFromHref(site.whatsapp);
-    if (!number) return "/stays";
+    if (!whatsappNumber) return "/stays";
     const message = [
-      "Hi Brij Stays, I am looking for a stay with the following details:",
-      "",
-      `Location: Vrindavan, Uttar Pradesh`,
+      ...DEFAULT_AVAILABILITY_MESSAGE,
       `Stay Type: ${stayType}`,
       `Guests: ${guests}`,
       "",
       "Please share availability, pricing, and booking details.",
     ].join("\n");
-    return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
-  }, [stayType, guests, site.whatsapp]);
+    return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+  }, [stayType, guests, whatsappNumber]);
+
+  const availabilityHref = useMemo(() => {
+    if (!whatsappNumber) return "#enquire";
+    const message = [
+      "Hi Brij Stays, I would like to check availability for a stay in Vrindavan.",
+      "",
+      "Please share availability, pricing, and booking details.",
+    ].join("\n");
+    return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+  }, [whatsappNumber]);
 
   function handleSelect(key: Exclude<MenuKey, null>, value: string) {
     if (key === "Stay Type") setStayType(value);
@@ -68,7 +87,13 @@ export function Hero() {
       value: "Vrindavan, Uttar Pradesh",
       options: null,
     },
-    { key: "Stay Type", label: "Stay Type", icon: Home, value: stayType, options: stayTypeOptions },
+    {
+      key: "Stay Type",
+      label: "Stay Type",
+      icon: Home,
+      value: stayType,
+      options: categories.length > 1 ? categories : null,
+    },
     { key: "Guests", label: "Guests", icon: Banknote, value: guests, options: guestOptions },
   ];
 
@@ -104,7 +129,9 @@ export function Hero() {
                 </Link>
 
                 <a
-                  href="#enquire"
+                  href={availabilityHref}
+                  target={availabilityHref.startsWith("http") ? "_blank" : undefined}
+                  rel={availabilityHref.startsWith("http") ? "noopener noreferrer" : undefined}
                   className="inline-flex cursor-pointer items-center gap-[13px] border-0 bg-transparent p-0 text-[#111]"
                 >
                   <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border-2 border-[#111] max-[600px]:h-10 max-[600px]:w-10">
@@ -116,31 +143,22 @@ export function Hero() {
                 </a>
               </div>
 
-              <div className="mt-11 flex items-center gap-3 max-[600px]:mt-[26px] max-[600px]:gap-[10px]">
-                {heroSocials.map((social) => {
-                  const href =
-                    site.socials.find((s) => s.label.toLowerCase() === social.label.toLowerCase())
-                      ?.href ?? "#";
-                  return (
-                    <a
-                      key={social.label}
-                      href={href}
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label={social.label}
-                      className="flex h-7 w-7 items-center justify-center text-[#111] transition duration-200 hover:-translate-y-px hover:opacity-55 max-[600px]:h-[22px] max-[600px]:w-[22px]"
-                    >
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="block h-6 w-6 max-[600px]:h-[19px] max-[600px]:w-[19px]"
-                      >
-                        <path d={social.path} />
-                      </svg>
-                    </a>
-                  );
-                })}
-              </div>
+              {instagram ? (
+                <div className="mt-11 flex items-center gap-3 max-[600px]:mt-[26px] max-[600px]:gap-[10px]">
+                  <a
+                    href={instagram}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="Instagram"
+                    className="flex h-7 w-7 items-center justify-center text-[#111] transition duration-200 hover:-translate-y-px hover:opacity-55 max-[600px]:h-[22px] max-[600px]:w-[22px]"
+                  >
+                    <Instagram
+                      className="block h-6 w-6 max-[600px]:h-[19px] max-[600px]:w-[19px]"
+                      strokeWidth={1.6}
+                    />
+                  </a>
+                </div>
+              ) : null}
             </div>
 
             {/* House image */}

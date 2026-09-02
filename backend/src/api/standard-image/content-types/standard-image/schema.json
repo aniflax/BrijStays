@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "standard_images",
+  "info": {
+    "singularName": "standard-image",
+    "pluralName": "standard-images",
+    "displayName": "Standard Images",
+    "description": "Image grid shown in the Brij Stays Standard homepage section"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "alt": {
+      "type": "string"
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}

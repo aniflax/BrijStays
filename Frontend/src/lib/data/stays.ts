@@ -2,9 +2,9 @@
 // All property facts (names, descriptions, guest capacity, ratings, coordinates)
 // were sourced from each live Airbnb listing's public structured data.
 import { stayImages } from "./images";
-import { collection, type StrapiEntity, type Stay } from "./types";
+import { collection, type StrapiEntity, type Stay, type StaySeed } from "./types";
 
-export const stayEntities: StrapiEntity<Stay>[] = [
+export const stayEntities: StrapiEntity<StaySeed>[] = [
   {
     id: 1,
     attributes: {
@@ -15,6 +15,7 @@ export const stayEntities: StrapiEntity<Stay>[] = [
       category: "Boutique Stay",
       building: "Hari Krishna Residency",
       featured: true,
+      showOnHomePage: true,
       shortDescription:
         "A unique, family-friendly boutique stay one minute from ISKCON and Prem Mandir, tucked into a quiet, leafy corner of Vrindavan.",
       description: [
@@ -56,6 +57,7 @@ export const stayEntities: StrapiEntity<Stay>[] = [
       category: "Studio",
       building: "Hari Krishna Residency",
       featured: true,
+      showOnHomePage: true,
       shortDescription:
         "A super-central designer studio literally next door to ISKCON, with bold black-and-white walls, plush burgundy styling and a kitchenette.",
       description: [
@@ -97,6 +99,7 @@ export const stayEntities: StrapiEntity<Stay>[] = [
       category: "Heritage Apartment",
       building: "Hari Krishna Residency",
       featured: true,
+      showOnHomePage: true,
       shortDescription:
         "A hand-painted heritage apartment next to ISKCON — Jodhpur colours, Jaipur pots and a tranquil rooftop garden.",
       description: [
@@ -137,6 +140,7 @@ export const stayEntities: StrapiEntity<Stay>[] = [
       location: "Vrindavan, Uttar Pradesh",
       category: "1 BHK Apartment",
       featured: true,
+      showOnHomePage: true,
       shortDescription:
         "A terracotta-inspired 1BHK on the 13th floor with two balconies — one for sunrise, one for sunset — plus skyline views across Vrindavan.",
       description: [
@@ -177,6 +181,7 @@ export const stayEntities: StrapiEntity<Stay>[] = [
       location: "Vrindavan, Uttar Pradesh",
       category: "Arthouse Studio",
       featured: true,
+      showOnHomePage: true,
       shortDescription:
         "A Pichwai-themed studio with elegant fittings, art-filled interiors and a charming sit-out balcony, minutes from the prime temples.",
       description: [
@@ -217,6 +222,7 @@ export const stayEntities: StrapiEntity<Stay>[] = [
       location: "Vrindavan, Uttar Pradesh",
       category: "Designer Suite",
       featured: true,
+      showOnHomePage: true,
       shortDescription:
         "Urban luxury on the 15th floor — a stylish retreat with skyline vistas, two balconies and sparkling-clean corners by the prime temples.",
       description: [
@@ -257,6 +263,7 @@ export const stayEntities: StrapiEntity<Stay>[] = [
       location: "Vrindavan, Uttar Pradesh",
       category: "Luxury Suite",
       featured: true,
+      showOnHomePage: true,
       shortDescription:
         "Vrindavan's stunning luxury suite — tasteful colours, Rajasthan-inspired décor and a box-style bed on the 11th floor with breathtaking views.",
       description: [
@@ -297,6 +304,7 @@ export const stayEntities: StrapiEntity<Stay>[] = [
       location: "Vrindavan, Uttar Pradesh",
       category: "Wellness Stay",
       featured: true,
+      showOnHomePage: true,
       shortDescription:
         "A stylish 10th-floor wellness stay with terracotta charm, skyline views, 24×7 lifts and high-speed internet — fun for the whole family.",
       description: [
@@ -330,18 +338,20 @@ export const stayEntities: StrapiEntity<Stay>[] = [
   },
 ];
 
-// Assign verified photography from the per-property asset folders.
-for (const entity of stayEntities) {
-  const images = stayImages[entity.attributes.slug];
+// Attach verified photography from the per-property asset folders.
+export const stayList: Stay[] = stayEntities.map((entity) => {
+  const seed = entity.attributes;
+  const images = stayImages[seed.slug];
   if (images) {
-    entity.attributes.heroImage = images.hero;
-    entity.attributes.heroAlt = images.heroAlt;
-    entity.attributes.gallery = images.gallery;
+    return {
+      ...seed,
+      heroImage: images.hero,
+      heroAlt: images.heroAlt,
+      gallery: images.gallery,
+    };
   }
-}
-
-export const stays = collection(stayEntities);
-export const stayList = stayEntities.map((e) => e.attributes);
+  return { ...seed, heroImage: "", heroAlt: "", gallery: [] };
+});
 
 export function getStay(slug: string) {
   return stayList.find((s) => s.slug === slug);

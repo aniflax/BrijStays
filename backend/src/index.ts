@@ -25,8 +25,21 @@ const fixFile = (file: any): boolean => {
   return changed;
 };
 
-/** Idempotently grants the public role read access to the blog collection API. */
-async function ensurePublicBlogPermissions(strapi: Core.Strapi) {
+/**
+ * Content types the marketing site reads without authentication. Each gets
+ * `find`/`findOne` granted idempotently to the public role on boot.
+ */
+const PUBLIC_CONTENT_TYPES = [
+  'api::blog.blog',
+  'api::stay.stay',
+  'api::gallery-image.gallery-image',
+  'api::standard-image.standard-image',
+  'api::review.review',
+  'api::instagram-video.instagram-video',
+];
+
+/** Idempotently grants the public role read access to public content-type APIs. */
+async function ensurePublicContentPermissions(strapi: Core.Strapi) {
   try {
     const publicRole = await strapi.db
       .query('plugin::users-permissions.role')
@@ -37,7 +50,10 @@ async function ensurePublicBlogPermissions(strapi: Core.Strapi) {
       .query('plugin::users-permissions.permission')
       .findMany({ where: { role: { type: 'public' } } });
     const existingActions = new Set(existing.map((p: any) => p.action));
-    const wanted = ['api::blog.blog.find', 'api::blog.blog.findOne'];
+    const wanted = PUBLIC_CONTENT_TYPES.flatMap((uid) => [
+      `${uid}.find`,
+      `${uid}.findOne`,
+    ]);
 
     for (const action of wanted) {
       if (!existingActions.has(action)) {
@@ -48,7 +64,7 @@ async function ensurePublicBlogPermissions(strapi: Core.Strapi) {
       }
     }
   } catch (err) {
-    strapi.log.warn(`[permissions] Could not grant public blog access: ${err}`);
+    strapi.log.warn(`[permissions] Could not grant public content access: ${err}`);
   }
 }
 
@@ -88,6 +104,6 @@ export default {
       strapi.log.warn(`[r2-url-fix] Could not fix upload URLs: ${err}`);
     }
 
-    await ensurePublicBlogPermissions(strapi);
+    await ensurePublicContentPermissions(strapi);
   },
 };

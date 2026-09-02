@@ -1,10 +1,17 @@
 import { Link } from "@tanstack/react-router";
 import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Twitter, Youtube } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 import { useSite } from "@/lib/site-context";
 import { MAP_QUERY, mapEmbedFor, mapLinkFor } from "@/lib/site";
 
-const socialIcons = { Instagram, Facebook, Linkedin, Youtube, Twitter } as const;
+const socialIcons: Record<string, LucideIcon> = {
+  Instagram,
+  Facebook,
+  Linkedin,
+  Youtube,
+  Twitter,
+};
 
 const exploreLinks = [
   { label: "Stays", to: "/stays" },
@@ -29,22 +36,23 @@ export function Footer() {
             {site.mission}
           </p>
           <div className="mt-6 flex gap-3">
-            {Object.entries(socialIcons).map(([key, Icon]) => {
-              const social = site.socials.find((s) => s.icon.toLowerCase() === key.toLowerCase());
-              const href = social?.href;
-              return (
+            {site.socials
+              .flatMap((social) => {
+                const Icon = socialIcons[social.icon];
+                return Icon && social.href ? [{ social, Icon }] : [];
+              })
+              .map(({ social, Icon }) => (
                 <a
-                  key={key}
-                  href={href || undefined}
+                  key={social.icon}
+                  href={social.href}
                   target="_blank"
                   rel="noreferrer"
-                  aria-label={social?.label ?? key}
+                  aria-label={social.label}
                   className="rounded-full border border-border p-2 text-muted-foreground transition-colors hover:bg-foreground hover:text-background"
                 >
                   <Icon size={16} strokeWidth={1.6} />
                 </a>
-              );
-            })}
+              ))}
           </div>
         </div>
 

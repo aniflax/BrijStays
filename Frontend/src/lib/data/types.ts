@@ -36,6 +36,18 @@ export type HeroSlide = {
   imageAlt: string;
 };
 
+export type GalleryImage = {
+  src: string;
+  alt: string;
+};
+
+export type InstagramVideo = {
+  url: string;
+  caption: string;
+  /** Pre-built `https://www.instagram.com/<path>/embed/` iframe source. */
+  embedUrl: string;
+};
+
 export type Stay = {
   slug: string;
   name: string;
@@ -59,9 +71,18 @@ export type Stay = {
   category: string;
   building?: string;
   featured: boolean;
+  /** When true, the stay appears in the homepage featured grid. */
+  showOnHomePage: boolean;
   mapQuery: string;
   coords: { lat: number; lng: number };
 };
+
+/**
+ * Static fallback stay seed — the bundled local inventory. Photography
+ * (heroImage/heroAlt/gallery) is attached from the per-property asset folders
+ * after declaration, so those fields are omitted here.
+ */
+export type StaySeed = Omit<Stay, "heroImage" | "heroAlt" | "gallery">;
 
 export type BlogPost = {
   /** Static fallback slug or the Strapi documentId for CMS-managed posts. */

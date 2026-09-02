@@ -31,14 +31,14 @@ export const STATIC_SITE = {
   tagline: "Premium stays in Vrindavan",
   mission: "Premium, comfortable and curated boutique stays in Vrindavan.",
   address:
-    "Flat No. 110, 1st Floor, Krishna Castle Group Housing-5, Omaxe Eternity, Vrindavan, Mathura, Uttar Pradesh – 281121",
+    "Krishna Castle Group Housing-5, Omaxe Eternity, Vrindavan, Mathura, Uttar Pradesh – 281121",
   hours: "Monday – Sunday: 24/7 Operations",
   gst: "GST · Non-GST",
 } as const;
 
 /** Where the Google Map previews point. */
 export const MAP_QUERY =
-  "Flat No. 110, 1st Floor, Krishna Castle Group Housing-5, Omaxe Eternity, Vrindavan, Mathura, Uttar Pradesh – 281121";
+  "Krishna Castle Group Housing-5, Omaxe Eternity, Vrindavan, Mathura, Uttar Pradesh – 281121";
 
 /** Raw shape of the Strapi "Personal Informations" single type. */
 export type StrapiMedia = {

@@ -1,11 +1,11 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 
 import { StayDetail } from "@/components/site/StayDetail";
-import { getStay } from "@/lib/data/stays";
+import { getStay } from "@/lib/stays";
 
 export const Route = createFileRoute("/stays/$slug")({
-  loader: ({ params }) => {
-    const stay = getStay(params.slug);
+  loader: async ({ params }) => {
+    const stay = await getStay(params.slug);
     if (!stay) throw notFound();
     return { stay };
   },
