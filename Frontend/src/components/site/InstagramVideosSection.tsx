@@ -22,9 +22,14 @@ export function InstagramVideosSection({
 }) {
   const site = useSite();
   const [playing, setPlaying] = useState<Record<string, boolean>>({});
+  const [covers, setCovers] = useState<Record<string, "loading" | "ok" | "error">>({});
   const instagram = site.socials.find(
     (s) => s.label.toLowerCase() === "instagram" || s.icon.toLowerCase() === "instagram",
   )?.href;
+
+  const coverState = (url: string) => covers[url] ?? "loading";
+  const markCover = (url: string, state: "ok" | "error") =>
+    setCovers((prev) => (prev[url] === state ? prev : { ...prev, [url]: state }));
 
   return (
     <section className="container-luxe py-24 md:py-32">
@@ -56,28 +61,52 @@ export function InstagramVideosSection({
                     <button
                       type="button"
                       onClick={() => setPlaying((prev) => ({ ...prev, [video.url]: true }))}
-                      className="relative block aspect-[9/16] w-full cursor-pointer overflow-hidden bg-secondary"
+                      className="relative flex aspect-[9/16] w-full cursor-pointer flex-col overflow-hidden bg-secondary text-left"
                       aria-label={`Play reel: ${video.caption || "Brij Stays Instagram video"}`}
                     >
-                      {video.thumbnailUrl ? (
-                        <img
-                          src={video.thumbnailUrl}
-                          alt={video.caption || "Brij Stays Instagram reel"}
-                          width={540}
-                          height={960}
-                          loading="lazy"
-                          decoding="async"
-                          className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                      <span className="relative flex-1 overflow-hidden">
+                        {video.thumbnailUrl ? (
+                          <img
+                            src={video.thumbnailUrl}
+                            alt={video.caption || "Brij Stays Instagram reel"}
+                            width={540}
+                            height={960}
+                            loading="lazy"
+                            decoding="async"
+                            onLoad={() => markCover(video.url, "ok")}
+                            onError={() => markCover(video.url, "error")}
+                            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${
+                              coverState(video.url) === "ok"
+                                ? "opacity-100"
+                                : "opacity-0 group-hover:scale-[1.03]"
+                            }`}
+                          />
+                        ) : null}
+                        <span
+                          className={`absolute inset-0 grid place-items-center bg-gradient-to-br from-secondary via-secondary to-charcoal/15 transition-opacity duration-300 ${
+                            coverState(video.url) === "ok" ? "opacity-0" : "opacity-100"
+                          }`}
+                          aria-hidden
+                        >
+                          <span className="flex flex-col items-center gap-3 px-6 text-center">
+                            <Instagram className="h-8 w-8 text-charcoal/70" strokeWidth={1.4} />
+                            <span className="text-sm leading-snug text-charcoal/60">
+                              {video.caption || "Brij Stays reel"}
+                            </span>
+                          </span>
+                        </span>
+                        <span
+                          className="absolute inset-0 bg-charcoal/20 transition-colors duration-300 group-hover:bg-charcoal/10"
+                          aria-hidden
                         />
-                      ) : null}
-                      <span className="absolute inset-0 bg-charcoal/20 transition-colors duration-300 group-hover:bg-charcoal/10" />
-                      <span className="absolute inset-0 grid place-items-center">
-                        <span className="grid h-14 w-14 place-items-center rounded-full bg-white/95 text-charcoal shadow-lg transition-transform duration-300 group-hover:scale-110">
-                          <Play className="ml-0.5 h-5 w-5 fill-current" />
+                        <span className="absolute inset-0 grid place-items-center" aria-hidden>
+                          <span className="grid h-14 w-14 place-items-center rounded-full bg-white/95 text-charcoal shadow-lg transition-transform duration-300 group-hover:scale-110">
+                            <Play className="ml-0.5 h-5 w-5 fill-current" />
+                          </span>
                         </span>
                       </span>
                       {video.caption ? (
-                        <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-charcoal/80 to-transparent px-4 pt-10 pb-3 text-left text-sm font-medium text-white">
+                        <span className="flex items-center border-t border-black/5 bg-white px-4 py-3 text-sm font-medium text-charcoal">
                           {video.caption}
                         </span>
                       ) : null}
