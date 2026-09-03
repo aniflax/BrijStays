@@ -55,7 +55,12 @@ export const Route = createFileRoute("/stays/$slug")({
             },
             containsPlace: {
               "@type": "Accommodation",
-              occupancy: { "@type": "QuantitativeValue", value: stay.guestCapacity },
+              occupancy: {
+                "@type": "QuantitativeValue",
+                value: Number(
+                  stay.specs.find((s) => s.label.toLowerCase() === "guests")?.value ?? 0,
+                ),
+              },
             },
             aggregateRating: {
               "@type": "AggregateRating",

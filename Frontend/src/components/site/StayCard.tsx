@@ -23,6 +23,15 @@ export function StayCard({
   const site = useSite();
   const whatsappHref = buildStayWhatsAppHref(stay.name, waNumberFromHref(site.whatsapp));
 
+  // Card chips come from the stay's spec rows (editable in Strapi). Common
+  // labels are matched case-insensitively; anything else in specs is skipped
+  // so chips stay short.
+  const chipSpecs = stay.specs.filter((spec) => /guests?|bed|bath|ac|room/i.test(spec.label));
+  const chips =
+    chipSpecs.length > 0
+      ? chipSpecs.map((spec) => `${spec.value} ${spec.label.toLowerCase()}`)
+      : stay.specs.slice(0, 3).map((spec) => spec.value);
+
   return (
     <article
       className={cn(
@@ -72,19 +81,17 @@ export function StayCard({
           </Link>
         </h3>
         <ul className={cn("flex flex-wrap gap-2", compact ? "mt-3 hidden sm:flex" : "mt-4")}>
-          {[`${stay.guestCapacity} guests`, `${stay.bedrooms} bed`, `${stay.bathrooms} bath`].map(
-            (value) => (
-              <li
-                key={value}
-                className={cn(
-                  "rounded-full border border-border tracking-[0.12em] text-muted-foreground uppercase",
-                  compact ? "px-2.5 py-1 text-[0.6rem]" : "px-3 py-1.5 text-[0.68rem]",
-                )}
-              >
-                {value}
-              </li>
-            ),
-          )}
+          {chips.map((value) => (
+            <li
+              key={value}
+              className={cn(
+                "rounded-full border border-border tracking-[0.12em] text-muted-foreground uppercase",
+                compact ? "px-2.5 py-1 text-[0.6rem]" : "px-3 py-1.5 text-[0.68rem]",
+              )}
+            >
+              {value}
+            </li>
+          ))}
         </ul>
 
         <div

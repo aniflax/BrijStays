@@ -35,13 +35,7 @@ const usps = [
 export function StayDetail({ stay }: { stay: Stay }) {
   const [lightbox, setLightbox] = useState<number | null>(null);
 
-  const specs = [
-    { label: "Room type", value: stay.roomType },
-    { label: "Guests", value: String(stay.guestCapacity) },
-    { label: "Bedrooms", value: String(stay.bedrooms) },
-    { label: "Bathrooms", value: String(stay.bathrooms) },
-    { label: "Location", value: stay.location },
-  ];
+  const specs = [...stay.specs, { label: "Location", value: stay.location }];
 
   return (
     <>

@@ -21,23 +21,21 @@ const STAYS_QUERY = [
   "fields[2]=slug",
   "fields[3]=category",
   "fields[4]=building",
-  "fields[5]=roomType",
-  "fields[6]=shortDescription",
-  "fields[7]=description",
-  "fields[8]=highlights",
-  "fields[9]=amenities",
-  "fields[10]=airbnbUrl",
-  "fields[11]=mapQuery",
-  "fields[12]=guestCapacity",
-  "fields[13]=bedrooms",
-  "fields[14]=bathrooms",
-  "fields[15]=rating",
-  "fields[16]=ratingCount",
-  "fields[17]=latitude",
-  "fields[18]=longitude",
-  "fields[19]=order",
-  "fields[20]=featured",
-  "fields[21]=showOnHomePage",
+  "fields[5]=shortDescription",
+  "fields[6]=description",
+  "fields[7]=highlights",
+  "fields[8]=amenities",
+  "fields[9]=airbnbUrl",
+  "fields[10]=mapQuery",
+  "fields[11]=rating",
+  "fields[12]=ratingCount",
+  "fields[13]=latitude",
+  "fields[14]=longitude",
+  "fields[15]=order",
+  "fields[16]=featured",
+  "fields[17]=showOnHomePage",
+  "populate[specs][fields][0]=label",
+  "populate[specs][fields][1]=value",
   "populate[heroImage][fields][0]=url",
   "populate[heroImage][fields][1]=alternativeText",
   "populate[gallery][fields][0]=url",
@@ -57,16 +55,13 @@ type StrapiStayDocument = {
   slug?: string | null;
   category?: string | null;
   building?: string | null;
-  roomType?: string | null;
   shortDescription?: string | null;
   description?: string | null;
   highlights?: string | null;
   amenities?: string | null;
   airbnbUrl?: string | null;
   mapQuery?: string | null;
-  guestCapacity?: number | null;
-  bedrooms?: number | null;
-  bathrooms?: number | null;
+  specs?: StrapiStaySpec[] | null;
   rating?: number | null;
   ratingCount?: number | null;
   latitude?: number | null;
@@ -76,6 +71,12 @@ type StrapiStayDocument = {
   showOnHomePage?: boolean | null;
   heroImage?: StrapiMediaDocument;
   gallery?: StrapiMediaDocument[] | StrapiMediaDocument;
+};
+
+type StrapiStaySpec = {
+  id: number;
+  label?: string | null;
+  value?: string | null;
 };
 
 function splitLines(value: string | null | undefined): string[] {
@@ -122,10 +123,12 @@ export function normalizeStay(doc: StrapiStayDocument): Stay {
     heroImage,
     heroAlt,
     gallery: gallery.length ? gallery : heroImage ? [{ src: heroImage, alt: heroAlt }] : [],
-    guestCapacity: num(doc.guestCapacity),
-    bedrooms: num(doc.bedrooms),
-    bathrooms: num(doc.bathrooms),
-    roomType: doc.roomType ?? "",
+    specs: (doc.specs ?? [])
+      .map((spec) => ({
+        label: spec.label?.trim() ?? "",
+        value: spec.value?.trim() ?? "",
+      }))
+      .filter((spec) => spec.label && spec.value),
     amenities: splitLines(doc.amenities),
     airbnbUrl: doc.airbnbUrl ?? "",
     rating: num(doc.rating),

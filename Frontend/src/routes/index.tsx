@@ -386,6 +386,9 @@ function Home() {
         </RevealGroup>
       </section>
 
+      {/* FAQ */}
+      <FaqSection faqs={faqs} />
+
       {/* Lead capture */}
       <section id="enquire" className="bg-secondary/60 py-24 md:py-32">
         <div className="container-luxe grid gap-14 lg:grid-cols-12 lg:items-center">
@@ -409,9 +412,6 @@ function Home() {
           </div>
         </div>
       </section>
-
-      {/* FAQ */}
-      <FaqSection faqs={faqs} />
     </>
   );
 }

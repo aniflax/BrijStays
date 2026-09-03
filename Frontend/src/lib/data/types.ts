@@ -50,6 +50,11 @@ export type InstagramVideo = {
   thumbnailUrl: string;
 };
 
+export type StaySpec = {
+  label: string;
+  value: string;
+};
+
 export type Stay = {
   slug: string;
   name: string;
@@ -62,10 +67,8 @@ export type Stay = {
   heroImage: string;
   heroAlt: string;
   gallery: { src: string; alt: string }[];
-  guestCapacity: number;
-  bedrooms: number;
-  bathrooms: number;
-  roomType: string;
+  /** Tag/value rows shown on the stay detail table (e.g. AC: 3). Editable per stay in Strapi. */
+  specs: StaySpec[];
   amenities: string[];
   airbnbUrl: string;
   rating: number;
