@@ -77,9 +77,12 @@ export function instagramEmbedUrl(rawUrl: string): string {
 }
 
 /**
- * Builds a cover-image URL for an Instagram post/reel. Instagram responds to
- * `https://www.instagram.com/p/<shortcode>/media/?size=l` with a 302 redirect
- * to the CDN JPEG, which browsers follow automatically when used as an img src.
+ * Builds a cover-image URL for an Instagram post/reel. Instagram serves the
+ * image at `https://www.instagram.com/p/<shortcode>/media/?size=l` with a 302
+ * redirect to its CDN, but browsers frequently fail to load that cross-domain
+ * request (Instagram hotlink/cookie/referrer handling varies by network and
+ * device). The cover therefore points at the site's own `/api/ig-cover`
+ * proxy, which fetches the image server-side and serves it from our domain.
  */
 export function instagramThumbnailUrl(rawUrl: string): string {
   const trimmed = rawUrl.trim();
@@ -94,7 +97,8 @@ export function instagramThumbnailUrl(rawUrl: string): string {
   const segments = path.split("/").filter(Boolean);
   const shortcode = segments[segments.length - 1];
   if (!shortcode) return "";
-  return `https://www.instagram.com/p/${shortcode}/media/?size=l`;
+  const instagramMediaUrl = `https://www.instagram.com/p/${shortcode}/media/?size=l`;
+  return `/api/ig-cover?url=${encodeURIComponent(instagramMediaUrl)}`;
 }
 
 function sortEntries<T extends { order?: number | null }>(entries: T[] | undefined): T[] {

@@ -209,12 +209,73 @@ async function handleSitemap(request: Request): Promise<Response | null> {
   });
 }
 
+/**
+ * Instagram cover proxy. Browsers often fail to load Instagram's cover image
+ * directly (hotlink/cookie/referrer blocks vary by network and device), so the
+ * cover <img> points here instead of at instagram.com. The Worker fetches the
+ * media URL server-side and returns the JPEG from our own domain, cached at
+ * the Cloudflare edge so repeat views never touch Instagram again.
+ */
+async function handleInstagramCover(request: Request): Promise<Response | null> {
+  const url = new URL(request.url);
+  if (request.method !== "GET" || url.pathname !== "/api/ig-cover") return null;
+
+  const target = url.searchParams.get("url");
+  if (!target) return new Response("missing url", { status: 400 });
+
+  // Only ever proxy Instagram media URLs — never let this become an open proxy.
+  let instagramUrl: URL;
+  try {
+    instagramUrl = new URL(target);
+  } catch {
+    return new Response("invalid url", { status: 400 });
+  }
+  if (!/^https:$/.test(instagramUrl.protocol)) return new Response("invalid url", { status: 400 });
+  const host = instagramUrl.hostname.replace(/^www\./, "");
+  if (host !== "instagram.com" && !host.endsWith(".instagram.com")) {
+    return new Response("forbidden", { status: 403 });
+  }
+
+  try {
+    const upstream = await fetch(instagramUrl, {
+      headers: {
+        // Instagram's /media/ endpoint serves the JPEG to a plain GET.
+        "user-agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0 Safari/537.36",
+        accept: "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
+      },
+      redirect: "follow",
+    });
+
+    if (!upstream.ok) {
+      return new Response(`upstream ${upstream.status}`, { status: 502 });
+    }
+
+    const contentType = upstream.headers.get("content-type") ?? "image/jpeg";
+    const body = await upstream.arrayBuffer();
+    return new Response(body, {
+      status: 200,
+      headers: {
+        "content-type": contentType,
+        "cache-control": "public, max-age=86400, s-maxage=86400",
+        // The final CDN URL is a signed fbcdn.net URL that changes on each
+        // fetch, so never store the redirect target — only the image bytes.
+        "content-length": String(body.byteLength),
+      },
+    });
+  } catch {
+    return new Response("upstream error", { status: 502 });
+  }
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     const sitemapResponse = await handleSitemap(request);
     if (sitemapResponse) return sitemapResponse;
     const purgeResponse = await handlePurgeWebhook(request, env);
     if (purgeResponse) return purgeResponse;
+    const coverResponse = await handleInstagramCover(request);
+    if (coverResponse) return coverResponse;
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
