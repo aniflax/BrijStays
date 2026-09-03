@@ -36,6 +36,7 @@ const PUBLIC_CONTENT_TYPES = [
   'api::standard-image.standard-image',
   'api::review.review',
   'api::instagram-video.instagram-video',
+  'api::faq.faq',
 ];
 
 /** Idempotently grants the public role read access to public content-type APIs. */
