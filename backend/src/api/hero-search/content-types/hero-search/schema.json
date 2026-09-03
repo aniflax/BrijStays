@@ -1,0 +1,31 @@
+{
+  "kind": "singleType",
+  "collectionName": "hero_searches",
+  "info": {
+    "singularName": "hero-search",
+    "pluralName": "hero-searches",
+    "displayName": "Hero Search",
+    "description": "Options shown in the homepage hero search bar (location, stay type and guest range dropdowns)"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "heroLocations": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.hero-option"
+    },
+    "heroStayTypes": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.hero-option"
+    },
+    "heroGuestOptions": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.hero-option"
+    }
+  }
+}

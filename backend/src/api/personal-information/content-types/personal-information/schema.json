@@ -44,21 +44,6 @@
       "type": "media",
       "multiple": false,
       "required": false
-    },
-    "heroLocations": {
-      "type": "component",
-      "repeatable": true,
-      "component": "shared.hero-option"
-    },
-    "heroStayTypes": {
-      "type": "component",
-      "repeatable": true,
-      "component": "shared.hero-option"
-    },
-    "heroGuestOptions": {
-      "type": "component",
-      "repeatable": true,
-      "component": "shared.hero-option"
     }
   }
 }
