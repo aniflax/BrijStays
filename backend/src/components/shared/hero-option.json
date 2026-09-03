@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_shared_hero_options",
+  "info": {
+    "displayName": "Hero Option",
+    "icon": "list",
+    "description": "A single selectable option for the homepage hero search bar (location, stay type, or guest range). The first option in the list becomes the default selection."
+  },
+  "options": {},
+  "attributes": {
+    "value": {
+      "type": "string",
+      "required": true
+    }
+  }
+}
