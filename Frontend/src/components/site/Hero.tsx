@@ -18,25 +18,33 @@ import { waNumberFromHref } from "@/lib/site";
 import { useSite } from "@/lib/site-context";
 import { cn } from "@/lib/utils";
 
-const guestOptions = ["2 – 3 Guests", "1 – 2 Guests", "3 – 4 Guests", "4 – 5 Guests"];
-
-type MenuKey = "Stay Type" | "Guests" | null;
+type MenuKey = "Location" | "Stay Type" | "Guests";
+type OpenMenu = MenuKey | null;
 
 const DEFAULT_AVAILABILITY_MESSAGE = [
   "Hi Brij Stays, I am looking for a stay with the following details:",
   "",
-  "Location: Vrindavan, Uttar Pradesh",
 ];
 
 export function Hero({ stays = stayList }: { stays?: Stay[] }) {
   const site = useSite();
-  const [stayType, setStayType] = useState("All Stays");
-  const [guests, setGuests] = useState("2 – 3 Guests");
-  const [openMenu, setOpenMenu] = useState<MenuKey>(null);
+  const guestOptions = site.heroGuestOptions;
 
-  const categories = [
+  const [selectedLocation, setSelectedLocation] = useState(
+    site.heroLocations[0] ?? "Vrindavan, Uttar Pradesh",
+  );
+  const [stayType, setStayType] = useState(site.heroStayTypes[0] ?? "All Stays");
+  const [guests, setGuests] = useState(guestOptions[0] ?? "2 – 3 Guests");
+  const [openMenu, setOpenMenu] = useState<OpenMenu>(null);
+
+  const locationOptions = site.heroLocations;
+
+  const categories = [...new Set(stays.map((s) => s.category).filter(Boolean))];
+  // Show the CMS stay types first; fall back to categories derived from the
+  // actual inventory so the list always has real options.
+  const stayTypeOptions = [
     "All Stays",
-    ...Array.from(new Set(stays.map((s) => s.category).filter(Boolean))),
+    ...Array.from(new Set([...site.heroStayTypes.filter((t) => t !== "All Stays"), ...categories])),
   ];
 
   const instagram = site.socials.find(
@@ -49,13 +57,14 @@ export function Hero({ stays = stayList }: { stays?: Stay[] }) {
     if (!whatsappNumber) return "/stays";
     const message = [
       ...DEFAULT_AVAILABILITY_MESSAGE,
+      `Location: ${selectedLocation}`,
       `Stay Type: ${stayType}`,
       `Guests: ${guests}`,
       "",
       "Please share availability, pricing, and booking details.",
     ].join("\n");
     return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-  }, [stayType, guests, whatsappNumber]);
+  }, [stayType, guests, whatsappNumber, selectedLocation]);
 
   const availabilityHref = useMemo(() => {
     if (!whatsappNumber) return "#enquire";
@@ -67,32 +76,33 @@ export function Hero({ stays = stayList }: { stays?: Stay[] }) {
     return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
   }, [whatsappNumber]);
 
-  function handleSelect(key: Exclude<MenuKey, null>, value: string) {
-    if (key === "Stay Type") setStayType(value);
-    else setGuests(value);
+  function handleSelect(key: MenuKey, value: string) {
+    if (key === "Location") setSelectedLocation(value);
+    else if (key === "Stay Type") setStayType(value);
+    else if (key === "Guests") setGuests(value);
     setOpenMenu(null);
   }
 
   const searchFields: {
-    key: string;
+    key: MenuKey;
     label: string;
     icon: LucideIcon;
     value: string;
-    options: string[] | null;
+    options: string[];
   }[] = [
     {
       key: "Location",
       label: "Location",
       icon: MapPin,
-      value: "Vrindavan, Uttar Pradesh",
-      options: null,
+      value: selectedLocation,
+      options: locationOptions,
     },
     {
       key: "Stay Type",
       label: "Stay Type",
       icon: Home,
       value: stayType,
-      options: categories.length > 1 ? categories : null,
+      options: stayTypeOptions,
     },
     { key: "Guests", label: "Guests", icon: Banknote, value: guests, options: guestOptions },
   ];
@@ -219,13 +229,9 @@ export function Hero({ stays = stayList }: { stays?: Stay[] }) {
                       <>
                         <button
                           type="button"
-                          onClick={() =>
-                            setOpenMenu(
-                              openMenu === (field.key as MenuKey) ? null : (field.key as MenuKey),
-                            )
-                          }
+                          onClick={() => setOpenMenu(openMenu === field.key ? null : field.key)}
                           aria-haspopup="listbox"
-                          aria-expanded={openMenu === (field.key as MenuKey)}
+                          aria-expanded={openMenu === field.key}
                           className="flex cursor-pointer flex-col justify-center gap-[5px] text-left"
                         >
                           <div className="flex items-center gap-[7px] text-xs leading-none font-normal text-[#777]">
@@ -239,13 +245,13 @@ export function Hero({ stays = stayList }: { stays?: Stay[] }) {
                             <ChevronDown
                               className={cn(
                                 "h-[15px] w-[15px] shrink-0 text-[#111] transition-transform duration-200",
-                                openMenu === (field.key as MenuKey) && "rotate-180",
+                                openMenu === field.key && "rotate-180",
                               )}
                               strokeWidth={2}
                             />
                           </div>
                         </button>
-                        {openMenu === (field.key as MenuKey) ? (
+                        {openMenu === field.key ? (
                           <div
                             role="listbox"
                             aria-label={field.label}
@@ -257,9 +263,7 @@ export function Hero({ stays = stayList }: { stays?: Stay[] }) {
                                 type="button"
                                 role="option"
                                 aria-selected={option === field.value}
-                                onClick={() =>
-                                  handleSelect(field.key as Exclude<MenuKey, null>, option)
-                                }
+                                onClick={() => handleSelect(field.key, option)}
                                 className={cn(
                                   "block w-full cursor-pointer rounded-xl px-3 py-2 text-left text-sm text-[#111] transition-colors duration-150 hover:bg-[#f5f5f5]",
                                   option === field.value && "font-semibold text-[#111]",
@@ -271,23 +275,7 @@ export function Hero({ stays = stayList }: { stays?: Stay[] }) {
                           </div>
                         ) : null}
                       </>
-                    ) : (
-                      <>
-                        <div className="flex items-center gap-[7px] text-xs leading-none font-normal text-[#777]">
-                          <field.icon className="h-[14px] w-[14px] shrink-0" strokeWidth={1.8} />
-                          {field.label}
-                        </div>
-                        <div className="flex items-center justify-between gap-2.5">
-                          <div className="text-sm leading-[1.2] font-semibold whitespace-nowrap text-[#111]">
-                            {field.value}
-                          </div>
-                          <ChevronDown
-                            className="h-[15px] w-[15px] shrink-0 text-[#111]"
-                            strokeWidth={2}
-                          />
-                        </div>
-                      </>
-                    )}
+                    ) : null}
                   </div>
                 </div>
               ))}
