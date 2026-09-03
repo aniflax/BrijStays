@@ -114,6 +114,11 @@ export type Testimonial = {
   location: string;
 };
 
+export type Faq = {
+  question: string;
+  answer: string;
+};
+
 export type TeamMember = {
   name: string;
   role: string;

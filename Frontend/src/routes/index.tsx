@@ -12,6 +12,7 @@ import { TestimonialsCarousel } from "@/components/site/TestimonialsCarousel";
 import { InstagramVideosSection } from "@/components/site/InstagramVideosSection";
 import { EnquiryForm } from "@/components/site/EnquiryForm";
 import { WhatsAppInquiry } from "@/components/site/WhatsAppInquiry";
+import { FaqSection } from "@/components/site/FaqSection";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/button";
 import { fetchBlogPosts } from "@/lib/blog";
@@ -22,10 +23,11 @@ import {
   fetchReviews,
   fetchStandardImages,
 } from "@/lib/homepage";
+import { fetchFaqs } from "@/lib/faq";
 
 export const Route = createFileRoute("/")({
   loader: async () => {
-    const [posts, stays, galleryImages, standardImages, reviews, instagramVideos] =
+    const [posts, stays, galleryImages, standardImages, reviews, instagramVideos, faqs] =
       await Promise.all([
         fetchBlogPosts(),
         fetchStays(),
@@ -33,6 +35,7 @@ export const Route = createFileRoute("/")({
         fetchStandardImages(),
         fetchReviews(),
         fetchInstagramVideos(),
+        fetchFaqs(),
       ]);
     const homePosts = posts.filter((p) => p.showOnHomePage).slice(0, 3);
     return {
@@ -42,6 +45,7 @@ export const Route = createFileRoute("/")({
       standardImages,
       reviews,
       instagramVideos,
+      faqs,
     };
   },
   head: () => ({
@@ -125,7 +129,7 @@ const uspTags = [
 ];
 
 function Home() {
-  const { homePosts, stays, galleryImages, standardImages, reviews, instagramVideos } =
+  const { homePosts, stays, galleryImages, standardImages, reviews, instagramVideos, faqs } =
     Route.useLoaderData();
 
   const featuredStays = stays.filter((s) => s.showOnHomePage);
@@ -405,6 +409,9 @@ function Home() {
           </div>
         </div>
       </section>
+
+      {/* FAQ */}
+      <FaqSection faqs={faqs} />
     </>
   );
 }

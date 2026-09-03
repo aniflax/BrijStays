@@ -6,6 +6,7 @@ import { resetBlogCache, fetchBlogPosts } from "./lib/blog";
 import { resetStaysCache, fetchStays } from "./lib/stays";
 import { resetHomepageCaches } from "./lib/homepage";
 import { resetSiteCache } from "./lib/site";
+import { resetFaqCache } from "./lib/faq";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -114,6 +115,7 @@ async function handlePurgeWebhook(request: Request, env: unknown): Promise<Respo
   resetSiteCache();
   resetStaysCache();
   resetHomepageCaches();
+  resetFaqCache();
 
   const res = await fetch(`https://api.cloudflare.com/client/v4/zones/${zoneId}/purge_cache`, {
     method: "POST",
