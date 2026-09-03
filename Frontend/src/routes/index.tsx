@@ -24,19 +24,29 @@ import {
   fetchStandardImages,
 } from "@/lib/homepage";
 import { fetchFaqs } from "@/lib/faq";
+import { fetchHeroSearch } from "@/lib/hero-search";
 
 export const Route = createFileRoute("/")({
   loader: async () => {
-    const [posts, stays, galleryImages, standardImages, reviews, instagramVideos, faqs] =
-      await Promise.all([
-        fetchBlogPosts(),
-        fetchStays(),
-        fetchGalleryImages(),
-        fetchStandardImages(),
-        fetchReviews(),
-        fetchInstagramVideos(),
-        fetchFaqs(),
-      ]);
+    const [
+      posts,
+      stays,
+      galleryImages,
+      standardImages,
+      reviews,
+      instagramVideos,
+      faqs,
+      heroSearch,
+    ] = await Promise.all([
+      fetchBlogPosts(),
+      fetchStays(),
+      fetchGalleryImages(),
+      fetchStandardImages(),
+      fetchReviews(),
+      fetchInstagramVideos(),
+      fetchFaqs(),
+      fetchHeroSearch(),
+    ]);
     const homePosts = posts.filter((p) => p.showOnHomePage).slice(0, 3);
     return {
       homePosts,
@@ -46,6 +56,7 @@ export const Route = createFileRoute("/")({
       reviews,
       instagramVideos,
       faqs,
+      heroSearch,
     };
   },
   head: () => ({
@@ -129,8 +140,16 @@ const uspTags = [
 ];
 
 function Home() {
-  const { homePosts, stays, galleryImages, standardImages, reviews, instagramVideos, faqs } =
-    Route.useLoaderData();
+  const {
+    homePosts,
+    stays,
+    galleryImages,
+    standardImages,
+    reviews,
+    instagramVideos,
+    faqs,
+    heroSearch,
+  } = Route.useLoaderData();
 
   const featuredStays = stays.filter((s) => s.showOnHomePage);
   const homeStays = featuredStays.length > 0 ? featuredStays : stays;
@@ -160,7 +179,7 @@ function Home() {
 
   return (
     <>
-      <Hero stays={stays} />
+      <Hero stays={stays} options={heroSearch} />
 
       {/* More Than a Stay */}
       <section className="container-luxe py-24 md:py-32">

@@ -24,36 +24,9 @@ export type Site = {
   socials: SiteSocial[];
   founderImage: string;
   coFounderImage: string;
-  /** Selectable locations in the homepage hero search bar. */
-  heroLocations: string[];
-  /** Selectable stay types in the homepage hero search bar (incl. "All Stays"). */
-  heroStayTypes: string[];
-  /** Selectable guest ranges in the homepage hero search bar. */
-  heroGuestOptions: string[];
 };
 
-/** Fallback hero search options, used when the CMS hasn't configured any. */
-export const HERO_DEFAULT_OPTIONS: {
-  heroLocations: string[];
-  heroStayTypes: string[];
-  heroGuestOptions: string[];
-} = {
-  heroLocations: ["Vrindavan, Uttar Pradesh"],
-  heroStayTypes: ["All Stays"],
-  heroGuestOptions: ["2 – 3 Guests", "1 – 2 Guests", "3 – 4 Guests", "4 – 5 Guests"],
-};
-
-export const STATIC_SITE: {
-  name: string;
-  tagline: string;
-  mission: string;
-  address: string;
-  hours: string;
-  gst: string;
-  heroLocations: string[];
-  heroStayTypes: string[];
-  heroGuestOptions: string[];
-} = {
+export const STATIC_SITE = {
   name: "Brij Stays",
   tagline: "Premium stays in Vrindavan",
   mission: "Premium, comfortable and curated boutique stays in Vrindavan.",
@@ -61,10 +34,7 @@ export const STATIC_SITE: {
     "Krishna Castle Group Housing-5, Omaxe Eternity, Vrindavan, Mathura, Uttar Pradesh – 281121",
   hours: "Monday – Sunday: 24/7 Operations",
   gst: "GST · Non-GST",
-  heroLocations: [...HERO_DEFAULT_OPTIONS.heroLocations],
-  heroStayTypes: [...HERO_DEFAULT_OPTIONS.heroStayTypes],
-  heroGuestOptions: [...HERO_DEFAULT_OPTIONS.heroGuestOptions],
-};
+} as const;
 
 /** Where the Google Map previews point. */
 export const MAP_QUERY =
@@ -87,21 +57,7 @@ export type PersonalInformation = {
   twitter?: string | null;
   founder?: StrapiMedia;
   coFounder?: StrapiMedia;
-  heroLocations?: HeroOption[] | null;
-  heroStayTypes?: HeroOption[] | null;
-  heroGuestOptions?: HeroOption[] | null;
 };
-
-/** A single repeatable option row (`{ value }`) from the hero-option component. */
-export type HeroOption = {
-  id?: number;
-  value?: string | null;
-};
-
-/** Maps a CMS option list to plain strings, dropping blanks. */
-function optionValues(options: HeroOption[] | null | undefined): string[] {
-  return (options ?? []).map((option) => option.value?.trim() ?? "").filter(Boolean);
-}
 
 export const enquiryTypes = [
   "Stay Booking",
@@ -140,9 +96,6 @@ export function normalizeSite(info: PersonalInformation | null | undefined): Sit
   const i = info ?? {};
   const phone = i.phone ?? "";
   const instagram = i.instagram ?? "";
-  const cmsLocations = optionValues(i.heroLocations);
-  const cmsStayTypes = optionValues(i.heroStayTypes);
-  const cmsGuestOptions = optionValues(i.heroGuestOptions);
   return {
     ...STATIC_SITE,
     email: i.email ?? "",
@@ -151,11 +104,6 @@ export function normalizeSite(info: PersonalInformation | null | undefined): Sit
     whatsapp: buildWhatsAppHref(i.whatsapp, phone),
     hours: STATIC_SITE.hours,
     gst: STATIC_SITE.gst,
-    heroLocations: cmsLocations.length ? cmsLocations : HERO_DEFAULT_OPTIONS.heroLocations,
-    heroStayTypes: cmsStayTypes.length ? cmsStayTypes : HERO_DEFAULT_OPTIONS.heroStayTypes,
-    heroGuestOptions: cmsGuestOptions.length
-      ? cmsGuestOptions
-      : [...HERO_DEFAULT_OPTIONS.heroGuestOptions],
     socials: [
       ...(instagram ? [{ label: "Instagram", href: instagram, icon: "Instagram" as const }] : []),
       ...(i.facebook ? [{ label: "Facebook", href: i.facebook, icon: "Facebook" as const }] : []),

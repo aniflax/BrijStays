@@ -14,6 +14,7 @@ import {
 import houseImage from "@/assets/house.png";
 import { stayList } from "@/lib/data/stays";
 import type { Stay } from "@/lib/data/types";
+import { HERO_DEFAULT_OPTIONS, type HeroSearch } from "@/lib/hero-search";
 import { waNumberFromHref } from "@/lib/site";
 import { useSite } from "@/lib/site-context";
 import { cn } from "@/lib/utils";
@@ -26,25 +27,34 @@ const DEFAULT_AVAILABILITY_MESSAGE = [
   "",
 ];
 
-export function Hero({ stays = stayList }: { stays?: Stay[] }) {
+export function Hero({
+  stays = stayList,
+  options = HERO_DEFAULT_OPTIONS,
+}: {
+  stays?: Stay[];
+  /** Dropdown options for the search bar, fetched from the Hero Search CMS. */
+  options?: HeroSearch;
+}) {
   const site = useSite();
-  const guestOptions = site.heroGuestOptions;
+  const guestOptions = options.heroGuestOptions;
 
   const [selectedLocation, setSelectedLocation] = useState(
-    site.heroLocations[0] ?? "Vrindavan, Uttar Pradesh",
+    options.heroLocations[0] ?? "Vrindavan, Uttar Pradesh",
   );
-  const [stayType, setStayType] = useState(site.heroStayTypes[0] ?? "All Stays");
+  const [stayType, setStayType] = useState(options.heroStayTypes[0] ?? "All Stays");
   const [guests, setGuests] = useState(guestOptions[0] ?? "2 – 3 Guests");
   const [openMenu, setOpenMenu] = useState<OpenMenu>(null);
 
-  const locationOptions = site.heroLocations;
+  const locationOptions = options.heroLocations;
 
   const categories = [...new Set(stays.map((s) => s.category).filter(Boolean))];
   // Show the CMS stay types first; fall back to categories derived from the
   // actual inventory so the list always has real options.
   const stayTypeOptions = [
     "All Stays",
-    ...Array.from(new Set([...site.heroStayTypes.filter((t) => t !== "All Stays"), ...categories])),
+    ...Array.from(
+      new Set([...options.heroStayTypes.filter((t) => t !== "All Stays"), ...categories]),
+    ),
   ];
 
   const instagram = site.socials.find(
