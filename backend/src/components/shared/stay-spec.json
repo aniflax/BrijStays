@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_shared_stay_specs",
+  "info": {
+    "displayName": "Stay Spec",
+    "icon": "list",
+    "description": "A single tag/value row on a stay's details table (e.g. AC: 3, Room type: Studio)"
+  },
+  "options": {},
+  "attributes": {
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "value": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

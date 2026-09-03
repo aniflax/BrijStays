@@ -99,7 +99,6 @@ const staysSeed = [
     shortName: 'Nest in the Forest',
     category: 'Boutique Stay',
     building: 'Hari Krishna Residency',
-    roomType: 'Private room',
     shortDescription:
       'A unique, family-friendly boutique stay one minute from ISKCON and Prem Mandir, tucked into a quiet, leafy corner of Vrindavan.',
     description: [
@@ -122,9 +121,13 @@ const staysSeed = [
     ].join('\n'),
     airbnbUrl: 'https://www.airbnb.co.in/rooms/1694091085781085697',
     mapQuery: 'ISKCON Vrindavan, Uttar Pradesh',
-    guestCapacity: 2,
-    bedrooms: 1,
-    bathrooms: 1,
+    specs: [
+        { label: 'Room type', value: 'Private room' },
+        { label: 'Guests', value: '2' },
+        { label: 'Bedrooms', value: '1' },
+        { label: 'Bathrooms', value: '1' },
+        { label: 'AC', value: 'Yes' },
+    ],
     rating: 4.0,
     ratingCount: 1,
     latitude: 27.57585,
@@ -139,7 +142,6 @@ const staysSeed = [
     shortName: 'Red Velvet Studio',
     category: 'Studio',
     building: 'Hari Krishna Residency',
-    roomType: 'Studio',
     shortDescription:
       'A super-central designer studio literally next door to ISKCON, with bold black-and-white walls, plush burgundy styling and a kitchenette.',
     description: [
@@ -162,9 +164,13 @@ const staysSeed = [
     ].join('\n'),
     airbnbUrl: 'https://www.airbnb.co.in/rooms/1694085953625668285',
     mapQuery: 'ISKCON Vrindavan, Uttar Pradesh',
-    guestCapacity: 2,
-    bedrooms: 1,
-    bathrooms: 1,
+    specs: [
+        { label: 'Room type', value: 'Studio' },
+        { label: 'Guests', value: '2' },
+        { label: 'Bedrooms', value: '1' },
+        { label: 'Bathrooms', value: '1' },
+        { label: 'AC', value: 'Yes' },
+    ],
     rating: 5.0,
     ratingCount: 2,
     latitude: 27.57771,
@@ -179,7 +185,6 @@ const staysSeed = [
     shortName: 'Shyam Rang Palace',
     category: 'Heritage Apartment',
     building: 'Hari Krishna Residency',
-    roomType: 'Entire apartment',
     shortDescription:
       'A hand-painted heritage apartment next to ISKCON — Jodhpur colours, Jaipur pots and a tranquil rooftop garden.',
     description: [
@@ -202,9 +207,13 @@ const staysSeed = [
     ].join('\n'),
     airbnbUrl: 'https://www.airbnb.co.in/rooms/1429472757418114108',
     mapQuery: 'ISKCON Vrindavan, Uttar Pradesh',
-    guestCapacity: 2,
-    bedrooms: 1,
-    bathrooms: 1,
+    specs: [
+        { label: 'Room type', value: 'Entire apartment' },
+        { label: 'Guests', value: '2' },
+        { label: 'Bedrooms', value: '1' },
+        { label: 'Bathrooms', value: '1' },
+        { label: 'AC', value: 'Yes' },
+    ],
     rating: 4.91,
     ratingCount: 32,
     latitude: 27.57146,
@@ -219,7 +228,6 @@ const staysSeed = [
     shortName: 'Anand-Van',
     category: '1 BHK Apartment',
     building: '',
-    roomType: '1 BHK apartment',
     shortDescription:
       'A terracotta-inspired 1BHK on the 13th floor with two balconies — one for sunrise, one for sunset — plus skyline views across Vrindavan.',
     description: [
@@ -242,9 +250,13 @@ const staysSeed = [
     ].join('\n'),
     airbnbUrl: 'https://www.airbnb.co.in/rooms/1142535842156771470',
     mapQuery: 'Prem Mandir, Vrindavan, Uttar Pradesh',
-    guestCapacity: 2,
-    bedrooms: 1,
-    bathrooms: 1,
+    specs: [
+        { label: 'Room type', value: '1 BHK apartment' },
+        { label: 'Guests', value: '2' },
+        { label: 'Bedrooms', value: '1' },
+        { label: 'Bathrooms', value: '1' },
+        { label: 'AC', value: 'Yes' },
+    ],
     rating: 4.98,
     ratingCount: 43,
     latitude: 27.56357,
@@ -259,7 +271,6 @@ const staysSeed = [
     shortName: 'All things Pichwai',
     category: 'Arthouse Studio',
     building: '',
-    roomType: 'Studio',
     shortDescription:
       'A Pichwai-themed studio with elegant fittings, art-filled interiors and a charming sit-out balcony, minutes from the prime temples.',
     description: [
@@ -282,9 +293,13 @@ const staysSeed = [
     ].join('\n'),
     airbnbUrl: 'https://www.airbnb.co.in/rooms/1205714535489622168',
     mapQuery: 'Prem Mandir, Vrindavan, Uttar Pradesh',
-    guestCapacity: 3,
-    bedrooms: 1,
-    bathrooms: 1,
+    specs: [
+        { label: 'Room type', value: 'Studio' },
+        { label: 'Guests', value: '3' },
+        { label: 'Bedrooms', value: '1' },
+        { label: 'Bathrooms', value: '1' },
+        { label: 'AC', value: 'Yes' },
+    ],
     rating: 4.97,
     ratingCount: 98,
     latitude: 27.57375,
@@ -299,7 +314,6 @@ const staysSeed = [
     shortName: 'Artistic Haven: ShantiVan',
     category: 'Designer Suite',
     building: '',
-    roomType: 'Entire apartment',
     shortDescription:
       'Urban luxury on the 15th floor — a stylish retreat with skyline vistas, two balconies and sparkling-clean corners by the prime temples.',
     description: [
@@ -322,9 +336,13 @@ const staysSeed = [
     ].join('\n'),
     airbnbUrl: 'https://www.airbnb.co.in/rooms/1142555542700079169',
     mapQuery: 'Prem Mandir, Vrindavan, Uttar Pradesh',
-    guestCapacity: 2,
-    bedrooms: 1,
-    bathrooms: 1,
+    specs: [
+        { label: 'Room type', value: 'Entire apartment' },
+        { label: 'Guests', value: '2' },
+        { label: 'Bedrooms', value: '1' },
+        { label: 'Bathrooms', value: '1' },
+        { label: 'AC', value: 'Yes' },
+    ],
     rating: 4.99,
     ratingCount: 76,
     latitude: 27.56312,
@@ -339,7 +357,6 @@ const staysSeed = [
     shortName: 'The Royal Indian Odyssey',
     category: 'Luxury Suite',
     building: '',
-    roomType: 'Luxury suite',
     shortDescription:
       "Vrindavan's stunning luxury suite — tasteful colours, Rajasthan-inspired décor and a box-style bed on the 11th floor with breathtaking views.",
     description: [
@@ -362,9 +379,13 @@ const staysSeed = [
     ].join('\n'),
     airbnbUrl: 'https://www.airbnb.co.in/rooms/1350462335119442515',
     mapQuery: 'Prem Mandir, Vrindavan, Uttar Pradesh',
-    guestCapacity: 2,
-    bedrooms: 1,
-    bathrooms: 1,
+    specs: [
+        { label: 'Room type', value: 'Luxury suite' },
+        { label: 'Guests', value: '2' },
+        { label: 'Bedrooms', value: '1' },
+        { label: 'Bathrooms', value: '1' },
+        { label: 'AC', value: 'Yes' },
+    ],
     rating: 4.88,
     ratingCount: 40,
     latitude: 27.56152,
@@ -379,7 +400,6 @@ const staysSeed = [
     shortName: 'The Yoga Cafe',
     category: 'Wellness Stay',
     building: '',
-    roomType: 'Entire apartment',
     shortDescription:
       'A stylish 10th-floor wellness stay with terracotta charm, skyline views, 24×7 lifts and high-speed internet — fun for the whole family.',
     description: [
@@ -402,9 +422,13 @@ const staysSeed = [
     ].join('\n'),
     airbnbUrl: 'https://www.airbnb.co.in/rooms/1337256608803515268',
     mapQuery: 'Prem Mandir, Vrindavan, Uttar Pradesh',
-    guestCapacity: 2,
-    bedrooms: 1,
-    bathrooms: 1,
+    specs: [
+        { label: 'Room type', value: 'Entire apartment' },
+        { label: 'Guests', value: '2' },
+        { label: 'Bedrooms', value: '1' },
+        { label: 'Bathrooms', value: '1' },
+        { label: 'AC', value: 'Yes' },
+    ],
     rating: 4.89,
     ratingCount: 19,
     latitude: 27.56591,

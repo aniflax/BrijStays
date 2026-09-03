@@ -30,9 +30,6 @@
     "building": {
       "type": "string"
     },
-    "roomType": {
-      "type": "string"
-    },
     "shortDescription": {
       "type": "text"
     },
@@ -51,17 +48,10 @@
     "mapQuery": {
       "type": "string"
     },
-    "guestCapacity": {
-      "type": "integer",
-      "default": 2
-    },
-    "bedrooms": {
-      "type": "integer",
-      "default": 1
-    },
-    "bathrooms": {
-      "type": "integer",
-      "default": 1
+    "specs": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.stay-spec"
     },
     "rating": {
       "type": "decimal",
