@@ -14,6 +14,7 @@ import { EnquiryForm } from "@/components/site/EnquiryForm";
 import { WhatsAppInquiry } from "@/components/site/WhatsAppInquiry";
 import { FaqSection } from "@/components/site/FaqSection";
 import { Reveal, RevealGroup, RevealItem } from "@/components/motion/Reveal";
+import { GoogleReviews } from "@/components/site/GoogleReviews";
 import { Button } from "@/components/ui/button";
 import { fetchBlogPosts } from "@/lib/blog";
 import { fetchStays } from "@/lib/stays";
@@ -231,6 +232,9 @@ function Home() {
       <section className="pb-24 md:pb-32">
         <GalleryMarquee images={galleryImages} />
       </section>
+
+      {/* Google reviews */}
+      <GoogleReviews />
 
       {/* Featured stays */}
       <section className="py-24 md:py-32">
