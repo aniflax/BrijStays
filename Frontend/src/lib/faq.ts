@@ -7,7 +7,6 @@ import { createServerFn } from "@tanstack/react-start";
 import { STRAPI_URL } from "./site";
 import { readEdgeCache, writeEdgeCache } from "./server-cache";
 import type { Faq } from "./data/types";
-import { faqList } from "./data/faqs";
 
 const FETCH_TIMEOUT_MS = 15_000;
 const CACHE_TTL_MS = 10 * 60 * 1000;
@@ -68,9 +67,9 @@ export const fetchFaqsFromCms = createServerFn()
       }
     }
 
-    // Only fall back to the bundled list when the CMS returned nothing, so
-    // content edits in Strapi (including removing every FAQ) take effect.
-    const result = faqs ?? faqList;
+    // Only CMS content is used; the section renders nothing when Strapi is
+    // unreachable or has no entries.
+    const result = faqs ?? [];
     faqsCache = result;
     faqsCacheAt = Date.now();
     await writeEdgeCache("faqs", result, EDGE_CACHE_TTL_SECONDS);

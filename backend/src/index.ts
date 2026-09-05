@@ -53,25 +53,92 @@ const UPLOAD_ACTIONS = [
   { action: 'plugin::upload.configure-view', subject: 'plugin::upload.file' },
 ];
 
-/** Grants every admin role upload-plugin actions so the media picker can load. */
+/**
+ * Grants every admin role upload-plugin actions so the media picker can load.
+ * Runs inside try/catch because a failure here must never block Strapi from
+ * binding its port (Render fails the deploy when the port is not open in time).
+ */
 async function ensureUploadPermissions(strapi: Core.Strapi) {
-  const roles = await strapi.service('admin::role').find();
-  const rolesList = Array.isArray(roles) ? roles : roles.results ?? [];
-  for (const role of rolesList) {
-    const existing = await strapi.service('admin::permission').findMany({
-      where: {
-        role: role.id,
-        action: { $in: UPLOAD_ACTIONS.map((a) => a.action) },
-      },
-    });
-    const existingActions = new Set(existing.map((p: any) => p.action));
-    const missing = UPLOAD_ACTIONS.filter((a) => !existingActions.has(a.action));
-    if (missing.length) {
-      await strapi.service('admin::permission').createMany({
-        data: missing.map((a) => ({ ...a, role: role.id })),
+  try {
+    const roles = await strapi.service('admin::role').find();
+    const rolesList = Array.isArray(roles) ? roles : roles.results ?? [];
+    for (const role of rolesList) {
+      const existing = await strapi.service('admin::permission').findMany({
+        where: {
+          role: role.id,
+          action: { $in: UPLOAD_ACTIONS.map((a) => a.action) },
+        },
       });
-      strapi.log.info(`[permissions] Granted upload actions to admin role "${role.name}"`);
+      const existingActions = new Set(existing.map((p: any) => p.action));
+      const missing = UPLOAD_ACTIONS.filter((a) => !existingActions.has(a.action));
+      if (missing.length) {
+        await strapi
+          .service('admin::permission')
+          .createMany(missing.map((a) => ({ ...a, role: role.id })));
+        strapi.log.info(`[permissions] Granted upload actions to admin role "${role.name}"`);
+      }
     }
+  } catch (err) {
+    strapi.log.warn(`[permissions] Could not grant upload permissions: ${err}`);
+  }
+}
+
+const PURGE_WEBHOOK_URL = 'https://brijstays.in/api/purge-cache';
+
+/** Every generic entry event, so any CMS edit triggers the cache purge. */
+const PURGE_EVENTS = [
+  'entry.create',
+  'entry.update',
+  'entry.delete',
+  'entry.publish',
+  'entry.unpublish',
+];
+
+/**
+ * Ensures a webhook POSTs to the frontend's cache-purge endpoint on every
+ * content-type change. The Cloudflare Worker resets its blog/site/homepage
+ * caches and purges the zone on that call, so CMS edits (gallery, standard
+ * images, stays, reviews, …) appear immediately instead of after the 10-minute
+ * cache TTL.
+ */
+async function ensurePurgeWebhook(strapi: Core.Strapi) {
+  try {
+    const store = strapi.get('webhookStore') as {
+      findWebhooks: () => Promise<Array<Record<string, any>>>;
+      createWebhook: (data: Record<string, any>) => Promise<Record<string, any>>;
+      updateWebhook: (id: string, data: Record<string, any>) => Promise<Record<string, any> | null>;
+    };
+    const webhooks = await store.findWebhooks();
+    const existing = webhooks.find((w) => w.url === PURGE_WEBHOOK_URL);
+    // If the frontend Worker enforces PURGE_SECRET, mirror it as a header on
+    // the webhook so purge requests are accepted. The same value is set as a
+    // Render environment variable on the backend.
+    const purgeSecret =
+      typeof process !== 'undefined' ? (process.env['PURGE_SECRET'] ?? '') : '';
+    const payload = {
+      name: 'Purge Brij Stays cache',
+      url: PURGE_WEBHOOK_URL,
+      headers: purgeSecret ? { 'x-strapi-secret': purgeSecret } : {},
+      events: PURGE_EVENTS,
+      isEnabled: true,
+    };
+
+    if (existing) {
+      const missingEvents = PURGE_EVENTS.some((e) => !(existing.events ?? []).includes(e));
+      const headerChanged =
+        JSON.stringify(existing.headers ?? {}) !== JSON.stringify(payload.headers);
+      if (!existing.isEnabled || missingEvents || headerChanged) {
+        const updated = await store.updateWebhook(existing.id, payload);
+        if (updated) strapi.get('webhookRunner')?.update(updated);
+        strapi.log.info('[webhook] Updated purge-cache webhook to cover all content types');
+      }
+    } else {
+      const created = await store.createWebhook(payload);
+      strapi.get('webhookRunner')?.add(created);
+      strapi.log.info('[webhook] Created purge-cache webhook for all content types');
+    }
+  } catch (err) {
+    strapi.log.warn(`[webhook] Could not configure purge webhook: ${err}`);
   }
 }
 
@@ -143,5 +210,6 @@ export default {
 
     await ensurePublicContentPermissions(strapi);
     await ensureUploadPermissions(strapi);
+    await ensurePurgeWebhook(strapi);
   },
 };

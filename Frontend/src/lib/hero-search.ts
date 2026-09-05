@@ -1,7 +1,7 @@
 // Hero search bar options (location, stay type and guest range dropdowns)
 // fetched from the Strapi "Hero Search" single type. Reads run through a
-// server function on the Worker (never the browser) and fall back to the
-// bundled defaults when Strapi is unreachable or has no entries.
+// server function on the Worker (never the browser). Only CMS content is used;
+// when Strapi is unreachable or has no entries the dropdowns are left empty.
 
 import { createServerFn } from "@tanstack/react-start";
 import { STRAPI_URL } from "./site";
@@ -24,12 +24,6 @@ export type HeroSearch = {
   heroGuestOptions: string[];
 };
 
-export const HERO_DEFAULT_OPTIONS: HeroSearch = {
-  heroLocations: ["Vrindavan, Uttar Pradesh"],
-  heroStayTypes: ["All Stays"],
-  heroGuestOptions: ["2 – 3 Guests", "1 – 2 Guests", "3 – 4 Guests", "4 – 5 Guests"],
-};
-
 /** Raw shape of the Strapi "Hero Search" single type. */
 export type StrapiHeroSearch = {
   heroLocations?: HeroOption[] | null;
@@ -43,15 +37,10 @@ function optionValues(options: HeroOption[] | null | undefined): string[] {
 
 export function normalizeHeroSearch(info: StrapiHeroSearch | null | undefined): HeroSearch {
   const i = info ?? {};
-  const locations = optionValues(i.heroLocations);
-  const stayTypes = optionValues(i.heroStayTypes);
-  const guestOptions = optionValues(i.heroGuestOptions);
   return {
-    heroLocations: locations.length ? locations : HERO_DEFAULT_OPTIONS.heroLocations,
-    heroStayTypes: stayTypes.length ? stayTypes : HERO_DEFAULT_OPTIONS.heroStayTypes,
-    heroGuestOptions: guestOptions.length
-      ? guestOptions
-      : [...HERO_DEFAULT_OPTIONS.heroGuestOptions],
+    heroLocations: optionValues(i.heroLocations),
+    heroStayTypes: optionValues(i.heroStayTypes),
+    heroGuestOptions: optionValues(i.heroGuestOptions),
   };
 }
 
@@ -93,7 +82,7 @@ export const fetchHeroSearchFromCms = createServerFn()
       }
     }
 
-    result = result ?? HERO_DEFAULT_OPTIONS;
+    result = result ?? { heroLocations: [], heroStayTypes: [], heroGuestOptions: [] };
     cached = result;
     cachedAt = Date.now();
     await writeEdgeCache("hero-search", result, EDGE_CACHE_TTL_SECONDS);

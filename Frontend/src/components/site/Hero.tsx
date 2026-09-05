@@ -13,7 +13,7 @@ import {
 
 import houseImage from "@/assets/house.png";
 import type { Stay } from "@/lib/data/types";
-import { HERO_DEFAULT_OPTIONS, type HeroSearch } from "@/lib/hero-search";
+import type { HeroSearch } from "@/lib/hero-search";
 import { waNumberFromHref } from "@/lib/site";
 import { useSite } from "@/lib/site-context";
 import { cn } from "@/lib/utils";
@@ -28,7 +28,7 @@ const DEFAULT_AVAILABILITY_MESSAGE = [
 
 export function Hero({
   stays = [],
-  options = HERO_DEFAULT_OPTIONS,
+  options = { heroLocations: [], heroStayTypes: [], heroGuestOptions: [] },
 }: {
   stays?: Stay[];
   /** Dropdown options for the search bar, fetched from the Hero Search CMS. */
