@@ -6,7 +6,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { STRAPI_URL, resolveMediaUrl } from "./site";
 import type { StrapiMedia } from "./site";
-import { blogPostList } from "./data/blogPosts";
 import type { BlogPost } from "./data/types";
 import { readEdgeCache, writeEdgeCache } from "./server-cache";
 
@@ -138,7 +137,7 @@ export const fetchBlogPostsFromCms = createServerFn()
       }
     }
 
-    const result = posts ?? blogPostList;
+    const result = posts ?? [];
     cachedPosts = result;
     cachedAt = Date.now();
     await writeEdgeCache("blogs", result, EDGE_CACHE_TTL_SECONDS);

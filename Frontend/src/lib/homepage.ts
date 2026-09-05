@@ -7,8 +7,6 @@ import { createServerFn } from "@tanstack/react-start";
 import { STRAPI_URL, resolveMediaUrl } from "./site";
 import { readEdgeCache, writeEdgeCache } from "./server-cache";
 import type { GalleryImage, InstagramVideo, Testimonial } from "./data/types";
-import { galleryStrip, img } from "./data/images";
-import { testimonialList } from "./data/testimonials";
 
 const FETCH_TIMEOUT_MS = 15_000;
 const CACHE_TTL_MS = 10 * 60 * 1000;
@@ -146,7 +144,7 @@ export const fetchGalleryImagesFromCms = createServerFn()
       }
     }
 
-    const result = images ?? galleryStrip;
+    const result = images ?? [];
     galleryCache = result;
     galleryCacheAt = Date.now();
     await writeEdgeCache("gallery-images", result, EDGE_CACHE_TTL_SECONDS);
@@ -198,12 +196,7 @@ export const fetchStandardImagesFromCms = createServerFn()
       }
     }
 
-    const result =
-      images ??
-      [img.interior1, img.interior2, img.interior3, img.interior4].map((src, index) => ({
-        src,
-        alt: `Interior finish sample ${index + 1}`,
-      }));
+    const result = images ?? [];
     standardCache = result;
     standardCacheAt = Date.now();
     await writeEdgeCache("standard-images", result, EDGE_CACHE_TTL_SECONDS);
@@ -257,7 +250,7 @@ export const fetchReviewsFromCms = createServerFn()
       }
     }
 
-    const result = reviews ?? testimonialList;
+    const result = reviews ?? [];
     reviewsCache = result;
     reviewsCacheAt = Date.now();
     await writeEdgeCache("reviews", result, EDGE_CACHE_TTL_SECONDS);

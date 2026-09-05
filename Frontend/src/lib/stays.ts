@@ -5,7 +5,6 @@
 
 import { createServerFn } from "@tanstack/react-start";
 import { STRAPI_URL, resolveMediaUrl } from "./site";
-import { stayList } from "./data/stays";
 import type { Stay } from "./data/types";
 import { readEdgeCache, writeEdgeCache } from "./server-cache";
 
@@ -181,7 +180,7 @@ export const fetchStaysFromCms = createServerFn()
       }
     }
 
-    const result = stays ?? stayList;
+    const result = stays ?? [];
     cachedStays = result;
     cachedAt = Date.now();
     await writeEdgeCache("stays", result, EDGE_CACHE_TTL_SECONDS);

@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 
 import houseImage from "@/assets/house.png";
-import { stayList } from "@/lib/data/stays";
 import type { Stay } from "@/lib/data/types";
 import { HERO_DEFAULT_OPTIONS, type HeroSearch } from "@/lib/hero-search";
 import { waNumberFromHref } from "@/lib/site";
@@ -28,7 +27,7 @@ const DEFAULT_AVAILABILITY_MESSAGE = [
 ];
 
 export function Hero({
-  stays = stayList,
+  stays = [],
   options = HERO_DEFAULT_OPTIONS,
 }: {
   stays?: Stay[];
