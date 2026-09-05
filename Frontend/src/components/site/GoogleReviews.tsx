@@ -31,7 +31,7 @@ export function GoogleReviews() {
       <div className="container-luxe">
         <Reveal className="flex flex-col items-center justify-center gap-6 text-center">
           <a
-            href="https://www.google.com/maps/search/?api=1&query=Brij+Stays+Vrindavan"
+            href="https://share.google/Oc6HnxPKgkkqaelOT"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex flex-col items-center gap-3 sm:flex-row sm:gap-5"
