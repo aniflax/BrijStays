@@ -1,10 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { BedDouble, MapPin, MessageCircle, ShieldCheck, Sparkles, Wifi } from "lucide-react";
+import { BedDouble, Clock, MapPin, MessageCircle, ShieldCheck, Sparkles, Wifi } from "lucide-react";
 
 import moreThanAStayImage from "@/assets/more-than-a-stay.png";
 import { Hero } from "@/components/site/Hero";
 import { SectionHeading } from "@/components/site/SectionHeading";
-import { StatRow } from "@/components/site/StatCounter";
+import { StatRow, type Stat } from "@/components/site/StatCounter";
 import { GalleryMarquee } from "@/components/site/GalleryMarquee";
 import { StayCard } from "@/components/site/StayCard";
 import { BlogCard } from "@/components/site/BlogCard";
@@ -154,26 +154,24 @@ function Home() {
   const featuredStays = stays.filter((s) => s.showOnHomePage);
   const homeStays = featuredStays.length > 0 ? featuredStays : stays;
   const featuredStay = homeStays[0];
-  const totalGuestReviews = stays.reduce((sum, stay) => sum + stay.ratingCount, 0);
 
-  const stats = [
+  const stats: Stat[] = [
     {
-      value: stays.length,
+      value: 12,
       suffix: "",
       label: "Curated Stays",
       caption: "Boutique stays across Vrindavan.",
     },
     {
-      value: totalGuestReviews,
+      value: 1000,
       suffix: "+",
       label: "Guest Reviews",
       caption: "Verified ratings on Airbnb.",
     },
     {
-      value: 24,
-      suffix: "/7",
+      icon: Clock,
       label: "Guest Support",
-      caption: "Front desk and host care, always on.",
+      caption: "Host care - always on.",
     },
   ];
 
@@ -218,17 +216,8 @@ function Home() {
               <div className="animate-floaty absolute -right-4 -bottom-8 hidden h-32 w-32 rounded-3xl border border-brand/20 bg-white/40 backdrop-blur-sm md:block" />
               <div className="absolute -bottom-6 left-6 hidden max-w-[230px] rounded-2xl border border-border bg-white/90 p-4 shadow-lg backdrop-blur md:block">
                 <div className="text-xs tracking-widest text-brand uppercase">Rated on Airbnb</div>
-                <div className="mt-1 font-serif text-2xl text-foreground">
-                  {stays.length > 0
-                    ? (stays.reduce((sum, stay) => sum + stay.rating, 0) / stays.length)
-                        .toFixed(1)
-                        .replace(/\.0$/, "")
-                    : "—"}{" "}
-                  / 5
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  across {totalGuestReviews} guest reviews
-                </div>
+                <div className="mt-1 font-serif text-2xl text-foreground">4.95 / 5</div>
+                <div className="text-xs text-muted-foreground">across 1000+ Reviews</div>
               </div>
             </div>
           </Reveal>

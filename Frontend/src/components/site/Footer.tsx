@@ -122,7 +122,6 @@ export function Footer() {
       <div className="border-t border-border">
         <div className="container-x flex flex-col items-center justify-between gap-2 py-6 text-xs text-muted-foreground md:flex-row">
           <div>© {new Date().getFullYear()} Brij Stays. All Rights Reserved.</div>
-          <div>{site.gst}</div>
           <div>Crafted in Vrindavan, India.</div>
         </div>
       </div>

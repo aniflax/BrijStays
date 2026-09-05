@@ -1,7 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { useInView } from "motion/react";
+import type { LucideIcon } from "lucide-react";
 
-export type Stat = { value: number; suffix?: string; label: string; caption: string };
+export type Stat = {
+  value?: number;
+  suffix?: string;
+  icon?: LucideIcon;
+  label: string;
+  caption: string;
+};
 
 export function StatCounter({ stat }: { stat: Stat }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -9,14 +16,14 @@ export function StatCounter({ stat }: { stat: Stat }) {
   const [display, setDisplay] = useState(0);
 
   useEffect(() => {
-    if (!inView) return;
+    if (!inView || typeof stat.value !== "number") return;
     const duration = 1600;
     const start = performance.now();
     let frame = 0;
     const tick = (now: number) => {
       const progress = Math.min((now - start) / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplay(Math.round(stat.value * eased));
+      setDisplay(Math.round((stat.value as number) * eased));
       if (progress < 1) frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
@@ -25,10 +32,18 @@ export function StatCounter({ stat }: { stat: Stat }) {
 
   return (
     <div ref={ref} className="bg-white p-4 text-center md:p-10">
-      <p className="font-serif text-2xl leading-none text-foreground md:text-5xl">
-        {display}
-        <span className="text-brand">{stat.suffix}</span>
-      </p>
+      {stat.icon ? (
+        <stat.icon
+          className="mx-auto h-10 w-10 text-brand md:h-14 md:w-14"
+          strokeWidth={1.5}
+          aria-hidden
+        />
+      ) : (
+        <p className="font-serif text-2xl leading-none text-foreground md:text-5xl">
+          {display}
+          <span className="text-brand">{stat.suffix}</span>
+        </p>
+      )}
       <p className="mt-2 text-[0.6rem] tracking-[0.15em] text-muted-foreground uppercase md:mt-3 md:text-xs md:tracking-[0.2em]">
         {stat.label}
       </p>

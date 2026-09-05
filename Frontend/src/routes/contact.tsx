@@ -89,7 +89,6 @@ function ContactPage() {
                   <span className="text-muted-foreground">{site.hours}</span>
                 </li>
               </ul>
-              <p className="mt-6 text-xs text-muted-foreground">{site.gst}</p>
               <div className="mt-8 flex items-center gap-3">
                 {site.socials.map((s) => {
                   const Icon = socialIcons[s.icon as keyof typeof socialIcons];
