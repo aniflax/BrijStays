@@ -59,14 +59,6 @@ export type PersonalInformation = {
   coFounder?: StrapiMedia;
 };
 
-export const enquiryTypes = [
-  "Stay Booking",
-  "Corporate / Bulk Booking",
-  "Long-term Stay",
-  "Group Booking",
-  "Other",
-] as const;
-
 /**
  * Builds a usable WhatsApp deep-link from a Strapi value that may be stored as
  * a full URL or as a bare phone number (e.g. "919800126777" or "+91 98001 26777").

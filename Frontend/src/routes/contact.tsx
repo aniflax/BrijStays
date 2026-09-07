@@ -120,8 +120,7 @@ function ContactPage() {
                 className="mt-10"
                 showSubject
                 showMessage
-                submitLabel="Send Enquiry"
-                source="contact"
+                submitLabel="Send Enquiry on WhatsApp"
               />
             </Reveal>
           </div>

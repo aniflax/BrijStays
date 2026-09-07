@@ -410,8 +410,8 @@ function Home() {
               Ready to plan your stay in Vrindavan?
             </h2>
             <p className="mt-6 max-w-sm text-base leading-relaxed text-muted-foreground">
-              Leave your details and we will call you back within one working day. For faster
-              confirmation, message us on WhatsApp.
+              Fill in what suits you — your details open straight in WhatsApp, ready to send. It is
+              the fastest way to plan your stay.
             </p>
             <WhatsAppInquiry
               title="a stay in Vrindavan"
@@ -420,7 +420,7 @@ function Home() {
             />
           </div>
           <div className="rounded-3xl border border-border bg-white p-8 shadow-[var(--shadow-soft)] lg:col-span-7 lg:p-10">
-            <EnquiryForm source="home" />
+            <EnquiryForm />
           </div>
         </div>
       </section>

@@ -1,26 +1,31 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { toast } from "sonner";
-import { Check } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { submitEnquiry, type EnquiryPayload } from "@/lib/api";
-import { enquiryTypes } from "@/lib/site";
+import { waNumberFromHref } from "@/lib/site";
 import { useSite } from "@/lib/site-context";
 import { cn } from "@/lib/utils";
 
-type Errors = Partial<Record<"name" | "phone" | "email" | "message" | "consent", string>>;
+const enquiryTypes = [
+  "Stay Booking",
+  "Corporate / Bulk Booking",
+  "Long-term Stay",
+  "Group Booking",
+  "Other",
+];
 
 const fieldClass =
   "h-12 w-full rounded-xl border border-border bg-white px-4 text-sm text-foreground outline-none transition-all placeholder:text-muted-foreground/60 focus:border-brand focus:ring-1 focus:ring-brand";
+
+const OPTIONAL = " (optional)";
 
 export function EnquiryForm({
   tone = "dark",
   interestedIn,
   showSubject = false,
   showMessage = false,
-  submitLabel = "Request a Callback",
-  source = "site",
+  submitLabel = "Chat on WhatsApp",
   className,
 }: {
   tone?: "dark" | "light";
@@ -28,7 +33,6 @@ export function EnquiryForm({
   showSubject?: boolean;
   showMessage?: boolean;
   submitLabel?: string;
-  source?: string;
   className?: string;
 }) {
   const site = useSite();
@@ -39,80 +43,33 @@ export function EnquiryForm({
     enquiringAs: enquiryTypes[0] as string,
     subject: "",
     message: "",
-    consent: false,
   });
-  const [errors, setErrors] = useState<Errors>({});
-  const [sending, setSending] = useState(false);
-  const [done, setDone] = useState(false);
 
   const light = tone === "light";
   const border = light ? "border-cream/25" : "border-border";
+  const whatsappNumber = waNumberFromHref(site.whatsapp);
 
-  function validate() {
-    const next: Errors = {};
-    if (values.name.trim().length < 2) next.name = "Please enter your name.";
-    if (!/^[+\d][\d\s-]{7,}$/.test(values.phone.trim()))
-      next.phone = "Please enter a valid phone number.";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(values.email.trim()))
-      next.email = "Please enter a valid email address.";
-    if (showMessage && values.message.trim().length < 5)
-      next.message = "Please add a short message.";
-    if (!values.consent) next.consent = "Please accept the privacy policy to continue.";
-    setErrors(next);
-    return Object.keys(next).length === 0;
-  }
-
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!validate()) return;
-    setSending(true);
-    const payload: EnquiryPayload = { ...values, interestedIn, source };
-    const result = await submitEnquiry(payload);
-    setSending(false);
-    if (result.ok) {
-      setDone(true);
-      toast.success("Enquiry received", {
-        description: "Our team will call you back within one working day.",
-      });
-    } else {
-      toast.error("Something went wrong", { description: "Please try again or call us directly." });
-    }
-  }
+    if (!whatsappNumber) return;
+    const lines: string[] = [];
 
-  if (done) {
-    return (
-      <div
-        className={cn(
-          "flex flex-col items-start gap-4 rounded-2xl border border-border bg-white p-8",
-          className,
-        )}
-      >
-        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-brand text-white">
-          <Check className="h-5 w-5" />
-        </span>
-        <h3 className="font-serif text-2xl text-foreground">Thank you — we have your details.</h3>
-        <p
-          className={cn(
-            "text-sm leading-relaxed",
-            light ? "text-cream/70" : "text-muted-foreground",
-          )}
-        >
-          A member of our team will reach out within one working day. For anything urgent, call us
-          on {site.phoneDisplay || "the number on this page"}.
-        </p>
-        <Button
-          type="button"
-          variant={light ? "luxeLight" : "luxeOutline"}
-          size="luxeSm"
-          onClick={() => {
-            setDone(false);
-            setValues((v) => ({ ...v, message: "", subject: "", consent: false }));
-          }}
-        >
-          Send another enquiry
-        </Button>
-      </div>
-    );
+    if (values.message.trim()) {
+      lines.push(values.message.trim());
+    } else {
+      lines.push(
+        `Hi Brij Stays, I would like to enquire about ${interestedIn || "a stay in Vrindavan"}.`,
+      );
+      if (values.enquiringAs) lines.push(`Type of enquiry: ${values.enquiringAs}`);
+    }
+
+    if (values.name.trim()) lines.push(`Name: ${values.name.trim()}`);
+    if (values.phone.trim()) lines.push(`Phone: ${values.phone.trim()}`);
+    if (values.email.trim()) lines.push(`Email: ${values.email.trim()}`);
+    if (values.subject.trim()) lines.push(`Subject: ${values.subject.trim()}`);
+
+    const href = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(lines.join("\n"))}`;
+    window.open(href, "_blank", "noopener,noreferrer");
   }
 
   return (
@@ -121,7 +78,7 @@ export function EnquiryForm({
         <p className={cn("eyebrow", light && "text-gold")}>Interested in: {interestedIn}</p>
       ) : null}
 
-      <Field label="Name" error={errors.name} light={light}>
+      <Field label={`Name${OPTIONAL}`} light={light}>
         <input
           className={cn(fieldClass, border)}
           value={values.name}
@@ -132,7 +89,7 @@ export function EnquiryForm({
       </Field>
 
       <div className="grid gap-6 sm:grid-cols-2">
-        <Field label="Phone" error={errors.phone} light={light}>
+        <Field label={`Phone${OPTIONAL}`} light={light}>
           <input
             className={cn(fieldClass, border)}
             value={values.phone}
@@ -142,7 +99,7 @@ export function EnquiryForm({
             autoComplete="tel"
           />
         </Field>
-        <Field label="Email" error={errors.email} light={light}>
+        <Field label={`Email${OPTIONAL}`} light={light}>
           <input
             className={cn(fieldClass, border)}
             value={values.email}
@@ -153,33 +110,35 @@ export function EnquiryForm({
         </Field>
       </div>
 
-      {showSubject ? (
-        <Field label="Subject" light={light}>
-          <input
-            className={cn(fieldClass, border)}
-            value={values.subject}
-            onChange={(e) => setValues({ ...values, subject: e.target.value })}
-            placeholder="What is this about?"
-          />
-        </Field>
-      ) : null}
+      <div className="grid gap-6 sm:grid-cols-2">
+        {showSubject ? (
+          <Field label={`Subject${OPTIONAL}`} light={light}>
+            <input
+              className={cn(fieldClass, border)}
+              value={values.subject}
+              onChange={(e) => setValues({ ...values, subject: e.target.value })}
+              placeholder="What is this about?"
+            />
+          </Field>
+        ) : null}
 
-      <Field label="Enquiring as…" light={light}>
-        <select
-          className={cn(fieldClass, border, "cursor-pointer appearance-none")}
-          value={values.enquiringAs}
-          onChange={(e) => setValues({ ...values, enquiringAs: e.target.value })}
-        >
-          {enquiryTypes.map((t) => (
-            <option key={t} value={t} className="text-foreground">
-              {t}
-            </option>
-          ))}
-        </select>
-      </Field>
+        <Field label={`I am enquiring about${OPTIONAL}`} light={light}>
+          <select
+            className={cn(fieldClass, border, "cursor-pointer appearance-none")}
+            value={values.enquiringAs}
+            onChange={(e) => setValues({ ...values, enquiringAs: e.target.value })}
+          >
+            {enquiryTypes.map((t) => (
+              <option key={t} value={t} className="text-foreground">
+                {t}
+              </option>
+            ))}
+          </select>
+        </Field>
+      </div>
 
       {showMessage ? (
-        <Field label="Message" error={errors.message} light={light}>
+        <Field label={`Message${OPTIONAL}`} light={light}>
           <textarea
             rows={4}
             className={cn(
@@ -193,49 +152,41 @@ export function EnquiryForm({
         </Field>
       ) : null}
 
-      <label className="flex cursor-pointer items-start gap-3">
-        <input
-          type="checkbox"
-          checked={values.consent}
-          onChange={(e) => setValues({ ...values, consent: e.target.checked })}
-          className="mt-0.5 h-4 w-4 cursor-pointer rounded accent-[#111111]"
-        />
-        <span
-          className={cn(
-            "text-xs leading-relaxed",
-            light ? "text-cream/65" : "text-muted-foreground",
-          )}
-        >
-          I agree to be contacted about my enquiry and accept the{" "}
+      <Button
+        type="submit"
+        variant="whatsapp"
+        size="luxe"
+        className={cn("w-full text-white sm:w-fit", light && "bg-[#25D366] hover:bg-[#1ebe5b]")}
+      >
+        <MessageCircle className="h-4 w-4" />
+        {submitLabel}
+      </Button>
+
+      <p
+        className={cn(
+          "flex items-start gap-1.5 text-xs leading-relaxed",
+          light ? "text-cream/65" : "text-muted-foreground",
+        )}
+      >
+        <span>*</span>
+        <span>
+          All fields are optional — you can also just say hello. By continuing you agree to our{" "}
           <Link to="/privacy-policy" className="underline hover:text-gold">
             Privacy Policy
           </Link>
           .
         </span>
-      </label>
-      {errors.consent ? <p className="-mt-3 text-xs text-destructive">{errors.consent}</p> : null}
-
-      <Button
-        type="submit"
-        disabled={sending}
-        variant={light ? "gold" : "luxe"}
-        size="luxe"
-        className="w-full sm:w-fit"
-      >
-        {sending ? "Sending…" : submitLabel}
-      </Button>
+      </p>
     </form>
   );
 }
 
 function Field({
   label,
-  error,
   light,
   children,
 }: {
   label: string;
-  error?: string | undefined;
   light: boolean;
   children: React.ReactNode;
 }) {
@@ -250,7 +201,6 @@ function Field({
         {label}
       </span>
       {children}
-      {error ? <span className="mt-1.5 block text-xs text-destructive">{error}</span> : null}
     </label>
   );
 }
