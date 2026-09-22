@@ -8,10 +8,13 @@ import { STRAPI_URL } from "./site";
 import { readEdgeCache, writeEdgeCache } from "./server-cache";
 import type { Faq } from "./data/types";
 
-const FETCH_TIMEOUT_MS = 15_000;
+// SSR waits on this fetch before it can send any HTML, so it is deliberately
+// short: a cold or overloaded backend must degrade quickly instead of holding
+// the page open until the browser gives up.
+const FETCH_TIMEOUT_MS = 8_000;
 const CACHE_TTL_MS = 10 * 60 * 1000;
 const EDGE_CACHE_TTL_SECONDS = 10 * 60;
-const MAX_ATTEMPTS = 2;
+const MAX_ATTEMPTS = 1;
 
 type StrapiFaqEntry = {
   id: number;
@@ -68,12 +71,13 @@ export const fetchFaqsFromCms = createServerFn()
     }
 
     // Only CMS content is used; the section renders nothing when Strapi is
-    // unreachable or has no entries.
-    const result = faqs ?? [];
-    faqsCache = result;
+    // unreachable or has no entries. The empty result is deliberately not cached
+    // so the next request retries Strapi instead of pinning the section empty.
+    if (!faqs) return [];
+    faqsCache = faqs;
     faqsCacheAt = Date.now();
-    await writeEdgeCache("faqs", result, EDGE_CACHE_TTL_SECONDS);
-    return result;
+    await writeEdgeCache("faqs", faqs, EDGE_CACHE_TTL_SECONDS);
+    return faqs;
   });
 
 export async function fetchFaqs(): Promise<Faq[]> {

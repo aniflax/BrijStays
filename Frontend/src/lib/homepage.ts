@@ -8,10 +8,13 @@ import { STRAPI_URL, resolveMediaUrl } from "./site";
 import { readEdgeCache, writeEdgeCache } from "./server-cache";
 import type { GalleryImage, InstagramVideo, Testimonial } from "./data/types";
 
-const FETCH_TIMEOUT_MS = 15_000;
+// SSR waits on this fetch before it can send any HTML, so it is deliberately
+// short: a cold or overloaded backend must degrade quickly instead of holding
+// the page open until the browser gives up.
+const FETCH_TIMEOUT_MS = 8_000;
 const CACHE_TTL_MS = 10 * 60 * 1000;
 const EDGE_CACHE_TTL_SECONDS = 10 * 60;
-const MAX_ATTEMPTS = 2;
+const MAX_ATTEMPTS = 1;
 
 const MEDIA_ALT_FIELDS =
   "populate[image][fields][0]=url&populate[image][fields][1]=alternativeText";
@@ -144,11 +147,15 @@ export const fetchGalleryImagesFromCms = createServerFn()
       }
     }
 
-    const result = images ?? [];
-    galleryCache = result;
+    if (!images) {
+      // Serve the fallback without caching it so the next request retries Strapi
+      // instead of pinning an empty marquee for the whole TTL.
+      return [];
+    }
+    galleryCache = images;
     galleryCacheAt = Date.now();
-    await writeEdgeCache("gallery-images", result, EDGE_CACHE_TTL_SECONDS);
-    return result;
+    await writeEdgeCache("gallery-images", images, EDGE_CACHE_TTL_SECONDS);
+    return images;
   });
 
 export async function fetchGalleryImages(): Promise<GalleryImage[]> {
@@ -196,11 +203,15 @@ export const fetchStandardImagesFromCms = createServerFn()
       }
     }
 
-    const result = images ?? [];
-    standardCache = result;
+    if (!images) {
+      // Serve the fallback without caching it so the next request retries Strapi
+      // instead of pinning an empty image grid for the whole TTL.
+      return [];
+    }
+    standardCache = images;
     standardCacheAt = Date.now();
-    await writeEdgeCache("standard-images", result, EDGE_CACHE_TTL_SECONDS);
-    return result;
+    await writeEdgeCache("standard-images", images, EDGE_CACHE_TTL_SECONDS);
+    return images;
   });
 
 export async function fetchStandardImages(): Promise<GalleryImage[]> {
@@ -250,11 +261,15 @@ export const fetchReviewsFromCms = createServerFn()
       }
     }
 
-    const result = reviews ?? [];
-    reviewsCache = result;
+    if (!reviews) {
+      // Serve the fallback without caching it so the next request retries Strapi
+      // instead of pinning an empty review carousel for the whole TTL.
+      return [];
+    }
+    reviewsCache = reviews;
     reviewsCacheAt = Date.now();
-    await writeEdgeCache("reviews", result, EDGE_CACHE_TTL_SECONDS);
-    return result;
+    await writeEdgeCache("reviews", reviews, EDGE_CACHE_TTL_SECONDS);
+    return reviews;
   });
 
 export async function fetchReviews(): Promise<Testimonial[]> {
@@ -306,11 +321,15 @@ export const fetchInstagramVideosFromCms = createServerFn()
       }
     }
 
-    const result = videos ?? [];
-    videosCache = result;
+    if (!videos) {
+      // Serve the fallback without caching it so the next request retries Strapi
+      // instead of pinning an empty videos section for the whole TTL.
+      return [];
+    }
+    videosCache = videos;
     videosCacheAt = Date.now();
-    await writeEdgeCache("instagram-videos", result, EDGE_CACHE_TTL_SECONDS);
-    return result;
+    await writeEdgeCache("instagram-videos", videos, EDGE_CACHE_TTL_SECONDS);
+    return videos;
   });
 
 export async function fetchInstagramVideos(): Promise<InstagramVideo[]> {

@@ -7,10 +7,13 @@ import { createServerFn } from "@tanstack/react-start";
 import { STRAPI_URL } from "./site";
 import { readEdgeCache, writeEdgeCache } from "./server-cache";
 
-const FETCH_TIMEOUT_MS = 15_000;
+// SSR waits on this fetch before it can send any HTML, so it is deliberately
+// short: a cold or overloaded backend must degrade quickly instead of holding
+// the page open until the browser gives up.
+const FETCH_TIMEOUT_MS = 8_000;
 const CACHE_TTL_MS = 10 * 60 * 1000;
 const EDGE_CACHE_TTL_SECONDS = 10 * 60;
-const MAX_ATTEMPTS = 2;
+const MAX_ATTEMPTS = 1;
 
 /** A single repeatable option row (`{ value }`) from the hero-option component. */
 export type HeroOption = {
@@ -82,7 +85,11 @@ export const fetchHeroSearchFromCms = createServerFn()
       }
     }
 
-    result = result ?? { heroLocations: [], heroStayTypes: [], heroGuestOptions: [] };
+    if (!result) {
+      // Serve the fallback without caching it so the next request retries Strapi
+      // instead of pinning empty dropdowns for the whole TTL.
+      return { heroLocations: [], heroStayTypes: [], heroGuestOptions: [] };
+    }
     cached = result;
     cachedAt = Date.now();
     await writeEdgeCache("hero-search", result, EDGE_CACHE_TTL_SECONDS);

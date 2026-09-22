@@ -8,10 +8,13 @@ import { STRAPI_URL, resolveMediaUrl } from "./site";
 import type { Stay } from "./data/types";
 import { readEdgeCache, writeEdgeCache } from "./server-cache";
 
-const FETCH_TIMEOUT_MS = 15_000;
+// SSR waits on this fetch before it can send any HTML, so it is deliberately
+// short: a cold or overloaded backend must degrade quickly instead of holding
+// the page open until the browser gives up.
+const FETCH_TIMEOUT_MS = 8_000;
 const CACHE_TTL_MS = 10 * 60 * 1000;
 const EDGE_CACHE_TTL_SECONDS = 10 * 60;
-const MAX_ATTEMPTS = 2;
+const MAX_ATTEMPTS = 1;
 
 const STAYS_QUERY = [
   "sort[0]=order:asc",
@@ -180,11 +183,15 @@ export const fetchStaysFromCms = createServerFn()
       }
     }
 
-    const result = stays ?? [];
-    cachedStays = result;
+    if (!stays) {
+      // Serve the fallback without caching it so the next request retries Strapi
+      // instead of pinning an empty stay list for the whole TTL.
+      return [];
+    }
+    cachedStays = stays;
     cachedAt = Date.now();
-    await writeEdgeCache("stays", result, EDGE_CACHE_TTL_SECONDS);
-    return result;
+    await writeEdgeCache("stays", stays, EDGE_CACHE_TTL_SECONDS);
+    return stays;
   });
 
 export async function fetchStays(): Promise<Stay[]> {

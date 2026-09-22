@@ -205,8 +205,11 @@ let cachedSite: Site | null = null;
 let cachedAt = 0;
 const CACHE_TTL_MS = 10 * 60 * 1000;
 const EDGE_CACHE_TTL_SECONDS = 10 * 60;
-const FETCH_TIMEOUT_MS = 15_000;
-const MAX_ATTEMPTS = 2;
+// SSR waits on this fetch before it can send any HTML, so it is deliberately
+// short: a cold or overloaded backend must degrade quickly instead of holding
+// the page open until the browser gives up.
+const FETCH_TIMEOUT_MS = 8_000;
+const MAX_ATTEMPTS = 1;
 
 async function fetchSiteOnce(): Promise<Response> {
   const controller = new AbortController();
@@ -249,12 +252,15 @@ export const fetchSiteFromCms = createServerFn()
 
     if (!site) {
       console.error("[site] Failed to fetch personal information from Strapi:", lastError);
+      // Serve the fallback without caching it: a transient backend failure must
+      // not pin empty contact details on the site for the whole TTL. The next
+      // request retries the backend instead.
+      return EMPTY_SITE;
     }
-    const result = site ?? EMPTY_SITE;
-    cachedSite = result;
+    cachedSite = site;
     cachedAt = Date.now();
-    await writeEdgeCache("site", result, EDGE_CACHE_TTL_SECONDS);
-    return result;
+    await writeEdgeCache("site", site, EDGE_CACHE_TTL_SECONDS);
+    return site;
   });
 
 /**

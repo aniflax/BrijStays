@@ -135,6 +135,37 @@ async function handlePurgeWebhook(request: Request, env: unknown): Promise<Respo
 }
 
 const SITE_URL = "https://brijstays.in";
+const CANONICAL_HOST = "brijstays.in";
+
+/**
+ * True when the visitor reached us over HTTPS. Cloudflare terminates TLS and
+ * forwards the original scheme both in the request URL and in x-forwarded-proto.
+ */
+function isSecureRequest(request: Request): boolean {
+  const forwarded = request.headers.get("x-forwarded-proto");
+  if (forwarded) return forwarded.split(",")[0]?.trim() === "https";
+  return new URL(request.url).protocol === "https:";
+}
+
+/**
+ * Sends plain-HTTP and www requests to the canonical https://brijstays.in URL.
+ * Cloudflare can enforce this at the edge, but doing it here means a visitor
+ * arriving over HTTP is upgraded (instead of Chrome warning that the site
+ * "doesn't support a secure connection") even when that setting is off.
+ * Only safe read methods are redirected so the Strapi webhook is never touched.
+ */
+function handleCanonicalRedirect(request: Request): Response | null {
+  if (request.method !== "GET" && request.method !== "HEAD") return null;
+
+  const url = new URL(request.url);
+  const host = url.hostname.toLowerCase();
+  const canonicalHost = host === `www.${CANONICAL_HOST}` ? CANONICAL_HOST : host;
+  if (isSecureRequest(request) && canonicalHost === host) return null;
+
+  url.protocol = "https:";
+  url.host = canonicalHost;
+  return Response.redirect(url.toString(), 301);
+}
 
 const sitemapStaticPaths = [
   "",
@@ -274,6 +305,8 @@ async function handleInstagramCover(request: Request): Promise<Response | null> 
 
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
+    const redirectResponse = handleCanonicalRedirect(request);
+    if (redirectResponse) return redirectResponse;
     const sitemapResponse = await handleSitemap(request);
     if (sitemapResponse) return sitemapResponse;
     const purgeResponse = await handlePurgeWebhook(request, env);

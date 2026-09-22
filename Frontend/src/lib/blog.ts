@@ -9,10 +9,13 @@ import type { StrapiMedia } from "./site";
 import type { BlogPost } from "./data/types";
 import { readEdgeCache, writeEdgeCache } from "./server-cache";
 
-const FETCH_TIMEOUT_MS = 15_000;
+// SSR waits on this fetch before it can send any HTML, so it is deliberately
+// short: a cold or overloaded backend must degrade quickly instead of holding
+// the page open until the browser gives up.
+const FETCH_TIMEOUT_MS = 8_000;
 const CACHE_TTL_MS = 10 * 60 * 1000;
 const EDGE_CACHE_TTL_SECONDS = 10 * 60;
-const MAX_ATTEMPTS = 2;
+const MAX_ATTEMPTS = 1;
 
 const BLOGS_QUERY = [
   "sort[0]=date:desc",
@@ -137,11 +140,15 @@ export const fetchBlogPostsFromCms = createServerFn()
       }
     }
 
-    const result = posts ?? [];
-    cachedPosts = result;
+    if (!posts) {
+      // Serve the fallback without caching it so the next request retries Strapi
+      // instead of pinning empty content for the whole TTL.
+      return [];
+    }
+    cachedPosts = posts;
     cachedAt = Date.now();
-    await writeEdgeCache("blogs", result, EDGE_CACHE_TTL_SECONDS);
-    return result;
+    await writeEdgeCache("blogs", posts, EDGE_CACHE_TTL_SECONDS);
+    return posts;
   });
 
 export async function fetchBlogPosts(): Promise<BlogPost[]> {
