@@ -6,7 +6,7 @@
 // (never the browser) — client-side navigation works without backend CORS.
 
 import { createServerFn } from "@tanstack/react-start";
-import { readEdgeCache, writeEdgeCache } from "./server-cache";
+import { readEdgeCache, readLastGoodCache, writeEdgeCache } from "./server-cache";
 
 export type SiteSocial = { label: string; href: string; icon: string };
 
@@ -252,10 +252,10 @@ export const fetchSiteFromCms = createServerFn()
 
     if (!site) {
       console.error("[site] Failed to fetch personal information from Strapi:", lastError);
-      // Serve the fallback without caching it: a transient backend failure must
-      // not pin empty contact details on the site for the whole TTL. The next
-      // request retries the backend instead.
-      return EMPTY_SITE;
+      // Fall back to the newest copy that did load rather than blanking the
+      // phone, email and WhatsApp details. Nothing is cached here, so the next
+      // request retries the backend instead of pinning the failure.
+      return (await readLastGoodCache<Site>("site")) ?? EMPTY_SITE;
     }
     cachedSite = site;
     cachedAt = Date.now();

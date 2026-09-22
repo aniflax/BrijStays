@@ -136,6 +136,9 @@ async function handlePurgeWebhook(request: Request, env: unknown): Promise<Respo
 
 const SITE_URL = "https://brijstays.in";
 const CANONICAL_HOST = "brijstays.in";
+// A year. Once a browser has stored this it stops attempting plain HTTP for the
+// host, so the "not secure" warning cannot come back after the first visit.
+const HSTS_MAX_AGE = 31_536_000;
 
 /**
  * True when the visitor reached us over HTTPS. Cloudflare terminates TLS and
@@ -165,6 +168,24 @@ function handleCanonicalRedirect(request: Request): Response | null {
   url.protocol = "https:";
   url.host = canonicalHost;
   return Response.redirect(url.toString(), 301);
+}
+
+/**
+ * Marks every HTTPS response as HTTPS-only. Cloudflare can add this at the edge,
+ * but sending it from the Worker guarantees browsers upgrade themselves even
+ * when that setting is off, which is what stops the plain-HTTP warning.
+ */
+function withSecurityHeaders(request: Request, response: Response): Response {
+  if (!isSecureRequest(request) || response.headers.has("strict-transport-security")) {
+    return response;
+  }
+  const headers = new Headers(response.headers);
+  headers.set("strict-transport-security", `max-age=${HSTS_MAX_AGE}`);
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
 }
 
 const sitemapStaticPaths = [
@@ -303,26 +324,30 @@ async function handleInstagramCover(request: Request): Promise<Response | null> 
   }
 }
 
+async function handleRequest(request: Request, env: unknown, ctx: unknown): Promise<Response> {
+  const redirectResponse = handleCanonicalRedirect(request);
+  if (redirectResponse) return redirectResponse;
+  const sitemapResponse = await handleSitemap(request);
+  if (sitemapResponse) return sitemapResponse;
+  const purgeResponse = await handlePurgeWebhook(request, env);
+  if (purgeResponse) return purgeResponse;
+  const coverResponse = await handleInstagramCover(request);
+  if (coverResponse) return coverResponse;
+  try {
+    const handler = await getServerEntry();
+    const response = await handler.fetch(request, env, ctx);
+    return await normalizeCatastrophicSsrResponse(response);
+  } catch (error) {
+    console.error(error);
+    return new Response(renderErrorPage(), {
+      status: 500,
+      headers: { "content-type": "text/html; charset=utf-8" },
+    });
+  }
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
-    const redirectResponse = handleCanonicalRedirect(request);
-    if (redirectResponse) return redirectResponse;
-    const sitemapResponse = await handleSitemap(request);
-    if (sitemapResponse) return sitemapResponse;
-    const purgeResponse = await handlePurgeWebhook(request, env);
-    if (purgeResponse) return purgeResponse;
-    const coverResponse = await handleInstagramCover(request);
-    if (coverResponse) return coverResponse;
-    try {
-      const handler = await getServerEntry();
-      const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
-    } catch (error) {
-      console.error(error);
-      return new Response(renderErrorPage(), {
-        status: 500,
-        headers: { "content-type": "text/html; charset=utf-8" },
-      });
-    }
+    return withSecurityHeaders(request, await handleRequest(request, env, ctx));
   },
 };

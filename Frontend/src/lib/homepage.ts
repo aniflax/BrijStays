@@ -5,7 +5,7 @@
 
 import { createServerFn } from "@tanstack/react-start";
 import { STRAPI_URL, resolveMediaUrl } from "./site";
-import { readEdgeCache, writeEdgeCache } from "./server-cache";
+import { readEdgeCache, readLastGoodCache, writeEdgeCache } from "./server-cache";
 import type { GalleryImage, InstagramVideo, Testimonial } from "./data/types";
 
 // SSR waits on this fetch before it can send any HTML, so it is deliberately
@@ -148,9 +148,9 @@ export const fetchGalleryImagesFromCms = createServerFn()
     }
 
     if (!images) {
-      // Serve the fallback without caching it so the next request retries Strapi
-      // instead of pinning an empty marquee for the whole TTL.
-      return [];
+      // Serve the newest copy that did load, without caching it, so the next
+      // request retries Strapi instead of pinning an empty marquee for the TTL.
+      return (await readLastGoodCache<GalleryImage[]>("gallery-images")) ?? [];
     }
     galleryCache = images;
     galleryCacheAt = Date.now();
@@ -204,9 +204,9 @@ export const fetchStandardImagesFromCms = createServerFn()
     }
 
     if (!images) {
-      // Serve the fallback without caching it so the next request retries Strapi
-      // instead of pinning an empty image grid for the whole TTL.
-      return [];
+      // Serve the newest copy that did load, without caching it, so the next
+      // request retries Strapi instead of pinning an empty image grid for the TTL.
+      return (await readLastGoodCache<GalleryImage[]>("standard-images")) ?? [];
     }
     standardCache = images;
     standardCacheAt = Date.now();
@@ -262,9 +262,9 @@ export const fetchReviewsFromCms = createServerFn()
     }
 
     if (!reviews) {
-      // Serve the fallback without caching it so the next request retries Strapi
-      // instead of pinning an empty review carousel for the whole TTL.
-      return [];
+      // Serve the newest copy that did load, without caching it, so the next
+      // request retries Strapi instead of pinning an empty carousel for the TTL.
+      return (await readLastGoodCache<Testimonial[]>("reviews")) ?? [];
     }
     reviewsCache = reviews;
     reviewsCacheAt = Date.now();
@@ -322,9 +322,9 @@ export const fetchInstagramVideosFromCms = createServerFn()
     }
 
     if (!videos) {
-      // Serve the fallback without caching it so the next request retries Strapi
-      // instead of pinning an empty videos section for the whole TTL.
-      return [];
+      // Serve the newest copy that did load, without caching it, so the next
+      // request retries Strapi instead of pinning an empty videos section.
+      return (await readLastGoodCache<InstagramVideo[]>("instagram-videos")) ?? [];
     }
     videosCache = videos;
     videosCacheAt = Date.now();

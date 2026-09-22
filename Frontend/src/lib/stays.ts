@@ -6,7 +6,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { STRAPI_URL, resolveMediaUrl } from "./site";
 import type { Stay } from "./data/types";
-import { readEdgeCache, writeEdgeCache } from "./server-cache";
+import { readEdgeCache, readLastGoodCache, writeEdgeCache } from "./server-cache";
 
 // SSR waits on this fetch before it can send any HTML, so it is deliberately
 // short: a cold or overloaded backend must degrade quickly instead of holding
@@ -184,9 +184,9 @@ export const fetchStaysFromCms = createServerFn()
     }
 
     if (!stays) {
-      // Serve the fallback without caching it so the next request retries Strapi
-      // instead of pinning an empty stay list for the whole TTL.
-      return [];
+      // Serve the newest copy that did load, without caching it, so the next
+      // request retries Strapi instead of pinning an empty stay list for the TTL.
+      return (await readLastGoodCache<Stay[]>("stays")) ?? [];
     }
     cachedStays = stays;
     cachedAt = Date.now();

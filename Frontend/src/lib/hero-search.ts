@@ -5,7 +5,7 @@
 
 import { createServerFn } from "@tanstack/react-start";
 import { STRAPI_URL } from "./site";
-import { readEdgeCache, writeEdgeCache } from "./server-cache";
+import { readEdgeCache, readLastGoodCache, writeEdgeCache } from "./server-cache";
 
 // SSR waits on this fetch before it can send any HTML, so it is deliberately
 // short: a cold or overloaded backend must degrade quickly instead of holding
@@ -86,9 +86,15 @@ export const fetchHeroSearchFromCms = createServerFn()
     }
 
     if (!result) {
-      // Serve the fallback without caching it so the next request retries Strapi
-      // instead of pinning empty dropdowns for the whole TTL.
-      return { heroLocations: [], heroStayTypes: [], heroGuestOptions: [] };
+      // Serve the newest copy that did load, without caching it, so the next
+      // request retries Strapi instead of pinning empty dropdowns for the TTL.
+      return (
+        (await readLastGoodCache<HeroSearch>("hero-search")) ?? {
+          heroLocations: [],
+          heroStayTypes: [],
+          heroGuestOptions: [],
+        }
+      );
     }
     cached = result;
     cachedAt = Date.now();

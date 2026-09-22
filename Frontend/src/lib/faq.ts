@@ -5,7 +5,7 @@
 
 import { createServerFn } from "@tanstack/react-start";
 import { STRAPI_URL } from "./site";
-import { readEdgeCache, writeEdgeCache } from "./server-cache";
+import { readEdgeCache, readLastGoodCache, writeEdgeCache } from "./server-cache";
 import type { Faq } from "./data/types";
 
 // SSR waits on this fetch before it can send any HTML, so it is deliberately
@@ -71,9 +71,9 @@ export const fetchFaqsFromCms = createServerFn()
     }
 
     // Only CMS content is used; the section renders nothing when Strapi is
-    // unreachable or has no entries. The empty result is deliberately not cached
-    // so the next request retries Strapi instead of pinning the section empty.
-    if (!faqs) return [];
+    // unreachable or has no entries. Neither result is cached here: the newest
+    // copy that did load is served, and the next request retries Strapi.
+    if (!faqs) return (await readLastGoodCache<Faq[]>("faqs")) ?? [];
     faqsCache = faqs;
     faqsCacheAt = Date.now();
     await writeEdgeCache("faqs", faqs, EDGE_CACHE_TTL_SECONDS);
