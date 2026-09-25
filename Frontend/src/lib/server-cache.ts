@@ -13,6 +13,7 @@ type EdgeCache = {
 type EdgeCacheStorage = { default?: EdgeCache };
 
 const CACHE_ORIGIN = "https://brijstays.in";
+const CACHE_VERSION = "v2";
 
 // How long the last successfully fetched copy stays readable. This copy is only
 // ever used when a CMS request fails, and a slightly old phone number or stay
@@ -46,7 +47,7 @@ function jsonResponse<T>(value: T, ttlSeconds: number): Response {
 export async function readEdgeCache<T>(key: string): Promise<T | null> {
   const cache = edgeCache();
   if (!cache) return null;
-  return matchJson<T>(cache, `${CACHE_ORIGIN}/_cache/${key}`);
+  return matchJson<T>(cache, `${CACHE_ORIGIN}/_cache/${CACHE_VERSION}/${key}`);
 }
 
 /**
@@ -57,7 +58,7 @@ export async function readEdgeCache<T>(key: string): Promise<T | null> {
 export async function readLastGoodCache<T>(key: string): Promise<T | null> {
   const cache = edgeCache();
   if (!cache) return null;
-  return matchJson<T>(cache, `${CACHE_ORIGIN}/_cache/${key}/last-good`);
+  return matchJson<T>(cache, `${CACHE_ORIGIN}/_cache/${CACHE_VERSION}/${key}/last-good`);
 }
 
 export async function writeEdgeCache<T>(key: string, value: T, ttlSeconds: number): Promise<void> {
@@ -66,9 +67,12 @@ export async function writeEdgeCache<T>(key: string, value: T, ttlSeconds: numbe
   try {
     // Two entries per key: the fresh window used by normal reads, and a durable
     // copy that survives it so a failed refresh still has something to serve.
-    await cache.put(`${CACHE_ORIGIN}/_cache/${key}`, jsonResponse(value, ttlSeconds));
     await cache.put(
-      `${CACHE_ORIGIN}/_cache/${key}/last-good`,
+      `${CACHE_ORIGIN}/_cache/${CACHE_VERSION}/${key}`,
+      jsonResponse(value, ttlSeconds),
+    );
+    await cache.put(
+      `${CACHE_ORIGIN}/_cache/${CACHE_VERSION}/${key}/last-good`,
       jsonResponse(value, LAST_GOOD_TTL_SECONDS),
     );
   } catch {
