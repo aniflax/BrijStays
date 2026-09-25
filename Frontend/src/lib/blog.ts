@@ -12,7 +12,7 @@ import { readEdgeCache, readLastGoodCache, writeEdgeCache } from "./server-cache
 // SSR waits on this fetch before it can send any HTML, so it is deliberately
 // short: a cold or overloaded backend must degrade quickly instead of holding
 // the page open until the browser gives up.
-const FETCH_TIMEOUT_MS = 8_000;
+const FETCH_TIMEOUT_MS = 5_000;
 const CACHE_TTL_MS = 10 * 60 * 1000;
 const EDGE_CACHE_TTL_SECONDS = 10 * 60;
 const MAX_ATTEMPTS = 1;

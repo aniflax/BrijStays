@@ -136,26 +136,44 @@ async function handlePurgeWebhook(request: Request, env: unknown): Promise<Respo
 
 const SITE_URL = "https://brijstays.in";
 const CANONICAL_HOST = "brijstays.in";
-// A year. Once a browser has stored this it stops attempting plain HTTP for the
-// host, so the "not secure" warning cannot come back after the first visit.
+// A year with includeSubDomains + preload. Once stored the browser never
+// attempts plain HTTP for this host (or any sub-domain), so the "not secure"
+// warning cannot come back after the first HTTPS visit. The preload flag also
+// allows submission to hstspreload.org for baked-in browser lists.
 const HSTS_MAX_AGE = 31_536_000;
+const HSTS_VALUE = `max-age=${HSTS_MAX_AGE}; includeSubDomains; preload`;
 
 /**
- * True when the visitor reached us over HTTPS. Cloudflare terminates TLS and
- * forwards the original scheme both in the request URL and in x-forwarded-proto.
+ * True when the visitor reached us over HTTPS. Cloudflare terminates TLS at
+ * the edge and forwards the original scheme in several places:
+ *   1. `cf-visitor: {"scheme":"https"}`  — Cloudflare's own header
+ *   2. `x-forwarded-proto: https`         — standard proxy header
+ *   3. request URL protocol               — fallback when headers are absent
  */
 function isSecureRequest(request: Request): boolean {
+  const cfVisitor = request.headers.get("cf-visitor");
+  if (cfVisitor) {
+    try {
+      const parsed = JSON.parse(cfVisitor) as { scheme?: string };
+      if (parsed.scheme) return parsed.scheme === "https";
+    } catch {
+      // fall through to next check
+    }
+  }
   const forwarded = request.headers.get("x-forwarded-proto");
-  if (forwarded) return forwarded.split(",")[0]?.trim() === "https";
+  if (forwarded) return forwarded.split(",")[0]?.trim().toLowerCase() === "https";
   return new URL(request.url).protocol === "https:";
 }
 
 /**
  * Sends plain-HTTP and www requests to the canonical https://brijstays.in URL.
- * Cloudflare can enforce this at the edge, but doing it here means a visitor
- * arriving over HTTP is upgraded (instead of Chrome warning that the site
- * "doesn't support a secure connection") even when that setting is off.
+ * Cloudflare can enforce this at the edge (Always Use HTTPS), but doing it
+ * here guarantees the upgrade even when that toggle is off — otherwise Chrome
+ * on Android shows "This site doesn't support a secure connection" instead of
+ * following a redirect.
  * Only safe read methods are redirected so the Strapi webhook is never touched.
+ * The 301 itself already carries HSTS so the browser remembers the upgrade
+ * without needing a second round-trip.
  */
 function handleCanonicalRedirect(request: Request): Response | null {
   if (request.method !== "GET" && request.method !== "HEAD") return null;
@@ -163,24 +181,57 @@ function handleCanonicalRedirect(request: Request): Response | null {
   const url = new URL(request.url);
   const host = url.hostname.toLowerCase();
   const canonicalHost = host === `www.${CANONICAL_HOST}` ? CANONICAL_HOST : host;
-  if (isSecureRequest(request) && canonicalHost === host) return null;
+  const needsHostFix = canonicalHost !== host;
+  const needsSchemeFix = !isSecureRequest(request);
+  if (!needsHostFix && !needsSchemeFix) return null;
 
   url.protocol = "https:";
   url.host = canonicalHost;
-  return Response.redirect(url.toString(), 301);
+  // Build the redirect with HSTS already attached — withSecurityHeaders would
+  // otherwise be skipped because we return early from handleRequest.
+  return new Response(null, {
+    status: 301,
+    headers: {
+      location: url.toString(),
+      "strict-transport-security": HSTS_VALUE,
+      "cache-control": "public, max-age=86400",
+    },
+  });
 }
 
 /**
- * Marks every HTTPS response as HTTPS-only. Cloudflare can add this at the edge,
- * but sending it from the Worker guarantees browsers upgrade themselves even
- * when that setting is off, which is what stops the plain-HTTP warning.
+ * Marks every HTTPS response as HTTPS-only and adds baseline hardening headers.
+ * Cloudflare can add these at the edge, but sending them from the Worker
+ * guarantees they are present even when that setting is off — which is what
+ * stops the plain-HTTP warning from ever appearing again.
  */
 function withSecurityHeaders(request: Request, response: Response): Response {
-  if (!isSecureRequest(request) || response.headers.has("strict-transport-security")) {
-    return response;
-  }
+  if (!isSecureRequest(request)) return response;
   const headers = new Headers(response.headers);
-  headers.set("strict-transport-security", `max-age=${HSTS_MAX_AGE}`);
+  if (!headers.has("strict-transport-security")) {
+    headers.set("strict-transport-security", HSTS_VALUE);
+  }
+  if (!headers.has("x-content-type-options")) {
+    headers.set("x-content-type-options", "nosniff");
+  }
+  if (!headers.has("x-frame-options")) {
+    headers.set("x-frame-options", "SAMEORIGIN");
+  }
+  if (!headers.has("referrer-policy")) {
+    headers.set("referrer-policy", "strict-origin-when-cross-origin");
+  }
+  if (!headers.has("permissions-policy")) {
+    headers.set("permissions-policy", "camera=(), microphone=(), geolocation=()");
+  }
+  // Avoid leaking HSTS state to non-HTTPS callers; otherwise return cloned response.
+  const hadHsts = response.headers.has("strict-transport-security");
+  const hasNew = headers.has("strict-transport-security");
+  if (hadHsts && !hasNew) return response;
+  // Only create a new Response when we actually added something.
+  const added =
+    headers.get("strict-transport-security") !== response.headers.get("strict-transport-security") ||
+    headers.get("x-content-type-options") !== response.headers.get("x-content-type-options");
+  if (!added) return response;
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,

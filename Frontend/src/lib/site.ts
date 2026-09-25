@@ -208,7 +208,7 @@ const EDGE_CACHE_TTL_SECONDS = 10 * 60;
 // SSR waits on this fetch before it can send any HTML, so it is deliberately
 // short: a cold or overloaded backend must degrade quickly instead of holding
 // the page open until the browser gives up.
-const FETCH_TIMEOUT_MS = 8_000;
+const FETCH_TIMEOUT_MS = 5_000;
 const MAX_ATTEMPTS = 1;
 
 async function fetchSiteOnce(): Promise<Response> {

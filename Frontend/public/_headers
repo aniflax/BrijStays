@@ -1,0 +1,24 @@
+# Cloudflare Pages / Workers static-asset headers.
+# The Worker in src/server.ts is the primary enforcer (301 + HSTS from code),
+# but this file covers the case where assets are served directly from the edge
+# without hitting the Worker (e.g. /assets/*, /public/*) and acts as a second
+# layer if the Worker is bypassed.
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+  X-XSS-Protection: 0
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.png
+  Cache-Control: public, max-age=86400
+
+/*.jpg
+  Cache-Control: public, max-age=86400
+
+/*.webp
+  Cache-Control: public, max-age=86400
