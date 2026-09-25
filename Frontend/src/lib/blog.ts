@@ -77,21 +77,40 @@ function markdownToBlocks(markdown: string): BlogPost["body"] {
 }
 
 /** Strapi v5 returns documents flat, without the v4 `attributes` wrapper. */
-function slugifyType(type: string | null | undefined, fallback: string): string {
-  const slug = (type ?? "").trim().toLowerCase().replace(/\s+/g, "-");
-  return slug || fallback;
+function slugify(text: string | null | undefined): string {
+  const raw = (text ?? "").trim().toLowerCase();
+  if (!raw) return "";
+  return raw
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .replace(/-+/g, "-");
 }
 
 function normalizeBlog(doc: StrapiBlogDocument): BlogPost {
   const body = markdownToBlocks(doc.Blog ?? "");
   const firstParagraph = body.find((b) => b.type === "paragraph")?.text ?? "";
+  // Prefer Title for slug (unique per post); fallback to documentId. Type is
+  // not unique — three posts share "Information" and would collide.
+  const base = slugify(doc.Title) || doc.documentId;
+  // Deduplication is handled by deduplicateBySlug after mapping, but keep the
+  // raw slug here; the caller will ensure uniqueness.
+  let coverImage = resolveMediaUrl(doc.image as StrapiMedia);
+  // Fix known CMS data error: the duplicate "The Ultimate 2-Day..." on
+  // 2026-09-09 (documentId xeesq1eqguefdbpht0tmoz4l) was saved with a stay
+  // screenshot instead of the itinerary infographic. Override to the correct
+  // Vrindavan Blog image so homepage and media both show the right cover.
+  const isItinerary = (doc.Title ?? "").trim() === "The Ultimate 2-Day Spiritual Itinerary for Vrindavan";
+  const isWrongImage = coverImage.includes("Screenshot_2026_09_07_at_4_42_37_PM");
+  if (isItinerary && isWrongImage) {
+    coverImage = "https://cdn.brijstays.in/Vrindavan_Blog_6862edf3c9.png";
+  }
   return {
-    slug: slugifyType(doc.Type, doc.documentId),
+    slug: base || doc.documentId,
     title: doc.Title ?? "Untitled",
     excerpt: firstParagraph,
     category: doc.Type ?? "",
     readingTime: doc.ReadingTime ?? "",
-    coverImage: resolveMediaUrl(doc.image as StrapiMedia),
+    coverImage,
     coverAlt: doc.image?.alternativeText ?? doc.Title ?? "",
     author: doc.shortTag ?? "",
     publishedAt: doc.date ?? "",
@@ -100,6 +119,22 @@ function normalizeBlog(doc: StrapiBlogDocument): BlogPost {
     showOnHomePage: Boolean(doc.showOnhomePage),
     body,
   };
+}
+
+/** Ensures slugs are unique when Strapi has duplicate Titles (e.g. two
+ *  "The Ultimate 2-Day..." posts). Appends a short hash from documentId. */
+function deduplicateBySlug(posts: BlogPost[], docs: StrapiBlogDocument[]): BlogPost[] {
+  const seen = new Map<string, number>();
+  return posts.map((post, i) => {
+    const base = post.slug;
+    const count = seen.get(base) ?? 0;
+    seen.set(base, count + 1);
+    if (count === 0) return post;
+    // Append 4-char hash from documentId to make it unique, e.g.
+    // "the-ultimate-..." + "-xees"
+    const suffix = docs[i]?.documentId?.slice(0, 4) ?? String(count);
+    return { ...post, slug: `${base}-${suffix}` };
+  });
 }
 
 let cachedPosts: BlogPost[] | null = null;
@@ -133,7 +168,9 @@ export const fetchBlogPostsFromCms = createServerFn()
         }
         if (!res.ok) throw new Error(`Strapi responded with ${res.status}`);
         const json = (await res.json()) as { data?: StrapiBlogDocument[] };
-        posts = (json.data ?? []).map(normalizeBlog);
+        const docs = json.data ?? [];
+        const mapped = docs.map(normalizeBlog);
+        posts = deduplicateBySlug(mapped, docs);
         break;
       } catch (err) {
         console.error("[blog] Failed to fetch blogs from Strapi:", err);

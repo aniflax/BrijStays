@@ -32,7 +32,7 @@ export const Route = createFileRoute("/media/")({
 function MediaPage() {
   const { posts } = Route.useLoaderData();
   const featured = posts.find((p) => p.imp);
-  const rest = posts.filter((p) => p.slug !== featured?.slug);
+  const rest = posts.filter((p) => p !== featured);
 
   return (
     <>
