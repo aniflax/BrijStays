@@ -203,12 +203,12 @@ export const STRAPI_URL = resolveStrapiUrl();
 
 let cachedSite: Site | null = null;
 let cachedAt = 0;
-const CACHE_TTL_MS = 10 * 60 * 1000;
-const EDGE_CACHE_TTL_SECONDS = 10 * 60;
+const CACHE_TTL_MS = 60 * 60 * 1000;
+const EDGE_CACHE_TTL_SECONDS = 60 * 60;
 // SSR waits on this fetch before it can send any HTML, so it is deliberately
 // short: a cold or overloaded backend must degrade quickly instead of holding
 // the page open until the browser gives up.
-const FETCH_TIMEOUT_MS = 5_000;
+const FETCH_TIMEOUT_MS = 1_800;
 const MAX_ATTEMPTS = 1;
 
 async function fetchSiteOnce(): Promise<Response> {
