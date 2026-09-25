@@ -1,6 +1,0 @@
-# Cloudflare edge redirects — backup to the Worker in src/server.ts.
-# If the Worker is ever bypassed, these still force HTTPS and the canonical host.
-# Syntax: https://developers.cloudflare.com/pages/configuration/redirects/
-http://brijstays.in/* https://brijstays.in/:splat 301!
-http://www.brijstays.in/* https://brijstays.in/:splat 301!
-https://www.brijstays.in/* https://brijstays.in/:splat 301!
