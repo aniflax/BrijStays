@@ -19,12 +19,14 @@ export const Route = createFileRoute("/media/$slug")({
       };
     }
     const { post } = loaderData;
+    const metaTitle = post.metaTitle || post.title;
+    const metaDescription = post.metaDescription || post.excerpt;
     return {
       meta: [
-        { title: `${post.title} | Brij Stays` },
-        { name: "description", content: post.excerpt },
-        { property: "og:title", content: post.title },
-        { property: "og:description", content: post.excerpt },
+        { title: `${metaTitle} | Brij Stays` },
+        { name: "description", content: metaDescription },
+        { property: "og:title", content: metaTitle },
+        { property: "og:description", content: metaDescription },
         { property: "og:type", content: "article" },
       ],
     };

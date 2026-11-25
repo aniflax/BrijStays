@@ -24,6 +24,14 @@
     "shortTag": {
       "type": "string"
     },
+    "metaTitle": {
+      "type": "string",
+      "pluginOptions": {}
+    },
+    "metaDescription": {
+      "type": "text",
+      "pluginOptions": {}
+    },
     "date": {
       "type": "date"
     },

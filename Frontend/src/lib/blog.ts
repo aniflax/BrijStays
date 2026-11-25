@@ -23,11 +23,13 @@ const BLOGS_QUERY = [
   "fields[1]=ReadingTime",
   "fields[2]=Title",
   "fields[3]=shortTag",
-  "fields[4]=date",
-  "fields[5]=Blog",
-  "fields[6]=Ending",
-  "fields[7]=imp",
-  "fields[8]=showOnhomePage",
+  "fields[4]=metaTitle",
+  "fields[5]=metaDescription",
+  "fields[6]=date",
+  "fields[7]=Blog",
+  "fields[8]=Ending",
+  "fields[9]=imp",
+  "fields[10]=showOnhomePage",
   "populate[image][fields][0]=url",
   "populate[image][fields][1]=alternativeText",
 ].join("&");
@@ -39,6 +41,8 @@ type StrapiBlogDocument = {
   ReadingTime?: string | null;
   Title?: string | null;
   shortTag?: string | null;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
   date?: string | null;
   Blog?: string | null;
   Ending?: string | null;
@@ -108,6 +112,8 @@ function normalizeBlog(doc: StrapiBlogDocument): BlogPost {
     slug: base || doc.documentId,
     title: doc.Title ?? "Untitled",
     excerpt: firstParagraph,
+    metaTitle: doc.metaTitle?.trim() || undefined,
+    metaDescription: doc.metaDescription?.trim() || undefined,
     category: doc.Type ?? "",
     readingTime: doc.ReadingTime ?? "",
     coverImage,

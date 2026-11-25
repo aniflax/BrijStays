@@ -94,6 +94,10 @@ export type BlogPost = {
   slug: string;
   title: string;
   excerpt: string;
+  /** SEO `<title>` override for the post page. Falls back to `title`. */
+  metaTitle?: string | undefined;
+  /** SEO meta description override. Falls back to `excerpt`. */
+  metaDescription?: string | undefined;
   category: string;
   readingTime: string;
   coverImage: string;
