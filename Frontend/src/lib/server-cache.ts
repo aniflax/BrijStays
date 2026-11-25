@@ -13,7 +13,7 @@ type EdgeCache = {
 type EdgeCacheStorage = { default?: EdgeCache };
 
 const CACHE_ORIGIN = "https://brijstays.in";
-const CACHE_VERSION = "v2";
+const CACHE_VERSION = "v3";
 
 // How long the last successfully fetched copy stays readable. This copy is only
 // ever used when a CMS request fails, and a slightly old phone number or stay
